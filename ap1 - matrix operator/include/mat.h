@@ -7,6 +7,8 @@
 #include <string.h>
 #include <getopt.h>
 
+#include "msgassert.h"
+
 
 #define MAXTAM 5
 
