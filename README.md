@@ -6,11 +6,11 @@ Este repositório contém o material das aulas práticas da disciplina de Estrut
 
 ### Conteúdo
 
-- [Aula 1: Introdução às Estruturas de Dados](./Aula1)
-- [Aula 2: Listas Ligadas](./Aula2)
-- [Aula 3: Pilhas e Filas](./Aula3)
-- [Aula 4: Árvores](./Aula4)
-- [Aula 5: Grafos](./Aula5)
+- [Aula Prática 1: Refatoração de Código Monolítico](./ap1%20-%20matrix%20operator/)
+- [Aula Prática 2](./Aula2)
+- [Aula Prática 3](./Aula3)
+- [Aula Prática 4](./Aula4)
+- [Aula Prática 5](./Aula5)
 
 ### Como Usar
 
