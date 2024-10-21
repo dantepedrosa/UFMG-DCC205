@@ -1,4 +1,4 @@
-#include "mat.h"
+#include "../include/mat.h"
 
 void criaMatriz(mat_tipo * mat, int tx, int ty, int id)
 {
