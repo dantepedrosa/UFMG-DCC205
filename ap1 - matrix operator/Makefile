@@ -1,19 +1,42 @@
+# Compiler and flags
 CC = gcc
-CFLAGS = -I../include -Wall
-OBJDIR = ../obj
-BINDIR = ../bin
+CFLAGS = -Iinclude -Wall -Wextra -Werror
 
-SRCS = matop.c mat.c matnomod.c
-OBJS = $(SRCS:%.c=$(OBJDIR)/%.o)
+# Directories
+SRCDIR = src
+INCDIR = include
+OBJDIR = obj
+BINDIR = bin
+
+# Source files
+SRCS = $(SRCDIR)/mat.c $(SRCDIR)/matop.c
+OBJS = $(SRCS:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
+
+# Executável
 TARGET = $(BINDIR)/matop
 
+# Alvo padrão
 all: $(TARGET)
 
+# Linkar o executável
 $(TARGET): $(OBJS)
-    $(CC) $(CFLAGS) -o $@ $^
+	@mkdir -p $(BINDIR)
+	$(CC) $(CFLAGS) -o $@ $^
+	@chmod +x $(TARGET)
 
-$(OBJDIR)/%.o: %.c
-    $(CC) $(CFLAGS) -c $< -o $@
+# Compilar arquivos fonte em arquivos objeto
+$(OBJDIR)/%.o: $(SRCDIR)/%.c
+	@mkdir -p $(OBJDIR)
+	$(CC) $(CFLAGS) -c $< -o $@
 
+# Limpar artefatos de build
 clean:
-    rm -f $(OBJDIR)/*.o $(TARGET)
+	rm -rf $(OBJDIR) $(BINDIR)
+
+# Executar o programa com os comandos especificados
+run: $(TARGET)
+	$(TARGET) -s -x 5 -y 5
+	$(TARGET) -m -x 5 -y 5
+	$(TARGET) -t -x 5 -y 5
+
+.PHONY: all clean run
