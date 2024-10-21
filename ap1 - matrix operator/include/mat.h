@@ -1,13 +1,12 @@
+#ifndef MAT_H
+#define MAT_H
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
 #include <string.h>
 #include <getopt.h>
 
-#define avisoAssert(e,m) ((void) ((e)?0: __avisoassert (#e,__FILE__,__LINE__,m)))
-#define __avisoassert(e,file,line,m) ((void) fprintf(stderr,"%s:%u: Aviso: '%s' - %s\n",file,line,e,m),0)
-#define erroAssert(e,m) ((void) ((e)?0: __erroassert (#e,__FILE__,__LINE__,m)))
-#define __erroassert(e,file,line,m) ((void) fprintf(stderr,"%s:%u: Erro '%s' - %s\n",file,line,e,m), abort(),0)
 
 #define MAXTAM 5
 
@@ -138,3 +137,6 @@ void transpoeMatriz(mat_tipo *a);
  * @param a Ponteiro para a matriz
  */
 void destroiMatriz(mat_tipo *a);
+
+
+#endif // MAT_H
