@@ -1,4 +1,4 @@
-# 
+# Refatoração de Código Monolítico - Operador de Matriz
 
 ## Descrição da Tarefa
 
@@ -6,15 +6,14 @@ Nesta atividade prática você vai modularizar um código inicialmente monolíti
 
 O programa executável pode receber os seguintes parâmetros na linha de comando:
 
-```sh
-matop
-    -s     (somar matrizes)
-    -m     (multiplicar matrizes)
-    -t     (transpor matriz)
-    -c <arq>     (cria matriz e salva em arq)
-    -x <int>    (primeira dimensao)
-    -y <int>    (segunda dimensao)
-```
+    matop
+        -s     (somar matrizes)
+        -m     (multiplicar matrizes)
+        -t     (transpor matriz)
+        -c <arq>     (cria matriz e salva em arq)
+        -x <int>    (primeira dimensao)
+        -y <int>    (segunda dimensao)
+
 
 A partir do arquivo matnomod.c (em anexo), você deve criar os seguintes arquivos e organizá-los como um projeto:
 
@@ -36,14 +35,12 @@ Você deve utilizar a linguagem C ou C++ para o desenvolvimento do seu sistema. 
 
 Você DEVE utilizar a estrutura de projeto abaixo junto ao Makefile :
 
-```mermaid
-graph TD;
-    TP-->src
-    TP-->bin
-    TP-->obj
-    TP-->include
-    TP-->Makefile
-```
+    - TP
+        |- src
+        |- bin
+        |- obj
+        |- include
+        Makefile
 
 A pasta TP é a raiz do projeto; a pasta bin deve estar vazia; src deve armazenar arquivos de código (*.c, *.cpp ou *.cc); a pasta include, os cabeçalhos (headers) do projeto, com extensão *.h, por fim a pasta obj deve estar vazia. O Makefile deve estar na raiz do projeto. A execução do Makefile deve gerar os códigos objeto *.o no diretório obj, e o executável do TP no diretório bin.
 
