@@ -31,7 +31,7 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.c
 
 # Limpar artefatos de build
 clean:
-	rm -rf $(OBJDIR) $(BINDIR)
+	rm -rf $(OBJDIR)/* $(BINDIR)/*
 
 # Executar o programa com os comandos especificados
 run: $(TARGET)

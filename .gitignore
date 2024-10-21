@@ -1,3 +1,3 @@
 *.code-workspace
-*.o
-./bin/*
+bin/
+obj/
