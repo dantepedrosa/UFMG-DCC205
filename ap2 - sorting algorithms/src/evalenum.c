@@ -169,12 +169,38 @@ void recursiveSelectionSort(int arr[], int l, int r, sortperf_t * s)
 
 // selection sort
 void selectionSort(int arr[], int l, int r, sortperf_t * s) { 
-  return;
+  int i, j, min;
+
+  for(i=0; i<l-1; i++) {
+    min = i;
+    for(j=i+1; j<l; j++) {
+      inccmp(s,1);
+      if(arr[j] < arr[min]) {
+        min = j;
+      }
+    }
+    if(min != i) {
+      swap(&arr[i], &arr[min], s);
+    }
+  }
 }
 
 //insertion sort
 void insertionSort(int v[], int l, int r, sortperf_t * s) {
-  return;
+  int i, j;
+  int aux;
+
+  for(i=1; i<l; i++){
+    aux = v[i];
+    j = i-1;
+    while(j>=0 && v[j]>aux){
+      inccmp(s,1);
+      v[j+1] = v[j];
+      incmove(s,1);
+      j--;
+    }
+    v[j+1] = aux;
+  }
 }
 
 // median of 3 integers
