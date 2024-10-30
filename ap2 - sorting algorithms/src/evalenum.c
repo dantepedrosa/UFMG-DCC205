@@ -139,6 +139,22 @@ void swap(int *xp, int *yp, sortperf_t *s){
 
 // shellsort
 void shellSort(int *A, int n, sortperf_t * s) {
+  int i, h;
+
+  for(h=n/2; h>0; h/=2){
+    for(i=h; i<n; i++){
+      int temp = A[i];
+      int j;
+      inccalls(s, 1);
+      for(j=i; j >= h && A[j-h] > temp; j-=h) {
+        inccmp(s, 1);
+        A[j] = A[j-h];
+        incmove(s, 1);
+      }
+      A[j] = temp;
+      incmove(s, 1);
+    }
+  }
 }
 
 
@@ -215,26 +231,79 @@ int median (int a, int b, int c) {
 
 // quicksort partition using median of 3
 void partition3(int * A, int l, int r, int *i, int *j, sortperf_t *s) {
+  int p = median(A[l], A[(l+r)/2], A[r]);
+  *i = l;
+  *j = r;
+  do {
+    while (A[*i] < p) (*i)++;
+    while (A[*j] > p) (*j)--;
+    if (*i <= *j) {
+      swap(&A[*i], &A[*j], s);
+      (*i)++;
+      (*j)--;
+    }
+  } while (*i <= *j);
 }
 
 // standard quicksort partition
 void partition(int * A, int l, int r, int *i, int *j, sortperf_t *s) {
+  int p = A[(l + r) / 2]; // obtem o pivo p
+      *i = l;
+      *j = r;
+      do {
+          while (A[*i] < p) (*i)++;
+          while (A[*j] > p) (*j)--;
+          if (*i <= *j) {
+              swap(&A[*i], &A[*j], s);
+              (*i)++;
+              (*j)--;
+          }
+      } while (*i <= *j);
+  
 }
 
 // standard quicksort
 void quickSort(int * A, int l, int r, sortperf_t *s) { 
+  int i, j;
+  if (l < r) {
+    partition(A, l, r, &i, &j, s);
+    if (l < j) quickSort(A, l, j, s);
+    if (i < r) quickSort(A, i, r, s);
+  }
 }
 
 // quicksort with median of 3
 void quickSort3(int * A, int l, int r, sortperf_t *s) { 
+  int i, j;
+  if (l < r) {
+    partition3(A, l, r, &i, &j, s);
+    if (l < j) quickSort3(A, l, j, s);
+    if (i < r) quickSort3(A, i, r, s);
+  }
 }
 
 // quicksort with insertion for small partitions
 void quickSortIns(int * A, int l, int r, sortperf_t *s) { 
+  if (r - l <= 10) {
+    insertionSort(A, l, r, s);
+  } else {
+    int i, j;
+    partition(A, l, r, &i, &j, s);
+    if (l < j) quickSortIns(A, l, j, s);
+    if (i < r) quickSortIns(A, i, r, s);
+  }
 }
 
 // quicksort with insertion for small partitions and median of 3
 void quickSort3Ins(int * A, int l, int r, sortperf_t *s) { 
+  if (r - l <= 10) {
+    insertionSort(A, l, r, s);
+  } else {
+    int i, j;
+    partition3(A, l, r, &i, &j, s);
+    if (l < j) quickSort3Ins(A, l, j, s);
+    if (i < r) quickSort3Ins(A, i, r, s);
+  }
 }
 
 void uso()
