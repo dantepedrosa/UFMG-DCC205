@@ -137,7 +137,13 @@ void swap(int *xp, int *yp, sortperf_t *s){
     incmove(s,3);
 }
 
-// shellsort
+/**
+ * @brief Sorts an array using the Shell Sort algorithm.
+ * 
+ * @param A The array to be sorted.
+ * @param n The size of the array.
+ * @param s The performance metrics structure.
+ */
 void shellSort(int *A, int n, sortperf_t * s) {
   int i, h;
 
@@ -158,7 +164,14 @@ void shellSort(int *A, int n, sortperf_t * s) {
 }
 
 
-// recursive selection sort
+/**
+ * @brief Sorts an array using the Recursive Selection Sort algorithm.
+ * 
+ * @param arr The array to be sorted.
+ * @param l The starting index of the subarray.
+ * @param r The ending index of the subarray.
+ * @param s The performance metrics structure.
+ */
 void recursiveSelectionSort(int arr[], int l, int r, sortperf_t * s)
 {
     // find the minimum element in the unsorted subarray `[i…n-1]`
@@ -183,13 +196,21 @@ void recursiveSelectionSort(int arr[], int l, int r, sortperf_t * s)
     }
 }
 
-// selection sort
+/**
+ * @brief Sorts an array using the Selection Sort algorithm.
+ * 
+ * @param arr The array to be sorted.
+ * @param l The starting index of the subarray.
+ * @param r The ending index of the subarray.
+ * @param s The performance metrics structure.
+ */
 void selectionSort(int arr[], int l, int r, sortperf_t * s) { 
   int i, j, min;
+  inccalls(s, 1);
 
-  for(i=0; i<l-1; i++) {
+  for(i=l; i<r-1; i++) {
     min = i;
-    for(j=i+1; j<l; j++) {
+    for(j=i+1; j<r; j++) {
       inccmp(s,1);
       if(arr[j] < arr[min]) {
         min = j;
@@ -201,15 +222,22 @@ void selectionSort(int arr[], int l, int r, sortperf_t * s) {
   }
 }
 
-//insertion sort
+/**
+ * @brief Sorts an array using the Insertion Sort algorithm.
+ * 
+ * @param v The array to be sorted.
+ * @param l The starting index of the subarray.
+ * @param r The ending index of the subarray.
+ * @param s The performance metrics structure.
+ */
 void insertionSort(int v[], int l, int r, sortperf_t * s) {
   int i, j;
   int aux;
 
-  for(i=1; i<l; i++){
+  for(i= l+1; i<r; i++){
     aux = v[i];
     j = i-1;
-    while(j>=0 && v[j]>aux){
+    while(j>=l && v[j]>aux){
       inccmp(s,1);
       v[j+1] = v[j];
       incmove(s,1);
@@ -229,7 +257,16 @@ int median (int a, int b, int c) {
     return b;                            // c b a
 }
 
-// quicksort partition using median of 3
+/**
+ * @brief Partitions an array using the median of three elements.
+ * 
+ * @param A The array to be partitioned.
+ * @param l The starting index of the subarray.
+ * @param r The ending index of the subarray.
+ * @param i The index of the first element in the partition.
+ * @param j The index of the last element in the partition.
+ * @param s The performance metrics structure.
+ */
 void partition3(int * A, int l, int r, int *i, int *j, sortperf_t *s) {
   int p = median(A[l], A[(l+r)/2], A[r]);
   *i = l;
@@ -245,7 +282,16 @@ void partition3(int * A, int l, int r, int *i, int *j, sortperf_t *s) {
   } while (*i <= *j);
 }
 
-// standard quicksort partition
+/**
+ * @brief Partitions an array using the standard Quick Sort partitioning method.
+ * 
+ * @param A The array to be partitioned.
+ * @param l The starting index of the subarray.
+ * @param r The ending index of the subarray.
+ * @param i The index of the first element in the partition.
+ * @param j The index of the last element in the partition.
+ * @param s The performance metrics structure.
+ */
 void partition(int * A, int l, int r, int *i, int *j, sortperf_t *s) {
   int p = A[(l + r) / 2]; // obtem o pivo p
       *i = l;
@@ -262,7 +308,14 @@ void partition(int * A, int l, int r, int *i, int *j, sortperf_t *s) {
   
 }
 
-// standard quicksort
+/**
+ * @brief Sorts an array using the Quick Sort algorithm.
+ * 
+ * @param A The array to be sorted.
+ * @param l The starting index of the subarray.
+ * @param r The ending index of the subarray.
+ * @param s The performance metrics structure.
+ */
 void quickSort(int * A, int l, int r, sortperf_t *s) { 
   int i, j;
   if (l < r) {
@@ -272,7 +325,14 @@ void quickSort(int * A, int l, int r, sortperf_t *s) {
   }
 }
 
-// quicksort with median of 3
+/**
+ * @brief Sorts an array using the Quick Sort algorithm with median of three partitioning.
+ * 
+ * @param A The array to be sorted.
+ * @param l The starting index of the subarray.
+ * @param r The ending index of the subarray.
+ * @param s The performance metrics structure.
+ */
 void quickSort3(int * A, int l, int r, sortperf_t *s) { 
   int i, j;
   if (l < r) {
@@ -282,7 +342,14 @@ void quickSort3(int * A, int l, int r, sortperf_t *s) {
   }
 }
 
-// quicksort with insertion for small partitions
+/**
+ * @brief Sorts an array using the Quick Sort algorithm with insertion sort for small partitions.
+ * 
+ * @param A The array to be sorted.
+ * @param l The starting index of the subarray.
+ * @param r The ending index of the subarray.
+ * @param s The performance metrics structure.
+ */
 void quickSortIns(int * A, int l, int r, sortperf_t *s) { 
   if (r - l <= 10) {
     insertionSort(A, l, r, s);
@@ -294,7 +361,14 @@ void quickSortIns(int * A, int l, int r, sortperf_t *s) {
   }
 }
 
-// quicksort with insertion for small partitions and median of 3
+/**
+ * @brief Sorts an array using the Quick Sort algorithm with median of three partitioning and insertion sort for small partitions.
+ * 
+ * @param A The array to be sorted.
+ * @param l The starting index of the subarray.
+ * @param r The ending index of the subarray.
+ * @param s The performance metrics structure.
+ */
 void quickSort3Ins(int * A, int l, int r, sortperf_t *s) { 
   if (r - l <= 10) {
     insertionSort(A, l, r, s);
@@ -449,6 +523,8 @@ int main (int argc, char ** argv){
 
   printsortperf(&s,buf,pref);
   printf("%s\n",buf);
+
+  retp++;
 
   exit(0);
 }
