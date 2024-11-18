@@ -39,6 +39,9 @@ debug: $(EXE)
 run: $(EXE)
 	./$(EXE)
 
+memtest: $(EXE)
+	valgrind --leak-check=full ./$(EXE)
+
 # Clean build artifacts
 clean:
 	rm -f $(BINDIR)/* $(OBJDIR)/* $(LOGDIR)/*
