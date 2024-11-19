@@ -3,12 +3,14 @@
 
 int main(int argc, char** argv){
   int i;
-  int *a;
+  int a[10];
 
   for (i=0; i < 10; i++){
-    a = malloc(sizeof(int) * 100);
+    a[i] = malloc(sizeof(int) * 100);
   }
-  free(a);
+  for (i=0; i < 10; i++){
+    free(a[i]);
+  }
   return 0;
 }
 
