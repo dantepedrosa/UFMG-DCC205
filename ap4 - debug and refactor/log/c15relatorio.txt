@@ -10,6 +10,8 @@ Solução:
 
 A inicialização foi retirada do loop, deixando apenas a parte de incrementar.
 
+* Observação: o arquivo original gerado pelo comando script foi perdido. Foi portanto colocado o histórico de comandos do terminal como substituto.
+
 #======================================================================================
 #===================================== SCRIPT =========================================
 #======================================================================================

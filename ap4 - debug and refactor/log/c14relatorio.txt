@@ -4,11 +4,13 @@
 
 Problema:
 
-
+A variável fact não estava inicializada, sendo utilizada com valores aleartórios que estavam na memória.
 
 Solução:
 
+A variável deve ser inicializada antes do cálculo de fatorial com valor de 1, para que possa ser calculado.
 
+* Observação: o arquivo original gerado pelo comando script foi perdido. Foi portanto colocado o histórico de comandos do terminal como substituto.
 
 #======================================================================================
 #===================================== SCRIPT =========================================
