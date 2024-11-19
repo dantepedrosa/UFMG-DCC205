@@ -1,0 +1,114 @@
+#======================================================================================
+#=================================== RELATÓRIO ========================================
+#======================================================================================
+
+
+
+
+
+#======================================================================================
+#===================================== SCRIPT =========================================
+#======================================================================================
+
+dante@penguin:~/UFMG/UFMG-DCC205/ap4 - debug and refactor$ script log/c14rela
+torio.txt
+Script started, output log file is 'log/c14relatorio.txt'.
+dante@penguin:~/UFMG/UFMG-DCC205/ap4 - debug and refactor$ make memtest SRC=src/c13.c
+valgrind --leak-check=full ./bin/c13
+==4758== Memcheck, a memory error detector
+==4758== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
+==4758== Using Valgrind-3.19.0 and LibVEX; rerun with -h for copyright info
+==4758== Command: ./bin/c13
+==4758== 
+==4758== 
+==4758== HEAP SUMMARY:
+==4758==     in use at exit: 0 bytes in 0 blocks
+==4758==   total heap usage: 3 allocs, 3 frees, 47 bytes allocated
+==4758== 
+==4758== All heap blocks were freed -- no leaks are possible
+==4758== 
+==4758== For lists of detected and suppressed errors, rerun with: -s
+==4758== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+dante@penguin:~/UFMG/UFMG-DCC205/ap4 - debug and refactor$ make run SRC=src/c
+13.c
+./bin/c13
+dante@penguin:~/UFMG/UFMG-DCC205/ap4 - debug and refactor$ make run SRC=src/c13.c
+./bin/c13
+dante@penguin:~/UFMG/UFMG-DCC205/ap4 - debug and refactor$ make memtest SRC=src/c14.c
+gcc -g -Wall -Wextra -Iinclude -c src/c14.c -o obj/c14.o
+gcc -g -Wall -Wextra -Iinclude -o bin/c14 obj/c14.o
+valgrind --leak-check=full ./bin/c14
+==4914== Memcheck, a memory error detector
+==4914== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
+==4914== Using Valgrind-3.19.0 and LibVEX; rerun with -h for copyright info
+==4914== Command: ./bin/c14
+==4914== 
+Positive integer:6
+==4914== Conditional jump or move depends on uninitialised value(s)
+==4914==    at 0x4916680: __vfprintf_internal (vfprintf-process-arg.c:58)
+==4914==    by 0x490CD43: printf (printf.c:33)
+==4914==    by 0x10884B: main (c14.c:12)
+==4914== 
+==4914== Use of uninitialised value of size 8
+==4914==    at 0x490C140: _itoa_word (_itoa.c:177)
+==4914==    by 0x4915B2F: __vfprintf_internal (vfprintf-process-arg.c:164)
+==4914==    by 0x490CD43: printf (printf.c:33)
+==4914==    by 0x10884B: main (c14.c:12)
+==4914== 
+==4914== Conditional jump or move depends on uninitialised value(s)
+==4914==    at 0x490C14C: _itoa_word (_itoa.c:177)
+==4914==    by 0x4915B2F: __vfprintf_internal (vfprintf-process-arg.c:164)
+==4914==    by 0x490CD43: printf (printf.c:33)
+==4914==    by 0x10884B: main (c14.c:12)
+==4914== 
+==4914== Conditional jump or move depends on uninitialised value(s)
+==4914==    at 0x4915B8C: __vfprintf_internal (vfprintf-process-arg.c:174)
+==4914==    by 0x490CD43: printf (printf.c:33)
+==4914==    by 0x10884B: main (c14.c:12)
+==4914== 
+Factorial 6 = 0
+==4914== 
+==4914== HEAP SUMMARY:
+==4914==     in use at exit: 0 bytes in 0 blocks
+==4914==   total heap usage: 2 allocs, 2 frees, 2,048 bytes allocated
+==4914== 
+==4914== All heap blocks were freed -- no leaks are possible
+==4914== 
+==4914== Use --track-origins=yes to see where uninitialised values come from
+==4914== For lists of detected and suppressed errors, rerun with: -s
+==4914== ERROR SUMMARY: 4 errors from 4 contexts (suppressed: 0 from 0)
+dante@penguin:~/UFMG/UFMG-DCC205/ap4 - debug and refactor$ make run SRC=src/c14.c
+./bin/c14
+Positive integer:6
+Factorial 6 = 23040
+dante@penguin:~/UFMG/UFMG-DCC205/ap4 - debug and refactor$ make run SRC=src/c14.c
+gcc -g -Wall -Wextra -Iinclude -c src/c14.c -o obj/c14.o
+gcc -g -Wall -Wextra -Iinclude -o bin/c14 obj/c14.o
+./bin/c14
+Positive integer:3
+Factorial 3 = 6
+dante@penguin:~/UFMG/UFMG-DCC205/ap4 - debug and refactor$ make run SRC=src/c14.c
+./bin/c14
+Positive integer:5
+Factorial 5 = 120
+dante@penguin:~/UFMG/UFMG-DCC205/ap4 - debug and refactor$ make memtest SRC=src/c14.c
+valgrind --leak-check=full ./bin/c14
+==5255== Memcheck, a memory error detector
+==5255== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
+==5255== Using Valgrind-3.19.0 and LibVEX; rerun with -h for copyright info
+==5255== Command: ./bin/c14
+==5255== 
+Positive integer:5
+Factorial 5 = 120
+==5255== 
+==5255== HEAP SUMMARY:
+==5255==     in use at exit: 0 bytes in 0 blocks
+==5255==   total heap usage: 2 allocs, 2 frees, 2,048 bytes allocated
+==5255== 
+==5255== All heap blocks were freed -- no leaks are possible
+==5255== 
+==5255== For lists of detected and suppressed errors, rerun with: -s
+==5255== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+dante@penguin:~/UFMG/UFMG-DCC205/ap4 - debug and refactor$ exit
+exit
+Script done.
