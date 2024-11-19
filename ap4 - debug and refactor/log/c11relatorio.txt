@@ -4,11 +4,13 @@
 
 Problema:
 
-
+Foram encontrados 2 problemas:
+1- O espaço definido para o vetor msg não foi suficiente para a finalidade do problema;
+2- O espaço alocado para o vetor msg nunca foi liberado.
 
 Solução:
 
-
+O espaço foi redefinido para 10 endereços (9 caracteres + final da string) e após a utilização o espaço foi liberado pela função "free".
 
 #======================================================================================
 #===================================== SCRIPT =========================================
