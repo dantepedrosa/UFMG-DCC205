@@ -1,8 +1,33 @@
+#======================================================================================
+#=================================== RELATÓRIO ========================================
+#======================================================================================
+
+Problema:
+
+
+
+Solução:
+
+
+
+#======================================================================================
+#===================================== SCRIPT =========================================
+#======================================================================================
+
 Script started on 2024-11-18 20:18:31-03:00 [TERM="xterm-256color" TTY="/dev/pts/1" COLUMNS="92" LINES="10"]
-[?2004h]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ script teste--helpcd ap4\ -\ debug\ and\ refactor/[12Psudo apt install gccgit config --global user.email dantepedrosa@gmail.com[A]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cname "Dan[C[C[8P Pedrosa"[A]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[C[C[C[C[C[C[C[Ch[K
-[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Ct[C[C[C[3P--helpusernamvalgrind --version[7Pgit usernam[1P--helpconfit -hg[C[C[C-global user.name "Dante Pedrosa"[A]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cemail dan[C[Cpedrosa@gmail.com[A]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [13Psudo apt install gcc
-[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Ccd ap4\ -\ debug\ and\ refactor/[19Pscript --help[1Pteste[Kmake c1[K[Ksrc/fix[K[K[K[K]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ make src/Ssrc/Rsrc/Csrc/=src/[C[C[C[Cc1.c
-[?2004lgcc -g -Wall -Wextra -Iinclude -c src/c1.c -o obj/c1.o
+[?2004h]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ script teste--helpcd ap4\ -\ debug\ and\ refactor/[12Psudo apt install gccgit config --global user.email dantepedrosa@gmail.com[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cname "Dan[C[C[8P Pedrosa"[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[C[C[C[C[C[C[C[Ch[K
+
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Ct[C[C[C[3P--helpusernamvalgrind --version[7Pgit usernam[1P--helpconfit -hg[C[C[C-global user.name "Dante Pedrosa"[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cemail dan[C[Cpedrosa@gmail.com[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [13Psudo apt install gcc
+
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Ccd ap4\ -\ debug\ and\ refactor/[19Pscript --help[1Pteste[Kmake c1[K[Ksrc/fix[K[K[K
+[K
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ make src/Ssrc/Rsrc/Csrc/=src/[C[C[C[Cc1.c
+[?2004l
+gcc -g -Wall -Wextra -Iinclude -c src/c1.c -o obj/c1.o
 [01m[Ksrc/c1.c:[m[K In function ‘[01m[Kmain[m[K’:
 [01m[Ksrc/c1.c:4:14:[m[K [01;35m[Kwarning: [m[Kunused parameter ‘[01m[Kargc[m[K’ [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wunused-parameter-Wunused-parameter]8;;[m[K]
     4 | int main([01;35m[Kint argc[m[K, char** argv){
@@ -11,9 +36,19 @@ Script started on 2024-11-18 20:18:31-03:00 [TERM="xterm-256color" TTY="/dev/pts
     4 | int main(int argc, [01;35m[Kchar** argv[m[K){
       |                    [01;35m[K~~~~~~~^~~~[m[K
 gcc -g -Wall -Wextra -Iinclude -o bin/c1 obj/c1.o
-[?2004h]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ debug[K[K[K[K[Kmake v[Kmemtest [K c[KSRC=src/c1.c[C SRC=src/c1.c [A]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[Cm SRC=src/c1.c[A]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[C[Ce SRC=src/c1.c[A]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[C[C[Cm SRC=src/c1.c[A]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[C[C[C[Ct SRC=src/c1.c[A]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[C[C[C[C[Ce SRC=src/c1.c[A]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[C[C[C[C[C[Cs SRC=src/c1.c[A]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[C[C[C[C[C[C[Ct SRC=src/c1.c[A]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[C[C[C[C[C[C[C[C
-
-[?2004lvalgrind --leak-check=full ./bin/c1
+[?2004h]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ debug[K[K[K[K[Kmake v[Kmemtest [K c[KSRC=src/c1.c[C SRC=src/c1.c [A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[Cm SRC=src/c1.c[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[C[Ce SRC=src/c1.c[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[C[C[Cm SRC=src/c1.c[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[C[C[C[Ct SRC=src/c1.c[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[C[C[C[C[Ce SRC=src/c1.c[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[C[C[C[C[C[Cs SRC=src/c1.c[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[C[C[C[C[C[C[Ct SRC=src/c1.c[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[C[C[C[C[C[C[C[C
+
+
+[?2004l
+valgrind --leak-check=full ./bin/c1
 ==7647== Memcheck, a memory error detector
 ==7647== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
 ==7647== Using Valgrind-3.19.0 and LibVEX; rerun with -h for copyright info
@@ -34,9 +69,12 @@ gcc -g -Wall -Wextra -Iinclude -o bin/c1 obj/c1.o
 ==7647== 
 ==7647== For lists of detected and suppressed errors, rerun with: -s
 ==7647== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
-[?2004h]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ make memtest SRC=src/c1.c[A]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[C[1PSRC=src/c1.c
-[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C
-[?2004lgcc -g -Wall -Wextra -Iinclude -c src/c1.c -o obj/c1.o
+[?2004h]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ make memtest SRC=src/c1.c[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[C[1PSRC=src/c1.c
+
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C
+[?2004l
+gcc -g -Wall -Wextra -Iinclude -c src/c1.c -o obj/c1.o
 [01m[Ksrc/c1.c:[m[K In function ‘[01m[Kmain[m[K’:
 [01m[Ksrc/c1.c:4:14:[m[K [01;35m[Kwarning: [m[Kunused parameter ‘[01m[Kargc[m[K’ [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wunused-parameter-Wunused-parameter]8;;[m[K]
     4 | int main([01;35m[Kint argc[m[K, char** argv){
@@ -46,7 +84,8 @@ gcc -g -Wall -Wextra -Iinclude -o bin/c1 obj/c1.o
       |                    [01;35m[K~~~~~~~^~~~[m[K
 gcc -g -Wall -Wextra -Iinclude -o bin/c1 obj/c1.o
 [?2004h]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ make SRC=src/c1.cmemtest SRC=src/c1.c
-[?2004lvalgrind --leak-check=full ./bin/c1
+[?2004l
+valgrind --leak-check=full ./bin/c1
 ==7739== Memcheck, a memory error detector
 ==7739== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
 ==7739== Using Valgrind-3.19.0 and LibVEX; rerun with -h for copyright info
@@ -62,6 +101,7 @@ gcc -g -Wall -Wextra -Iinclude -o bin/c1 obj/c1.o
 ==7739== For lists of detected and suppressed errors, rerun with: -s
 ==7739== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
 [?2004h]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ exit
-[?2004lexit
+[?2004l
+exit
 
 Script done on 2024-11-18 20:21:40-03:00 [COMMAND_EXIT_CODE="0"]

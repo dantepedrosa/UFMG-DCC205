@@ -2,9 +2,13 @@
 #=================================== RELATÓRIO ========================================
 #======================================================================================
 
+Problema:
 
+Foi identificado que para cada vez que o loop rodava a variável a era inicializada.
 
+Solução:
 
+A inicialização foi retirada do loop, deixando apenas a parte de incrementar.
 
 #======================================================================================
 #===================================== SCRIPT =========================================

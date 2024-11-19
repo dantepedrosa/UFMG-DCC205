@@ -1,7 +1,26 @@
+#======================================================================================
+#=================================== RELATÓRIO ========================================
+#======================================================================================
+
+Problema:
+
+
+
+Solução:
+
+
+
+#======================================================================================
+#===================================== SCRIPT =========================================
+#======================================================================================
+
 Script started on 2024-11-19 18:39:41-03:00 [TERM="xterm-256color" TTY="/dev/pts/1" COLUMNS="77" LINES="7"]
-[?2004h]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ exitmake memtest SRC=src/c12.c[A]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ exit[K
-[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Kexitmake memtest SRC=src/c12.c[C\.c[1P.c[1P.c3.c
-[?2004lgcc -g -Wall -Wextra -Iinclude -c src/c13.c -o obj/c13.o
+[?2004h]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ exitmake memtest SRC=src/c12.c[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ exit[K
+
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Kexitmake memtest SRC=src/c12.c[C\.c[1P.c[1P.c3.c
+[?2004l
+gcc -g -Wall -Wextra -Iinclude -c src/c13.c -o obj/c13.o
 gcc -g -Wall -Wextra -Iinclude -o bin/c13 obj/c13.o
 valgrind --leak-check=full ./bin/c13
 ==4341== Memcheck, a memory error detector
@@ -32,7 +51,8 @@ valgrind --leak-check=full ./bin/c13
 ==4341== For lists of detected and suppressed errors, rerun with: -s
 ==4341== ERROR SUMMARY: 2 errors from 2 contexts (suppressed: 0 from 0)
 [?2004h]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ make memtest SRC=src/c13.c
-[?2004lgcc -g -Wall -Wextra -Iinclude -c src/c13.c -o obj/c13.o
+[?2004l
+gcc -g -Wall -Wextra -Iinclude -c src/c13.c -o obj/c13.o
 gcc -g -Wall -Wextra -Iinclude -o bin/c13 obj/c13.o
 valgrind --leak-check=full ./bin/c13
 ==4440== Memcheck, a memory error detector
@@ -59,7 +79,8 @@ valgrind --leak-check=full ./bin/c13
 ==4440== For lists of detected and suppressed errors, rerun with: -s
 ==4440== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
 [?2004h]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ make memtest SRC=src/c13.c
-[?2004lgcc -g -Wall -Wextra -Iinclude -c src/c13.c -o obj/c13.o
+[?2004l
+gcc -g -Wall -Wextra -Iinclude -c src/c13.c -o obj/c13.o
 gcc -g -Wall -Wextra -Iinclude -o bin/c13 obj/c13.o
 valgrind --leak-check=full ./bin/c13
 ==4517== Memcheck, a memory error detector
@@ -77,6 +98,7 @@ valgrind --leak-check=full ./bin/c13
 ==4517== For lists of detected and suppressed errors, rerun with: -s
 ==4517== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
 [?2004h]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ exit
-[?2004lexit
+[?2004l
+exit
 
 Script done on 2024-11-19 18:41:47-03:00 [COMMAND_EXIT_CODE="0"]

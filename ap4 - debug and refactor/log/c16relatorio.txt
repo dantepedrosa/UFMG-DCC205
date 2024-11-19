@@ -1,6 +1,20 @@
-RELATÓRIO
+#======================================================================================
+#=================================== RELATÓRIO ========================================
+#======================================================================================
 
-Foi identificado inicialmente que o programa realizava uma divisão por zero, e não tinha nenhuma função aparente. Foi portanto corrigido 
+Problema:
+
+Foi identificado inicialmente que o programa realizava uma divisão por zero, e não tinha nenhuma função aparente. 
+
+Solução:
+
+Foi portanto corrigido adicionando um condicional que detecta o erro e retorna o resultado esperado, mas tamb[em foi adicionada a funcionalizade de receber input do usuário e retornar o valor calculado.
+
+
+#======================================================================================
+#===================================== SCRIPT =========================================
+#======================================================================================
+
 
 Script started on 2024-11-19 19:12:29-03:00 [TERM="xterm-256color" TTY="/dev/pts/1" COLUMNS="77" LINES="7"]
 [?2004h]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ exitcho (./bin/c15 4) 
