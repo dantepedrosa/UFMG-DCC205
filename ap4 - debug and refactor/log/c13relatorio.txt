@@ -4,11 +4,11 @@
 
 Problema:
 
-
+Com o uso do valgrind, foi detectado que foram alocados memórias com início no endereço P mas nunca apagadas, antes de sua re-alocação.
 
 Solução:
 
-
+Liberar o espaço de memória préviamente alocado, antes de ser usado novamente.
 
 #======================================================================================
 #===================================== SCRIPT =========================================

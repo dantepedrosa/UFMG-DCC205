@@ -4,11 +4,11 @@
 
 Problema:
 
-
+O código nunca definiu um valor para a variável x, sendo aleartório quando será impresso a mensagem.
 
 Solução:
 
-
+A variável x foi colocada para receber um valor a ser inserido pelo usuário por meio do input do usuário.
 
 #======================================================================================
 #===================================== SCRIPT =========================================
