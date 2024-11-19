@@ -1,16 +1,17 @@
- #include <stdlib.h>
+#include <stdlib.h>
 
-void f(void) {
+void f(void)
+{
 
-int* x = malloc(10 * sizeof(int));
-x[10] = 0; 
+    int *x = malloc(10 * sizeof(int));
+    x[9] = 0;
+    free(x);
 }
 
-int main(void) {
+int main(void)
+{
 
-f();
+    f();
 
-return 0;
+    return 0;
 }
-
-
