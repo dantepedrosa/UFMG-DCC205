@@ -15,12 +15,14 @@ int sum_to_n(int num)
 void printSum()
 {
     char line[10];
+    char *buf = (char *)malloc(50);
     printf("enter a number:\n");
     fgets(line, 10, stdin);
     if(line != NULL) 
         strtok(line, "\n"); 
     sprintf(buf,"sum=%d",sum_to_n(atoi(line)));
     printf("%s\n",buf);
+    free(buf);
 }
 
 int main(void)
