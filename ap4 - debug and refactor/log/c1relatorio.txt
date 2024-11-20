@@ -4,11 +4,11 @@
 
 Problema:
 
-
+O loop de inicialização tentou inicializar memória que não foi préviamente alocada.
 
 Solução:
 
-
+O loop de inicialização teve seu tamanho decrementado para atender apenas ao espaço alocado pela função malloc.
 
 #======================================================================================
 #===================================== SCRIPT =========================================

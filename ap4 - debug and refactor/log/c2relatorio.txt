@@ -4,11 +4,11 @@
 
 Problema:
 
-
+O probrama tentou imprimir espaço de memória alocado, mas não inicializado.
 
 Solução:
 
-
+Foi incluída a inicialização do último espaço de memória por meio de mais uma iteração no loop for de inicialização.
 
 #======================================================================================
 #===================================== SCRIPT =========================================

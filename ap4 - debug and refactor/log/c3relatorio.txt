@@ -4,11 +4,12 @@
 
 Problema:
 
-
+O programa alocava diversos vetores dinâmicos dentro da mesma variável, gerando perda de informação e espaço alocado.
+Além disso, o programa liberou espaço apenas uma vez.
 
 Solução:
 
-
+Ao invés que guardar os endereços iniciais das alocações dinâmicas em uma variável, os endereços foram guardados em um vetor, permitindo acesso posteriormente para liberar todos os espaços alocados por meio de um loop.
 
 #======================================================================================
 #===================================== SCRIPT =========================================
