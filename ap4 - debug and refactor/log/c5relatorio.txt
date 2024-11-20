@@ -4,11 +4,11 @@
 
 Problema:
 
-
+A função não liberou os espaços de memória alocados no programa. 
 
 Solução:
 
-
+Incluído ao final do código a função "free" visando liberar o espaço alocado para o vetor intArray.
 
 #======================================================================================
 #===================================== SCRIPT =========================================

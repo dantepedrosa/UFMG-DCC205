@@ -4,11 +4,11 @@
 
 Problema:
 
-
+O vetor de origem não era grande o suficiente.
 
 Solução:
 
-
+Foi alterado o tamanho do vetor de origem para 27, ficando de acordo com o tamanho do destino e do loop
 
 #======================================================================================
 #===================================== SCRIPT =========================================

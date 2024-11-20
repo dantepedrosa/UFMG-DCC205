@@ -4,11 +4,11 @@
 
 Problema:
 
-
+O vetor, apesar de ter tamanho suficiente para receber todos os caracteres, necessidava de um espaço de memória a mais para receber o caracter de fim da string, gerando erro de acesso em memória não alocada.
 
 Solução:
 
-
+O tamanho do vetor alphabet foi incrementado em 1 espaço de memória.
 
 #======================================================================================
 #===================================== SCRIPT =========================================
