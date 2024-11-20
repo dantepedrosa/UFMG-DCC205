@@ -4,11 +4,13 @@
 
 Problema:
 
-
+Haviam 2 problemas:
+O programa tentou acessar uma posição de memória não alocada pelo malloc.
+Houve vazamento de memória.
 
 Solução:
 
-
+O programa foi corrigido para acessar a última memória alocada e após o uso, o espaço foi liberado.
 
 #======================================================================================
 #===================================== SCRIPT =========================================
