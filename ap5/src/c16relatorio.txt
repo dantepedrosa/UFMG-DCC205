@@ -1,0 +1,387 @@
+#======================================================================================
+#=================================== RELATÓRIO ========================================
+#======================================================================================
+
+Problema:
+
+Foi identificado inicialmente que o programa realizava uma divisão por zero, e não tinha nenhuma função aparente. 
+
+Solução:
+
+Foi portanto corrigido adicionando um condicional que detecta o erro e retorna o resultado esperado, mas tamb[em foi adicionada a funcionalizade de receber input do usuário e retornar o valor calculado.
+
+
+#======================================================================================
+#===================================== SCRIPT =========================================
+#======================================================================================
+
+
+Script started on 2024-11-19 19:12:29-03:00 [TERM="xterm-256color" TTY="/dev/pts/1" COLUMNS="77" LINES="7"]
+[?2004h]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ exitcho (./bin/c15 4) 
+[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cxit[K
+
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Kexitcho (./bin/c15 4) 
+[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[2P./bin/c15 4
+
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[5P[C[C[C[C[C[C[C[C[C[C[C[Kmake SRC=src/c15.c 
+[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cmemtest SRC=src/c15.c[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[CSRC=src/c15.c 
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cmemtest SRC=src/c15.c[C[1P.c6.c
+[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C SRC=src[1P/c16.c[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[C[C[C[C[C[C[C SRC=src/[1Pc16.c[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[C[C[C[C[C[C SRC=src/c[1P16.c[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[C[C[C[C[C SRC=src/c1[1P6.c[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[C[C[C[C SRC=src/c16[1P.c[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[C[C[C SRC=src/c16.[1Pc[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[C[C SRC=src/c16.c[K[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[Cr SRC=src/c16.c[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[C[Cu SRC=src/c16.c[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[C[C[Cn SRC=src/c16.c[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[C[C[C[C
+
+
+[?2004l
+gcc -g -Wall -Wextra -Iinclude -c src/c16.c -o obj/c16.o
+[01m[Ksrc/c16.c:[m[K In function ‘[01m[Kactual_calc[m[K’:
+[01m[Ksrc/c16.c:5:7:[m[K [01;35m[Kwarning: [m[Kvariable ‘[01m[Kc[m[K’ set but not used [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wunused-but-set-variable-Wunused-but-set-variable]8;;[m[K]
+    5 |   int [01;35m[Kc[m[K;
+      |       [01;35m[K^[m[K
+gcc -g -Wall -Wextra -Iinclude -o bin/c16 obj/c16.o
+./bin/c16
+[?2004h]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ make run SRC=src/c16.c[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ exit[K
+
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cmake run SRC=src/c16.c[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [K
+
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cmake run SRC=src/c16.c[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ exit[K
+
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Ccho (./bin/c15 4) 
+[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[2P./bin/c15 4
+
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[5P[C[C[C[C[C[C[C[C[C[C[C[5@echo [C[C[C[C[C[C[C[C[C[C[C(./bin/c15 4) 
+[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cxit[K
+
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cmake run SRC=src/c16.c[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ exit[K
+
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cmake run SRC=src/c16.c[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [K
+
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cmake run SRC=src/c16.c
+[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C SRC=src/c16[1P.c[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[C[C[C SRC=src/c16.[1Pc[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[C[C SRC=src/c16.c[K[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[Cm SRC=src/c16.c[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[C[Ce SRC=src/c16.c[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[C[C[Cm SRC=src/c16.c[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[C[C[C[Ct SRC=src/c16.c[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[C[C[C[C[Ce SRC=src/c16.c[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[C[C[C[C[C[Cs SRC=src/c16.c[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[C[C[C[C[C[C[Ct SRC=src/c16.c[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[C[C[C[C[C[C[C[C
+
+
+[?2004l
+valgrind --leak-check=full ./bin/c16
+==7764== Memcheck, a memory error detector
+==7764== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
+==7764== Using Valgrind-3.19.0 and LibVEX; rerun with -h for copyright info
+==7764== Command: ./bin/c16
+==7764== 
+==7764== 
+==7764== HEAP SUMMARY:
+==7764==     in use at exit: 0 bytes in 0 blocks
+==7764==   total heap usage: 0 allocs, 0 frees, 0 bytes allocated
+==7764== 
+==7764== All heap blocks were freed -- no leaks are possible
+==7764== 
+==7764== For lists of detected and suppressed errors, rerun with: -s
+==7764== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+[?2004h]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ make memtest SRC=src/c16.c[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[Crun SRC=src/c1[4P6.c
+[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C SRC=src/c16[1P.c[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[C[C[C SRC=src/c16.[1Pc[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[C[C SRC=src/c16.c[K[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[Cd SRC=src/c16.c[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[C[Ce SRC=src/c16.c[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[C[C[Cb SRC=src/c16.c[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[C[C[C[Cu SRC=src/c16.c[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[C[C[C[C[Cg SRC=src/c16.c[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[C[C[C[C[C[C
+
+
+[?2004l
+gdb ./bin/c16
+[35;1mGNU gdb (Debian 13.1-3) 13.1[m
+Copyright (C) 2023 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <[32mhttp://gnu.org/licenses/gpl.html[m>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+[?2004h--Type <RET> for more, q to quit, c to continue without paging--
+[?2004l
+Type "show copying" and "show warranty" for details.
+This GDB was configured as "aarch64-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+[32m<https://www.gnu.org/software/gdb/bugs/>[m.
+Find the GDB manual and other documentation resources online at:
+[?2004h--Type <RET> for more, q to quit, c to continue without paging--
+[?2004l
+    <[32mhttp://www.gnu.org/software/gdb/documentation/[m>.
+
+For help, type "help".
+Type "apropos word" to search for commands related to "word"...
+Reading symbols from [32m./bin/c16[m...
+[?2004h(gdb) break 7
+[?2004l
+Breakpoint 1 at [34m0x730[m: file [32msrc/c16.c[m, line 7.
+[?2004h(gdb) c
+[?2004l
+The program is not being run.
+[?2004h(gdb) run
+[?2004l
+Starting program: [32m/home/dante/UFMG/UFMG-DCC205/ap4 - debug and refactor/bin/c16[m 
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "[32m/lib/aarch64-linux-gnu/libthread_db.so.1[m".
+
+Breakpoint 1, [33mactual_calc[m ([36ma[m=13, [36mb[m=0) at [32msrc/c16.c[m:7
+7	  [01;34mreturn[m [35m0[m[31m;[m
+[?2004h[?2004l
+[?2004h(gdb) print c
+[?2004l
+$1 = 0
+[?2004h(gdb) print a
+[?2004l
+$2 = 13
+[?2004h(gdb) print b
+[?2004l
+$3 = 0
+[?2004h(gdb) print a/b
+[?2004l
+Division by zero
+[?2004h(gdb) print c
+[?2004l
+$4 = 0
+[?2004h(gdb) Quit
+[?2004l
+[?2004h(gdb) q
+[?2004l
+[?2004hA debugging session is active.
+
+	Inferior 1 [process 8135] will be killed.
+
+Quit anyway? (y or n) y
+[?2004l
+
+[?2004h]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ make debug SRC=src/c16.c[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[Cmemtest SRC=sr[C/c16.c[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[Crun SRC=src/c1[4P6.c
+[?2004l
+gcc -g -Wall -Wextra -Iinclude -c src/c16.c -o obj/c16.o
+[01m[Ksrc/c16.c:[m[K In function ‘[01m[Kcalc[m[K’:
+[01m[Ksrc/c16.c:17:22:[m[K [01;31m[Kerror: [m[Kexpected expression before ‘[01m[K%[m[K’ token
+   17 |   scanf("%d %d", &a, [01;31m[K%[m[Kb);
+      |                      [01;31m[K^[m[K
+make: *** [Makefile:28: obj/c16.o] Error 1
+[?2004h]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ make run SRC=src/c16.c
+[?2004l
+gcc -g -Wall -Wextra -Iinclude -c src/c16.c -o obj/c16.o
+gcc -g -Wall -Wextra -Iinclude -o bin/c16 obj/c16.o
+./bin/c16
+4 3
+make: *** [Makefile:40: run] Error 1
+[?2004h]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ make run SRC=src/c16.c[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[Cdebug SRC=src/c16.c[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[Cmemtest SRC=sr[C/c16.c[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[Crun SRC=src/c1[4P6.c[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ exit[K
+
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cmake run SRC=src/c16.c[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[Cmemtest SRC=src/c16.c[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[Cdebug SRC=src/[C[2P16.c[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[Crun SRC=src/c1[2P6.c[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [K
+
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cmake run SRC=src/c16.c
+[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C SRC=src/c16[1P.c[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[C[C[C SRC=src/c16.[1Pc[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[C[C SRC=src/c16.c[K[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[CSRC=src/c16.c 
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C
+
+[?2004l
+make: Nothing to be done for 'all'.
+[?2004h]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ ./[K[K./bin/c1[K16
+[?2004l
+3 16 4
+[?2004h]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ ./bin/c16make SRC=src/c16.c 
+[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Crun SRC=src/c16.c[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[Cdebug SRC=src/c16.c
+[?2004l
+gdb ./bin/c16
+[35;1mGNU gdb (Debian 13.1-3) 13.1[m
+Copyright (C) 2023 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <[32mhttp://gnu.org/licenses/gpl.html[m>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+[?2004h--Type <RET> for more, q to quit, c to continue without paging--
+[?2004l
+Type "show copying" and "show warranty" for details.
+This GDB was configured as "aarch64-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+[32m<https://www.gnu.org/software/gdb/bugs/>[m.
+Find the GDB manual and other documentation resources online at:
+[?2004h--Type <RET> for more, q to quit, c to continue without paging--
+[?2004l
+    <[32mhttp://www.gnu.org/software/gdb/documentation/[m>.
+
+For help, type "help".
+Type "apropos word" to search for commands related to "word"...
+Reading symbols from [32m./bin/c16[m...
+[?2004h(gdb) break 11
+[?2004l
+Breakpoint 1 at [34m0x814[m: file [32msrc/c16.c[m, line 11.
+[?2004h(gdb) c
+[?2004l
+The program is not being run.
+[?2004h(gdb) run
+[?2004l
+Starting program: [32m/home/dante/UFMG/UFMG-DCC205/ap4 - debug and refactor/bin/c16[m 
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "[32m/lib/aarch64-linux-gnu/libthread_db.so.1[m".
+print c
+
+Breakpoint 1, [33mactual_calc[m ([36ma[m=127, [36mb[m=-136153344) at [32msrc/c16.c[m:11
+11	  [01;34mreturn[m c[31m;[m
+[?2004h[?2004l
+[?2004h(gdb) Quit
+[?2004l
+[?2004h(gdb) print c
+[?2004l
+$1 = 0
+[?2004h(gdb) q
+[?2004l
+[?2004hA debugging session is active.
+
+	Inferior 1 [process 9123] will be killed.
+
+Quit anyway? (y or n) y
+[?2004l
+
+[?2004h]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ make debug SRC=src/c16.c
+[?2004l
+gdb ./bin/c16
+[35;1mGNU gdb (Debian 13.1-3) 13.1[m
+Copyright (C) 2023 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <[32mhttp://gnu.org/licenses/gpl.html[m>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+[?2004h--Type <RET> for more, q to quit, c to continue without paging--
+[?2004l
+Type "show copying" and "show warranty" for details.
+This GDB was configured as "aarch64-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+[32m<https://www.gnu.org/software/gdb/bugs/>[m.
+Find the GDB manual and other documentation resources online at:
+[?2004h--Type <RET> for more, q to quit, c to continue without paging--
+[?2004l
+    <[32mhttp://www.gnu.org/software/gdb/documentation/[m>.
+
+For help, type "help".
+Type "apropos word" to search for commands related to "word"...
+Reading symbols from [32m./bin/c16[m...
+[?2004h(gdb) break 11
+[?2004l
+Breakpoint 1 at [34m0x814[m: file [32msrc/c16.c[m, line 11.
+[?2004h(gdb) run
+[?2004l
+Starting program: [32m/home/dante/UFMG/UFMG-DCC205/ap4 - debug and refactor/bin/c16[m 
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "[32m/lib/aarch64-linux-gnu/libthread_db.so.1[m".
+1 15 6 4
+
+Breakpoint 1, [33mactual_calc[m ([36ma[m=16, [36mb[m=4) at [32msrc/c16.c[m:11
+11	  [01;34mreturn[m c[31m;[m
+[?2004h[?2004l
+[?2004h(gdb) print c
+[?2004l
+$1 = 4
+[?2004h(gdb) r
+[?2004l
+[?2004hThe program being debugged has been started already.
+Start it from the beginning? (y or n) y
+[?2004l
+Starting program: [32m/home/dante/UFMG/UFMG-DCC205/ap4 - debug and refactor/bin/c16[m 
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "[32m/lib/aarch64-linux-gnu/libthread_db.so.1[m".
+13 0
+Erro: divisão por zero
+[Inferior 1 (process 9527) exited normally]
+[?2004h[?2004l
+[?2004h(gdb) c
+[?2004l
+The program is not being run.
+[?2004h(gdb) e[Kq
+[?2004l
+[?2004h]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ c[Kex[K[Kmake debug SRC=src/c16.c
+[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C SRC=src/c[1P16.c[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[C[C[C[C[C SRC=src/c1[1P6.c[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[C[C[C[C SRC=src/c16[1P.c[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[C[C[C SRC=src/c16.[1Pc[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[C[C SRC=src/c16.c[K[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[Cm SRC=src/c16.c[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[C[Ce SRC=src/c16.c[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[C[C[Cm SRC=src/c16.c[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[C[C[C[Ct SRC=src/c16.c[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[C[C[C[C[Ce SRC=src/c16.c[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[C[C[C[C[C[Cs SRC=src/c16.c[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[C[C[C[C[C[C[Ct SRC=src/c16.c[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[C[C[C[C[C[C[C[C
+
+
+[?2004l
+valgrind --leak-check=full ./bin/c16
+==9719== Memcheck, a memory error detector
+==9719== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
+==9719== Using Valgrind-3.19.0 and LibVEX; rerun with -h for copyright info
+==9719== Command: ./bin/c16
+==9719== 
+13 0
+Erro: divisão por zero
+==9719== 
+==9719== HEAP SUMMARY:
+==9719==     in use at exit: 0 bytes in 0 blocks
+==9719==   total heap usage: 2 allocs, 2 frees, 2,048 bytes allocated
+==9719== 
+==9719== All heap blocks were freed -- no leaks are possible
+==9719== 
+==9719== For lists of detected and suppressed errors, rerun with: -s
+==9719== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+[?2004h]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ make memtest SRC=src/c16.c
+[?2004l
+valgrind --leak-check=full ./bin/c16
+==9788== Memcheck, a memory error detector
+==9788== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
+==9788== Using Valgrind-3.19.0 and LibVEX; rerun with -h for copyright info
+==9788== Command: ./bin/c16
+==9788== 
+16 4
+==9788== 
+==9788== HEAP SUMMARY:
+==9788==     in use at exit: 0 bytes in 0 blocks
+==9788==   total heap usage: 1 allocs, 1 frees, 1,024 bytes allocated
+==9788== 
+==9788== All heap blocks were freed -- no leaks are possible
+==9788== 
+==9788== For lists of detected and suppressed errors, rerun with: -s
+==9788== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+make: *** [Makefile:43: memtest] Error 4
+[?2004h]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ exit
+[?2004l
+exit
+
+Script done on 2024-11-19 19:31:47-03:00 [COMMAND_EXIT_CODE="2"]

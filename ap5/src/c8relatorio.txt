@@ -1,0 +1,71 @@
+#======================================================================================
+#=================================== RELATÓRIO ========================================
+#======================================================================================
+
+Problema:
+
+O vetor de origem não era grande o suficiente.
+
+Solução:
+
+Foi alterado o tamanho do vetor de origem para 27, ficando de acordo com o tamanho do destino e do loop
+
+#======================================================================================
+#===================================== SCRIPT =========================================
+#======================================================================================
+
+Script started on 2024-11-19 18:21:01-03:00 [TERM="xterm-256color" TTY="/dev/pts/1" COLUMNS="77" LINES="7"]
+[?2004h]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ script log/c7relatorio.txt[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[C[C[C[C[C[C[C[C6relato[C[C[C[C[C[C[C[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ [C[C[C[C[C[C[C[C[C[C[C[C5relato[C[C[C[C[C[C[C[A
+]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ exit[K
+
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cmake memtest SRC=src/c7.c[C[1P.c8.c
+[?2004l
+gcc -g -Wall -Wextra -Iinclude -c src/c8.c -o obj/c8.o
+gcc -g -Wall -Wextra -Iinclude -o bin/c8 obj/c8.o
+valgrind --leak-check=full ./bin/c8
+==1162== Memcheck, a memory error detector
+==1162== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
+==1162== Using Valgrind-3.19.0 and LibVEX; rerun with -h for copyright info
+==1162== Command: ./bin/c8
+==1162== 
+==1162== Invalid read of size 1
+==1162==    at 0x108858: main (c8.c:9)
+==1162==  Address 0x4a6f0ba is 0 bytes after a block of size 26 alloc'd
+==1162==    at 0x48850C8: malloc (vg_replace_malloc.c:381)
+==1162==    by 0x108833: main (c8.c:6)
+==1162== 
+==1162== 
+==1162== HEAP SUMMARY:
+==1162==     in use at exit: 0 bytes in 0 blocks
+==1162==   total heap usage: 2 allocs, 2 frees, 53 bytes allocated
+==1162== 
+==1162== All heap blocks were freed -- no leaks are possible
+==1162== 
+==1162== For lists of detected and suppressed errors, rerun with: -s
+==1162== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
+[?2004h]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ make memtest SRC=src/c8.c
+[?2004l
+gcc -g -Wall -Wextra -Iinclude -c src/c8.c -o obj/c8.o
+gcc -g -Wall -Wextra -Iinclude -o bin/c8 obj/c8.o
+valgrind --leak-check=full ./bin/c8
+==1239== Memcheck, a memory error detector
+==1239== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
+==1239== Using Valgrind-3.19.0 and LibVEX; rerun with -h for copyright info
+==1239== Command: ./bin/c8
+==1239== 
+==1239== 
+==1239== HEAP SUMMARY:
+==1239==     in use at exit: 0 bytes in 0 blocks
+==1239==   total heap usage: 2 allocs, 2 frees, 54 bytes allocated
+==1239== 
+==1239== All heap blocks were freed -- no leaks are possible
+==1239== 
+==1239== For lists of detected and suppressed errors, rerun with: -s
+==1239== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+[?2004h]0;dante@penguin: ~/UFMG/UFMG-DCC205/ap4 - debug and refactor[01;32mdante@penguin[00m:[01;34m~/UFMG/UFMG-DCC205/ap4 - debug and refactor[00m$ exit
+[?2004l
+exit
+
+Script done on 2024-11-19 18:21:56-03:00 [COMMAND_EXIT_CODE="0"]
