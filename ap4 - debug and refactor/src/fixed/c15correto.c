@@ -6,10 +6,10 @@ int inc(int a) {
 }
 
 int main(int argc, char** argv) {
+  int a = 1;
   for(int i=1; i < 5; i++) {
-     int a = 1;
      a = inc(a);
   }
-
+  
   return argc;
 }
