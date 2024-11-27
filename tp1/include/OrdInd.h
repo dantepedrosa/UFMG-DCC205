@@ -6,11 +6,10 @@
 
 /**
  * @class OrdInd
- * @brief Classe para manipulação de ordenação indireta de registros.
+ * @brief Classe para manipulação da base de dados e índices de ordenação.
  * 
- * A classe permite carregar uma base de dados, realizar ordenação indireta
- * com base em diferentes atributos (Nome, CPF, Endereço) e imprimir os dados
- * na ordem definida pelos índices.
+ * Essa classe gerencia os registros, permitindo acesso à base e aos vetores de índices,
+ * sem implementar a lógica de ordenação diretamente.
  */
 class OrdInd {
 private:
@@ -18,15 +17,6 @@ private:
     std::vector<int> indicesNome;               ///< Vetor de índices para ordenação por Nome.
     std::vector<int> indicesCPF;                ///< Vetor de índices para ordenação por CPF.
     std::vector<int> indicesEndereco;           ///< Vetor de índices para ordenação por Endereço.
-
-    /**
-     * @brief Função de comparação genérica para ordenação de índices.
-     * @param i Índice do primeiro registro.
-     * @param j Índice do segundo registro.
-     * @param atributo Identificador do atributo a ser usado como chave de ordenação.
-     * @return true se o registro `i` for menor que o registro `j` para o atributo dado.
-     */
-    bool compara(int i, int j, int atributo) const;
 
 public:
     /**
@@ -44,34 +34,35 @@ public:
     bool carregaArquivo(const std::string &nomeEntrada);
 
     /**
-     * @brief Ordena os índices com base no atributo Nome.
+     * @brief Retorna o vetor de índices para o Nome.
+     * @return Referência ao vetor de índices.
      */
-    void ordenaPorNome();
+    std::vector<int> &getIndicesNome();
 
     /**
-     * @brief Ordena os índices com base no atributo CPF.
+     * @brief Retorna o vetor de índices para o CPF.
+     * @return Referência ao vetor de índices.
      */
-    void ordenaPorCPF();
+    std::vector<int> &getIndicesCPF();
 
     /**
-     * @brief Ordena os índices com base no atributo Endereço.
+     * @brief Retorna o vetor de índices para o Endereço.
+     * @return Referência ao vetor de índices.
      */
-    void ordenaPorEndereco();
+    std::vector<int> &getIndicesEndereco();
 
     /**
-     * @brief Imprime os registros na ordem definida pelo vetor de índices de Nome.
+     * @brief Acessa o dado correspondente ao índice e atributo.
+     * @param index Índice do registro.
+     * @param atributo Índice do atributo.
+     * @return Valor do atributo como string.
      */
-    void imprimePorNome();
+    const std::string &getDado(int index, int atributo) const;
 
     /**
-     * @brief Imprime os registros na ordem definida pelo vetor de índices de CPF.
+     * @brief Retorna o número total de registros.
      */
-    void imprimePorCPF();
-
-    /**
-     * @brief Imprime os registros na ordem definida pelo vetor de índices de Endereço.
-     */
-    void imprimePorEndereco();
+    int getNumRegistros() const;
 };
 
 #endif // ORDIND_H

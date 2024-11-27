@@ -1,7 +1,6 @@
 #include "OrdInd.h"
-#include <iostream>
 #include <fstream>
-#include <algorithm>
+#include <iostream>
 
 // Construtor
 OrdInd::OrdInd(int numRegistros, int numAtributos) {
@@ -18,12 +17,7 @@ OrdInd::OrdInd(int numRegistros, int numAtributos) {
     }
 }
 
-// Função de comparação genérica
-bool OrdInd::compara(int i, int j, int atributo) const {
-    return dados[i][atributo] < dados[j][atributo];
-}
-
-// Carrega os dados do arquivo .xcsv
+// Carrega os dados de um arquivo .xcsv
 bool OrdInd::carregaArquivo(const std::string &nomeEntrada) {
     std::ifstream arquivo(nomeEntrada);
     if (!arquivo.is_open()) return false;
@@ -49,53 +43,15 @@ bool OrdInd::carregaArquivo(const std::string &nomeEntrada) {
     return true;
 }
 
-// Ordena os índices por Nome
-void OrdInd::ordenaPorNome() {
-    std::sort(indicesNome.begin(), indicesNome.end(),
-              [this](int i, int j) { return compara(i, j, 0); });
+// Métodos de acesso aos índices
+std::vector<int> &OrdInd::getIndicesNome() { return indicesNome; }
+std::vector<int> &OrdInd::getIndicesCPF() { return indicesCPF; }
+std::vector<int> &OrdInd::getIndicesEndereco() { return indicesEndereco; }
+
+// Acessa o dado correspondente ao índice e atributo
+const std::string &OrdInd::getDado(int index, int atributo) const {
+    return dados[index][atributo];
 }
 
-// Ordena os índices por CPF
-void OrdInd::ordenaPorCPF() {
-    std::sort(indicesCPF.begin(), indicesCPF.end(),
-              [this](int i, int j) { return compara(i, j, 1); });
-}
-
-// Ordena os índices por Endereço
-void OrdInd::ordenaPorEndereco() {
-    std::sort(indicesEndereco.begin(), indicesEndereco.end(),
-              [this](int i, int j) { return compara(i, j, 2); });
-}
-
-// Imprime os registros na ordem de Nome
-void OrdInd::imprimePorNome() {
-    std::cout << "Ordenado por Nome:\n";
-    for (int idx : indicesNome) {
-        for (const auto &campo : dados[idx]) {
-            std::cout << campo << " ";
-        }
-        std::cout << std::endl;
-    }
-}
-
-// Imprime os registros na ordem de CPF
-void OrdInd::imprimePorCPF() {
-    std::cout << "Ordenado por CPF:\n";
-    for (int idx : indicesCPF) {
-        for (const auto &campo : dados[idx]) {
-            std::cout << campo << " ";
-        }
-        std::cout << std::endl;
-    }
-}
-
-// Imprime os registros na ordem de Endereço
-void OrdInd::imprimePorEndereco() {
-    std::cout << "Ordenado por Endereço:\n";
-    for (int idx : indicesEndereco) {
-        for (const auto &campo : dados[idx]) {
-            std::cout << campo << " ";
-        }
-        std::cout << std::endl;
-    }
-}
+// Retorna o número total de registros
+int OrdInd::getNumRegistros() const { return dados.size(); }
