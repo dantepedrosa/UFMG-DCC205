@@ -9,54 +9,46 @@ int main(int argc, char* argv[]) {
 }
 */
 
-
 #include "OrdInd.h"
-#include <algorithm>
+#include <iostream>
 
-/**
- * @brief Função de ordenação usando QuickSort.
- * @param indices Vetor de índices a ser ordenado.
- * @param ordind Objeto OrdInd contendo os dados.
- * @param atributo Índice do atributo para ordenação.
- */
-void quickSort(std::vector<int> &indices, OrdInd &ordind, int atributo) {
-    std::sort(indices.begin(), indices.end(), [&](int i, int j) {
-        return ordind.getDado(i, atributo) < ordind.getDado(j, atributo);
-    });
-}
+// Declaração das funções externas
+void quickSort(std::vector<int> &indices, OrdInd &ordind, int atributo);
+void bubbleSort(std::vector<int> &indices, OrdInd &ordind, int atributo);
+void selectionSort(std::vector<int> &indices, OrdInd &ordind, int atributo);
 
-/**
- * @brief Função de ordenação usando BubbleSort.
- * @param indices Vetor de índices a ser ordenado.
- * @param ordind Objeto OrdInd contendo os dados.
- * @param atributo Índice do atributo para ordenação.
- */
-void bubbleSort(std::vector<int> &indices, OrdInd &ordind, int atributo) {
-    for (size_t i = 0; i < indices.size() - 1; ++i) {
-        for (size_t j = 0; j < indices.size() - i - 1; ++j) {
-            if (ordind.getDado(indices[j], atributo) >
-                ordind.getDado(indices[j + 1], atributo)) {
-                std::swap(indices[j], indices[j + 1]);
-            }
-        }
+int main() {
+    int numRegistros = 5;
+    int numAtributos = 3;
+
+    // Instancia o objeto de dados
+    OrdInd organizador(numRegistros, numAtributos);
+
+    if (!organizador.carregaArquivo("entrada.xcsv")) {
+        std::cerr << "Erro ao carregar o arquivo." << std::endl;
+        return 1;
     }
-}
 
-/**
- * @brief Função de ordenação usando SelectionSort.
- * @param indices Vetor de índices a ser ordenado.
- * @param ordind Objeto OrdInd contendo os dados.
- * @param atributo Índice do atributo para ordenação.
- */
-void selectionSort(std::vector<int> &indices, OrdInd &ordind, int atributo) {
-    for (size_t i = 0; i < indices.size() - 1; ++i) {
-        size_t minIdx = i;
-        for (size_t j = i + 1; j < indices.size(); ++j) {
-            if (ordind.getDado(indices[j], atributo) <
-                ordind.getDado(indices[minIdx], atributo)) {
-                minIdx = j;
-            }
-        }
-        std::swap(indices[i], indices[minIdx]);
+    // Ordena usando QuickSort
+    quickSort(organizador.getIndicesNome(), organizador, 0);
+    std::cout << "Ordenado por Nome:\n";
+    for (int idx : organizador.getIndicesNome()) {
+        std::cout << organizador.getDado(idx, 0) << "\n";
     }
+
+    // Ordena usando BubbleSort
+    bubbleSort(organizador.getIndicesCPF(), organizador, 1);
+    std::cout << "Ordenado por CPF:\n";
+    for (int idx : organizador.getIndicesCPF()) {
+        std::cout << organizador.getDado(idx, 1) << "\n";
+    }
+
+    // Ordena usando SelectionSort
+    selectionSort(organizador.getIndicesEndereco(), organizador, 2);
+    std::cout << "Ordenado por Endereço:\n";
+    for (int idx : organizador.getIndicesEndereco()) {
+        std::cout << organizador.getDado(idx, 2) << "\n";
+    }
+
+    return 0;
 }
