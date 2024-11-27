@@ -1,5 +1,4 @@
 #include "Matriz.h"
-#include <iostream>
 
 // Construtor
 Matriz::Matriz(int linhas, int colunas) {

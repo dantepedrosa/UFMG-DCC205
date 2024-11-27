@@ -106,3 +106,5 @@ void OrdInd::imprimeOrdenadoIndice(int atribid) {
         std::cout << std::endl;
     }
 }
+
+// TODO - Colocar getDados igual o GPT sugeriu
