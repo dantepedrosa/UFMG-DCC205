@@ -12,16 +12,9 @@ int main(int argc, char* argv[]) {
 #include "OrdInd.h"
 #include <iostream>
 
-// Declaração das funções externas
-void quickSort(std::vector<int> &indices, OrdInd &ordind, int atributo);
-void bubbleSort(std::vector<int> &indices, OrdInd &ordind, int atributo);
-void selectionSort(std::vector<int> &indices, OrdInd &ordind, int atributo);
-
 int main() {
-    int numRegistros = 5;
-    int numAtributos = 3;
+    int numRegistros = 5, numAtributos = 3;
 
-    // Instancia o objeto de dados
     OrdInd organizador(numRegistros, numAtributos);
 
     if (!organizador.carregaArquivo("entrada.xcsv")) {
@@ -29,26 +22,17 @@ int main() {
         return 1;
     }
 
-    // Ordena usando QuickSort
-    quickSort(organizador.getIndicesNome(), organizador, 0);
-    std::cout << "Ordenado por Nome:\n";
-    for (int idx : organizador.getIndicesNome()) {
-        std::cout << organizador.getDado(idx, 0) << "\n";
-    }
+    organizador.criaIndice(0); // Nome
+    organizador.ordenaIndice(0);
+    organizador.imprimeOrdenadoIndice(0);
 
-    // Ordena usando BubbleSort
-    bubbleSort(organizador.getIndicesCPF(), organizador, 1);
-    std::cout << "Ordenado por CPF:\n";
-    for (int idx : organizador.getIndicesCPF()) {
-        std::cout << organizador.getDado(idx, 1) << "\n";
-    }
+    organizador.criaIndice(1); // CPF
+    organizador.ordenaIndice(1);
+    organizador.imprimeOrdenadoIndice(1);
 
-    // Ordena usando SelectionSort
-    selectionSort(organizador.getIndicesEndereco(), organizador, 2);
-    std::cout << "Ordenado por Endereço:\n";
-    for (int idx : organizador.getIndicesEndereco()) {
-        std::cout << organizador.getDado(idx, 2) << "\n";
-    }
+    organizador.criaIndice(2); // Endereço
+    organizador.ordenaIndice(2);
+    organizador.imprimeOrdenadoIndice(2);
 
     return 0;
 }
