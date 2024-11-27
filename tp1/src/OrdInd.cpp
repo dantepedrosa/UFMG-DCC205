@@ -107,4 +107,18 @@ void OrdInd::imprimeOrdenadoIndice(int atribid) {
     }
 }
 
-// TODO - Colocar getDados igual o GPT sugeriu
+// Retorna o valor armazenado em uma célula da matriz
+const char *OrdInd::getDado(int linha, int coluna) const {
+    if (linha < 0 || linha >= dados->linhas || coluna < 0 || coluna >= dados->colunas) {
+        throw std::out_of_range("Índices fora dos limites da matriz.");
+    }
+    return dados->get(linha, coluna);
+}
+
+// Modifica o valor armazenado em uma célula da matriz
+void OrdInd::setDado(int linha, int coluna, const char *valor) {
+    if (linha < 0 || linha >= dados->linhas || coluna < 0 || coluna >= dados->colunas) {
+        throw std::out_of_range("Índices fora dos limites da matriz.");
+    }
+    dados->set(linha, coluna, valor);
+}

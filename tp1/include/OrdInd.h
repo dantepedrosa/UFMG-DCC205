@@ -22,6 +22,8 @@ public:
     void criaIndice(int atribid);
     void ordenaIndice(int atribid);
     void imprimeOrdenadoIndice(int atribid);
+    const char *getDado(int linha, int coluna) const;
+    void setDado(int linha, int coluna, const char *valor);
 };
 
 #endif // ORDIND_H

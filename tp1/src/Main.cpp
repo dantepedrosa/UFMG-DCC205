@@ -37,7 +37,7 @@ int main() {
         std::string campo;
         for (int coluna = 0; coluna < numColunas; coluna++) {
             std::getline(stream, campo, ',');
-            organizador.get->set(registroAtual, coluna, campo.c_str());
+            organizador.setDado(registroAtual, coluna, campo.c_str());
         }
         registroAtual++;
     }
