@@ -1,47 +1,47 @@
 #include "OrdInd.h"
-#include <algorithm>
+#include <cstring> // Para strcmp
+#include <utility> // Para std::swap
 
-/**
- * @brief Função de ordenação usando QuickSort.
- * @param indices Vetor de índices a ser ordenado.
- * @param ordind Objeto OrdInd contendo os dados.
- * @param atributo Índice do atributo para ordenação.
- */
-void quickSort(std::vector<int> &indices, OrdInd &ordind, int atributo) {
-    std::sort(indices.begin(), indices.end(), [&](int i, int j) {
-        return ordind.getDado(i, atributo) < ordind.getDado(j, atributo);
-    });
+// QuickSort
+void quickSort(Vetor &indices, int low, int high, int atribid, const Matriz &dados) {
+    if (low < high) {
+        int pi = partition(indices, low, high, atribid, dados);
+        quickSort(indices, low, pi - 1, atribid, dados);
+        quickSort(indices, pi + 1, high, atribid, dados);
+    }
 }
 
-/**
- * @brief Função de ordenação usando BubbleSort.
- * @param indices Vetor de índices a ser ordenado.
- * @param ordind Objeto OrdInd contendo os dados.
- * @param atributo Índice do atributo para ordenação.
- */
-void bubbleSort(std::vector<int> &indices, OrdInd &ordind, int atributo) {
-    for (size_t i = 0; i < indices.size() - 1; ++i) {
-        for (size_t j = 0; j < indices.size() - i - 1; ++j) {
-            if (ordind.getDado(indices[j], atributo) >
-                ordind.getDado(indices[j + 1], atributo)) {
+int partition(Vetor &indices, int low, int high, int atribid, const Matriz &dados) {
+    const char *pivot = dados.get(indices[high], atribid);
+    int i = low - 1;
+
+    for (int j = low; j < high; j++) {
+        if (strcmp(dados.get(indices[j], atribid), pivot) < 0) {
+            i++;
+            std::swap(indices[i], indices[j]);
+        }
+    }
+    std::swap(indices[i + 1], indices[high]);
+    return i + 1;
+}
+
+// BubbleSort
+void bubbleSort(Vetor &indices, int atribid, const Matriz &dados) {
+    for (int i = 0; i < indices.size() - 1; i++) {
+        for (int j = 0; j < indices.size() - i - 1; j++) {
+            if (strcmp(dados.get(indices[j], atribid), dados.get(indices[j + 1], atribid)) > 0) {
                 std::swap(indices[j], indices[j + 1]);
             }
         }
     }
 }
 
-/**
- * @brief Função de ordenação usando SelectionSort.
- * @param indices Vetor de índices a ser ordenado.
- * @param ordind Objeto OrdInd contendo os dados.
- * @param atributo Índice do atributo para ordenação.
- */
-void selectionSort(std::vector<int> &indices, OrdInd &ordind, int atributo) {
-    for (size_t i = 0; i < indices.size() - 1; ++i) {
-        size_t minIdx = i;
-        for (size_t j = i + 1; j < indices.size(); ++j) {
-            if (ordind.getDado(indices[j], atributo) <
-                ordind.getDado(indices[minIdx], atributo)) {
+// SelectionSort
+void selectionSort(Vetor &indices, int atribid, const Matriz &dados) {
+    for (int i = 0; i < indices.size() - 1; i++) {
+        int minIdx = i;
+        for (int j = i + 1; j < indices.size(); j++) {
+            if (strcmp(dados.get(indices[j], atribid), dados.get(indices[minIdx], atribid)) < 0) {
                 minIdx = j;
             }
         }

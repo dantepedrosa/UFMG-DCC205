@@ -122,3 +122,21 @@ void OrdInd::setDado(int linha, int coluna, const char *valor) {
     }
     dados->set(linha, coluna, valor);
 }
+
+// QuickSort
+void OrdInd::ordenaIndiceQuickSort(int atribid) {
+    Vetor *indice = getIndice(atribid);
+    quickSort(*indice, 0, indice->size() - 1, atribid, *dados);
+}
+
+// BubbleSort
+void OrdInd::ordenaIndiceBubbleSort(int atribid) {
+    Vetor *indice = getIndice(atribid);
+    bubbleSort(*indice, atribid, *dados);
+}
+
+// SelectionSort
+void OrdInd::ordenaIndiceSelectionSort(int atribid) {
+    Vetor *indice = getIndice(atribid);
+    selectionSort(*indice, atribid, *dados);
+}

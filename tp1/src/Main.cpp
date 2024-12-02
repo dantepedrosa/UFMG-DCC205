@@ -1,64 +1,79 @@
 #include "OrdInd.h"
 #include <iostream>
 #include <fstream>
-#include <sstream>
+#include <cstring>
 
-int main() {
-    std::ifstream arquivo("entrada.xcsv");
-    if (!arquivo.is_open()) {
-        std::cerr << "Erro ao abrir o arquivo." << std::endl;
+int main(int argc, char *argv[]) {
+    if (argc != 2) {
+        std::cerr << "Uso: bin/tp1.out <arquivo_de_entrada.xcsv>" << std::endl;
         return 1;
     }
 
-    // Variáveis para leitura do cabeçalho
+    const char *nomeArquivo = argv[1];
+
+    // Abrir o arquivo de entrada
+    std::ifstream arquivo(nomeArquivo);
+    if (!arquivo.is_open()) {
+        std::cerr << "Erro ao abrir o arquivo: " << nomeArquivo << std::endl;
+        return 1;
+    }
+
+    // Ler cabeçalho
     int numColunas, numRegistros;
     std::string linha;
-
-    // Ler o número de colunas
     std::getline(arquivo, linha);
     numColunas = std::stoi(linha);
 
-    // Ignorar as próximas linhas que indicam os nomes e formatos
+    // Ignorar descrições de colunas
     for (int i = 0; i < numColunas; i++) {
-        std::getline(arquivo, linha); // Exemplo: "name,s"
+        std::getline(arquivo, linha);
     }
 
-    // Ler o número de registros
+    // Ler número de registros
     std::getline(arquivo, linha);
     numRegistros = std::stoi(linha);
 
-    // Inicializar a estrutura OrdInd
+    // Inicializar a classe OrdInd
     OrdInd organizador(numRegistros, numColunas);
 
-    // Ler os registros do arquivo
+    // Ler registros
     int registroAtual = 0;
     while (std::getline(arquivo, linha) && registroAtual < numRegistros) {
-        std::istringstream stream(linha);
-        std::string campo;
+        char *token = strtok(&linha[0], ",");
         for (int coluna = 0; coluna < numColunas; coluna++) {
-            std::getline(stream, campo, ',');
-            organizador.setDado(registroAtual, coluna, campo.c_str());
+            organizador.setDado(registroAtual, coluna, token);
+            token = strtok(nullptr, ",");
         }
         registroAtual++;
     }
-
     arquivo.close();
 
-    // Criar índices para Nome, CPF e Endereço (assumindo colunas 0, 1 e 2)
-    organizador.criaIndice(0); // Nome
-    organizador.ordenaIndice(0);
-    std::cout << "Ordenado por Nome:\n";
-    organizador.imprimeOrdenadoIndice(0);
+    // Algoritmos e chaves
+    auto algoritmos = {"QuickSort", "BubbleSort", "SelectionSort"};
+    auto chaves = {0, 1, 2}; // Nome, ID, Endereço
 
-    organizador.criaIndice(1); // CPF
-    organizador.ordenaIndice(1);
-    std::cout << "\nOrdenado por CPF:\n";
-    organizador.imprimeOrdenadoIndice(1);
+    // Iterar pelos algoritmos e chaves
+    for (const auto &algoritmo : algoritmos) {
+        for (const auto &chave : chaves) {
+            // Criar índice
+            organizador.criaIndice(chave);
 
-    organizador.criaIndice(2); // Endereço
-    organizador.ordenaIndice(2);
-    std::cout << "\nOrdenado por Endereço:\n";
-    organizador.imprimeOrdenadoIndice(2);
+            // Ordenar de acordo com o algoritmo
+            if (algoritmo == "QuickSort") {
+                organizador.ordenaIndiceQuickSort(chave);
+            } else if (algoritmo == "BubbleSort") {
+                organizador.ordenaIndiceBubbleSort(chave);
+            } else if (algoritmo == "SelectionSort") {
+                organizador.ordenaIndiceSelectionSort(chave);
+            }
+
+            // Imprimir saída formatada
+            std::cout << numColunas << std::endl;
+            std::cout << "name,s\nid,s\naddress,s\npayload,s\n";
+            std::cout << numRegistros << std::endl;
+            organizador.imprimeOrdenadoIndice(chave);
+        }
+    }
 
     return 0;
 }

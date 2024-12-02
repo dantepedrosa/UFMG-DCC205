@@ -3,6 +3,8 @@
 
 #include "Matriz.h"
 #include "Vetor.h"
+#include "Sorts.h" 
+
 
 class OrdInd {
 private:
@@ -11,19 +13,24 @@ private:
     Vetor *indicesCPF;
     Vetor *indicesEndereco;
 
-    void quickSort(Vetor &indice, int low, int high, int atributo);
-    int partition(Vetor &indice, int low, int high, int atributo);
+    Vetor *getIndice(int atribid);
 
 public:
     OrdInd(int numRegistros, int numAtributos);
     ~OrdInd();
 
-    bool carregaArquivo(const char *nomeEntrada);
-    void criaIndice(int atribid);
-    void ordenaIndice(int atribid);
-    void imprimeOrdenadoIndice(int atribid);
-    const char *getDado(int linha, int coluna) const;
+    // Métodos para acessar e modificar dados
     void setDado(int linha, int coluna, const char *valor);
+    const char *getDado(int linha, int coluna) const;
+
+    // Criação e ordenação de índices
+    void criaIndice(int atribid);
+    void ordenaIndiceQuickSort(int atribid);
+    void ordenaIndiceBubbleSort(int atribid);
+    void ordenaIndiceSelectionSort(int atribid);
+
+    // Imprimir registros
+    void imprimeOrdenadoIndice(int atribid) const;
 };
 
 #endif // ORDIND_H
