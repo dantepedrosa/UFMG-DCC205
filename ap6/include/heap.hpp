@@ -1,6 +1,7 @@
 #ifndef HEAP_HPP
 #define HEAP_HPP
 
+#include <iostream>
 /*  Você pode inserir os includes necessários para que sua classe funcione.
  * Alteracoes no arquivo so podem ser feitas quando explicitadas
  */

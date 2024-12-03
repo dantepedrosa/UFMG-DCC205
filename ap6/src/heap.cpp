@@ -7,7 +7,7 @@ Heap::Heap(int maxsize) {
 }
 
 Heap::~Heap() {
-    // TODO
+    delete[] data;
 }
 
 void Heap::Inserir(int x) {
@@ -16,39 +16,62 @@ void Heap::Inserir(int x) {
     tamanho++;
     int ancestral = GetAncestral(index);
     while(index > 0 && data[index] > data[ancestral]) {
-        int tmp = data[ancestral];
-        data[ancestral] = data[index];
-        data[tamanho] = tmp;
-
+        std::swap(data[index], data[ancestral]);
         index = ancestral;
         ancestral = GetAncestral(index);
     }
 }
 
 int Heap::Remover() {
-    // TODO
+    int removido = data[0];
+    data[0] = data[tamanho-1];
+    tamanho--;
+    HeapifyPorBaixo(0);
+    return removido;
 }
 
 bool Heap::Vazio() {
-    // TODO
+    if (tamanho == 0)
+        return 1;
+    else 
+        return 0;
 }
 
 int Heap::GetAncestral(int posicao) {
-    // TODO
+    return (posicao-1)/2;
 }
 
 int Heap::GetSucessorEsq(int posicao) {
-    // TODO
+    return (2*posicao) + 1;
 }
 
 int Heap::GetSucessorDir(int posicao) {
-    // TODO
+    return (2*posicao) + 2;
 }
 
 void Heap::HeapifyPorBaixo(int posicao) {
-    // TODO
+    int maior = posicao;
+    int esquerda = (2 * posicao) + 1;
+    int direita = (2 * posicao) + 2;
+
+    if (esquerda < tamanho && data[esquerda] > data[maior]) {
+        maior = esquerda;
+    }
+
+    if (direita < tamanho && data[direita] > data[maior]) {
+        maior = direita;
+    }
+
+    if (maior != posicao) {
+        std::swap(data[posicao], data[maior]);
+        HeapifyPorBaixo(maior);
+    }
 }
 
 void Heap::HeapifyPorCima(int posicao) {
-    // TODO
+    int ancestral = GetAncestral(posicao);
+    if (posicao > 0 && data[posicao] > data[ancestral]) {
+        std::swap(data[posicao], data[ancestral]);
+        HeapifyPorCima(ancestral);
+    }
 }
