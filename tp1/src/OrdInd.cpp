@@ -1,142 +1,148 @@
-#include "OrdInd.h"
-#include <iostream>
+#pragma once
+
+#include <string>
 #include <fstream>
-#include <cstring>
+#include <iostream>
+#include <sstream>
+#include "OrdInd.hpp"
 
-// Construtor
-OrdInd::OrdInd(int numRegistros, int numAtributos) {
-    dados = new Matriz(numRegistros, numAtributos);
-    indicesNome = new Vetor(numRegistros);
-    indicesCPF = new Vetor(numRegistros);
-    indicesEndereco = new Vetor(numRegistros);
+OrdInd::OrdInd() : dados(nullptr), linhas(0), colunas(0), atributos(nullptr), tipoAtributos(nullptr), indices(nullptr){
+    // Inicializa todos os membros como 0 ou nullptr
 }
 
-// Destrutor
 OrdInd::~OrdInd() {
-    delete dados;
-    delete indicesNome;
-    delete indicesCPF;
-    delete indicesEndereco;
-}
 
-// Carrega arquivo
-bool OrdInd::carregaArquivo(const char *nomeEntrada) {
-    std::ifstream arquivo(nomeEntrada);
-    if (!arquivo.is_open()) return false;
-
-    char linha[256];
-    int registro = 0;
-    while (arquivo.getline(linha, sizeof(linha)) && registro < dados->linhas) {
-        char *token = strtok(linha, ",");
-        int coluna = 0;
-        while (token != nullptr && coluna < dados->colunas) {
-            dados->set(registro, coluna, token);
-            token = strtok(nullptr, ",");
-            coluna++;
+    // Destroi todos os apontadores presentes em dados
+    if (dados) {
+        for (int i = 0; i < linhas; ++i) {
+            delete[] dados[i];
         }
-        registro++;
+        delete[] dados;
     }
-    arquivo.close();
-    return true;
-}
 
-// Cria índice
-void OrdInd::criaIndice(int atribid) {
-    Vetor *indice = nullptr;
-    switch (atribid) {
-        case 0: indice = indicesNome; break;
-        case 1: indice = indicesCPF; break;
-        case 2: indice = indicesEndereco; break;
-        default: throw std::invalid_argument("ID de atributo inválido.");
-    }
-    for (int i = 0; i < indice->size(); i++) {
-        (*indice)[i] = i;
+    delete[] atributos;
+    delete[] tipoAtributos;
+
+    // Destrói todos os apontadores presentes em índices
+    if (indices) {
+        for (int i = 0; i < colunas; ++i) {
+            delete[] indices[i];
+        }
+        delete[] indices;
     }
 }
 
-// QuickSort
-void OrdInd::quickSort(Vetor &indice, int low, int high, int atributo) {
-    if (low < high) {
-        int pi = partition(indice, low, high, atributo);
-        quickSort(indice, low, pi - 1, atributo);
-        quickSort(indice, pi + 1, high, atributo);
-    }
-}
+int OrdInd::CarregaArquivo(const std::string& nomeentrada) {
 
-int OrdInd::partition(Vetor &indice, int low, int high, int atributo) {
-    const char *pivot = dados->get(indice[high], atributo);
-    int i = low - 1;
-    for (int j = low; j < high; j++) {
-        if (strcmp(dados->get(indice[j], atributo), pivot) < 0) {
-            i++;
-            std::swap(indice[i], indice[j]);
+    // Testar se arquivo foi aberto
+    std::ifstream Arquivo(nomeentrada);
+    if (!Arquivo.is_open()) {
+        std::cerr << "Error opening file: " << nomeentrada << std::endl;
+        return -1;
+    }
+
+    // Inicialização de parâmetros usados múltiplas vezes
+    std::string strLinha;
+    std::string substr;
+
+    // Ler quantidade de colunas
+    getline(Arquivo, strLinha);
+    this->colunas = stoi(strLinha);
+
+    // Inicializa arrays de atributos e tipoAtributos
+    this->atributos = new std::string[this->colunas];
+    this->tipoAtributos = new std::string[this->colunas];
+
+    // Inicializa array de indices
+    this->indices = new ApontadorIndice**[this->colunas];
+    for (int i = 0; i < this->colunas; ++i) {
+        this->indices[i] = new ApontadorIndice*[this->linhas];
+        for (int j = 0; j < this->linhas; ++j) {
+            this->indices[i][j] = nullptr;
         }
     }
-    std::swap(indice[i + 1], indice[high]);
-    return i + 1;
-}
 
-// Ordena índice
-void OrdInd::ordenaIndice(int atribid) {
-    Vetor *indice = nullptr;
-    switch (atribid) {
-        case 0: indice = indicesNome; break;
-        case 1: indice = indicesCPF; break;
-        case 2: indice = indicesEndereco; break;
-        default: throw std::invalid_argument("ID de atributo inválido.");
-    }
-    quickSort(*indice, 0, indice->size() - 1, atribid);
-}
-
-// Imprime
-void OrdInd::imprimeOrdenadoIndice(int atribid) {
-    Vetor *indice = nullptr;
-    switch (atribid) {
-        case 0: indice = indicesNome; break;
-        case 1: indice = indicesCPF; break;
-        case 2: indice = indicesEndereco; break;
-        default: throw std::invalid_argument("ID de atributo inválido.");
+    // Ler nomes de colunas e tipo de dados
+    for(int i=0; i < this->colunas; i++){
+        getline(Arquivo, strLinha);
+        std::stringstream ss(strLinha);
+        getline(ss, substr, ',');
+        this->atributos[i] = substr;
+        getline(ss, substr, ',');
+        this->tipoAtributos[i] = substr;
     }
 
-    for (int i = 0; i < indice->size(); i++) {
-        int idx = (*indice)[i];
-        for (int j = 0; j < dados->colunas; j++) {
-            std::cout << dados->get(idx, j) << " ";
+    // Ler quantidade de entradas de dados
+    getline(Arquivo, strLinha);
+    this->linhas = stoi(strLinha);
+
+    // Ler entradas de dados e armazenar em dados
+    for(int i = 0; i < this->linhas; i++){
+        
+        getline(Arquivo, strLinha);
+        std::stringstream ss(strLinha);
+        
+        for(int j = 0; j < this->colunas; j++){
+            std::stringstream ss(strLinha);
+            getline(ss, substr, ',');
+            this->dados[i][j] = substr;
         }
-        std::cout << std::endl;
     }
+
+    return 0;
 }
 
-// Retorna o valor armazenado em uma célula da matriz
-const char *OrdInd::getDado(int linha, int coluna) const {
-    if (linha < 0 || linha >= dados->linhas || coluna < 0 || coluna >= dados->colunas) {
-        throw std::out_of_range("Índices fora dos limites da matriz.");
+int OrdInd::NumAtributos() const {
+    return colunas;
+}
+
+int OrdInd::NomeAtributo(int pos, std::string& nome) const {
+    
+    if (pos < 0 || pos >= colunas)
+        std::cerr << "ID " << pos << " não representa nenhum atributo" << std::endl;
+        return -1;
+
+    nome = atributos[pos];
+
+    return 0;
+}
+
+int OrdInd::IDAtributo(std::string nome) {
+    
+    int i;
+    for(i=0; i < colunas; i++){
+        if(!atributos[i].compare(nome))
+            return i; // Caso tenha encontrado
     }
-    return dados->get(linha, coluna);
+
+    return -1;  // Caso não encontrado
 }
 
-// Modifica o valor armazenado em uma célula da matriz
-void OrdInd::setDado(int linha, int coluna, const char *valor) {
-    if (linha < 0 || linha >= dados->linhas || coluna < 0 || coluna >= dados->colunas) {
-        throw std::out_of_range("Índices fora dos limites da matriz.");
+int OrdInd::CriaIndice(int atribid) {
+    
+    if (atribid < 0 || atribid >= colunas) {
+        std::cerr << "atribid " << atribid << " fora dos limites" << std::endl;
+        return -1;
     }
-    dados->set(linha, coluna, valor);
+
+    indices[atribid] = new ApontadorIndice*[linhas];
+
+    int i;
+    for (i = 0; i < linhas; ++i) {
+        indices[atribid][i] = new ApontadorIndice;
+        indices[atribid][i]->chave = dados[i][atribid];
+        indices[atribid][i]->pos = i;
+    }
+
+    return 0;
 }
 
-// QuickSort
-void OrdInd::ordenaIndiceQuickSort(int atribid) {
-    Vetor *indice = getIndice(atribid);
-    quickSort(*indice, 0, indice->size() - 1, atribid, *dados);
+int OrdInd::OrdenaIndice(int atribid, std::string ordenacao) {
+    // TODO: Sort the index for the attribute with id 'atribid'
+    return 0;
 }
 
-// BubbleSort
-void OrdInd::ordenaIndiceBubbleSort(int atribid) {
-    Vetor *indice = getIndice(atribid);
-    bubbleSort(*indice, atribid, *dados);
-}
-
-// SelectionSort
-void OrdInd::ordenaIndiceSelectionSort(int atribid) {
-    Vetor *indice = getIndice(atribid);
-    selectionSort(*indice, atribid, *dados);
+int OrdInd::ImprimeOrdenadoIndice(int atribid) const {
+    // TODO: Print the sorted index for the attribute with id 'atribid'
+    return 0;
 }
