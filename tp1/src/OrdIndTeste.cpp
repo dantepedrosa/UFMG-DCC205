@@ -1,17 +1,17 @@
-#include "OrdInd.hpp"
 #include <cassert>
 #include <iostream>
+#include "OrdInd.hpp"
 
 void testCarregaArquivo() {
     OrdInd ordInd;
-    int result = ordInd.CarregaArquivo("input.xcsv");
+    int result = ordInd.CarregaArquivo("cad/input.xcsv");
     assert(result == 0);
     std::cout << "testCarregaArquivo passed." << std::endl;
 }
 
 void testNumAtributos() {
     OrdInd ordInd;
-    ordInd.CarregaArquivo("input.xcsv");
+    ordInd.CarregaArquivo("cad/input.xcsv");
     int numAtributos = ordInd.NumAtributos();
     assert(numAtributos == 3); // Supondo que o arquivo tenha 3 atributos
     std::cout << "testNumAtributos passed." << std::endl;
@@ -19,7 +19,7 @@ void testNumAtributos() {
 
 void testNomeAtributo() {
     OrdInd ordInd;
-    ordInd.CarregaArquivo("input.xcsv");
+    ordInd.CarregaArquivo("cad/input.xcsv");
     std::string nome;
     int result = ordInd.NomeAtributo(0, nome);
     assert(result == 0);
@@ -29,7 +29,7 @@ void testNomeAtributo() {
 
 void testIDAtributo() {
     OrdInd ordInd;
-    ordInd.CarregaArquivo("input.xcsv");
+    ordInd.CarregaArquivo("cad/input.xcsv");
     int id = ordInd.IDAtributo("NomeAtributo1");
     assert(id == 0); // Supondo que "NomeAtributo1" seja o primeiro atributo
     std::cout << "testIDAtributo passed." << std::endl;
@@ -37,7 +37,7 @@ void testIDAtributo() {
 
 void testCriaIndice() {
     OrdInd ordInd;
-    ordInd.CarregaArquivo("input.xcsv");
+    ordInd.CarregaArquivo("cad/input.xcsv");
     int result = ordInd.CriaIndice(0);
     assert(result == 0);
     std::cout << "testCriaIndice passed." << std::endl;
@@ -45,7 +45,7 @@ void testCriaIndice() {
 
 void testOrdenaIndice() {
     OrdInd ordInd;
-    ordInd.CarregaArquivo("input.xcsv");
+    ordInd.CarregaArquivo("cad/input.xcsv");
     ordInd.CriaIndice(0);
     int result = ordInd.OrdenaIndice(0, "quick");
     assert(result == 0);
@@ -54,7 +54,7 @@ void testOrdenaIndice() {
 
 void testImprimeOrdenadoIndice() {
     OrdInd ordInd;
-    ordInd.CarregaArquivo("input.xcsv");
+    ordInd.CarregaArquivo("cad/input.xcsv");
     ordInd.CriaIndice(0);
     ordInd.OrdenaIndice(0, "quick");
     int result = ordInd.ImprimeOrdenadoIndice(0);

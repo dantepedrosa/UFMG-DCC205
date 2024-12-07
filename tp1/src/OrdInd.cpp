@@ -63,6 +63,12 @@ int OrdInd::CarregaArquivo(const std::string& nomeentrada) {
         }
     }
 
+    // Inicializa matriz de dados
+    this->dados = new std::string*[this->linhas];
+    for (int i = 0; i < this->linhas; ++i) {
+        this->dados[i] = new std::string[this->colunas];
+    }
+
     // Ler nomes de colunas e tipo de dados
     for(int i=0; i < this->colunas; i++){
         getline(Arquivo, strLinha);
@@ -86,7 +92,7 @@ int OrdInd::CarregaArquivo(const std::string& nomeentrada) {
         for(int j = 0; j < this->colunas; j++){
             std::stringstream ss(strLinha);
             getline(ss, substr, ',');
-            this->dados[i][j] = substr;
+            dados[i][j] = substr;
         }
     }
 

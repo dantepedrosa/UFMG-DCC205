@@ -11,7 +11,7 @@ typedef ApontadorIndice* ApontadorIndicePtr;
 class OrdInd
 {
 private:
-    std::string **dados;        // Dados carregados (matriz de strings)
+    std::string** dados;        // Dados carregados (matriz de strings)
     int linhas;                 // Número de linhas
     int colunas;                // Número de colunas (atributos)
     std::string *atributos;     // Nomes dos atributos
