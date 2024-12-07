@@ -139,11 +139,44 @@ int OrdInd::CriaIndice(int atribid) {
 }
 
 int OrdInd::OrdenaIndice(int atribid, std::string ordenacao) {
-    // TODO: Sort the index for the attribute with id 'atribid'
+    
+    // Validação de entrada
+    if (atribid < 0 || atribid >= colunas) {
+        std::cerr << "atribid " << atribid << " fora dos limites" << std::endl;
+        return -1;
+    }
+
+    if (ordenacao == "quick") {
+        quicksort(indices[atribid], linhas);
+    } else if (ordenacao == "shell") {
+        shellSort(indices[atribid], linhas);
+    } else if (ordenacao == "insertion") {
+        insertionSort(indices[atribid], linhas);
+    } else {                                                                
+        std::cerr << "Ordenação " << ordenacao << " não suportada" << std::endl;    // Ordenação não suportada
+        return -1;
+    }
+    
+    /* TODO - Caso seja implementado bucket sort
+    else if (ordenacao == "bucket") {
+        bucketSort(indices[atribid], linhas);
+    }
+    */ 
+
     return 0;
 }
 
 int OrdInd::ImprimeOrdenadoIndice(int atribid) const {
-    // TODO: Print the sorted index for the attribute with id 'atribid'
+    
+    // Validação de entrada
+    if (atribid < 0 || atribid >= colunas) {
+        std::cerr << "atribid " << atribid << " fora dos limites" << std::endl;
+        return -1;
+    }
+
+    for (int i = 0; i < linhas; ++i) {
+        std::cout << indices[atribid][i]->chave << std::endl;
+    }
+
     return 0;
 }

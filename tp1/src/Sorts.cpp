@@ -2,61 +2,19 @@
 #include "OrdInd.hpp"
 #include "ListaEncadeada.hpp"
 
-/**
- * @brief Implementação do algoritmo de ordenação QuickSort
- *
- * @param arr Array a ser ordenado
- * @param low Índice inicial
- * @param high Índice final
- */
 
-void quicksort(ApontadorIndice arr[], int low, int high);
-
-void quicksort_ord(ApontadorIndice arr[], int low, int high);
-
-void quicksort_part(ApontadorIndice arr[], int low, int high, int *i, int *j);
-
-/**
- * @brief Implementação do algoritmo de ordenação Shell Sort
- *
- * @param arr Array a ser ordenado
- * @param n Tamanho do array
- */
-
-void shellSort(ApontadorIndice arr[], int n);
-
-/**
- * @brief Implementação do algoritmo de ordenação Insertion Sort
- *
- * @param arr Array a ser ordenado
- * @param n Tamanho do array
- */
-
-void insertionSort(ApontadorIndice arr[], int n);
-
-/**
- * @brief Implementação do algoritmo de ordenação Bucket Sort
- *
- * @param arr Array a ser ordenado
- * @param n Tamanho do array
- */
-
-void bucketSort(ApontadorIndice arr[], int n);
-
-//=============================================================================
-
-void quicksort_part(ApontadorIndice arr[], int low, int high, int *i, int *j)
+void quicksort_part(ApontadorIndice* arr[], int low, int high, int *i, int *j)
 {
     *i = low;
     *j = high;
 
-    ApontadorIndice pivot = arr[(high + low) / 2]; // Pivot utilizado como metade do tamanho do vetor
+    ApontadorIndice* pivot = arr[(high + low) / 2]; // Pivot utilizado como metade do tamanho do vetor
 
     do
     {
-        while (arr[*i].chave < pivot.chave)
+        while (arr[*i]->chave < pivot->chave)
             (*i)++;
-        while (arr[*j].chave > pivot.chave)
+        while (arr[*j]->chave > pivot->chave)
             (*j)--;
         if (*i <= *j)
         {
@@ -67,7 +25,7 @@ void quicksort_part(ApontadorIndice arr[], int low, int high, int *i, int *j)
     } while (*i <= *j);
 }
 
-void quicksort_ord(ApontadorIndice arr[], int low, int high)
+void quicksort_ord(ApontadorIndice* arr[], int low, int high)
 {
 
     int i;
@@ -80,25 +38,25 @@ void quicksort_ord(ApontadorIndice arr[], int low, int high)
         quicksort_ord(arr, i, high);
 }
 
-void quicksort(ApontadorIndice arr[], int n)
+void quicksort(ApontadorIndice* arr[], int n)
 {
     quicksort_ord(arr, 0, n - 1);
 }
 
-void shellSort(ApontadorIndice arr[], int n)
+void shellSort(ApontadorIndice* arr[], int n)
 {
     int gap;
     for (gap = n / 2; gap > 0; gap /= 2)
     {
         for (int i = gap; i < n; i += 1)
         {
-            ApontadorIndice temp = arr[i];
+            ApontadorIndice temp = *arr[i];
             int j;
-            for (j = i; j >= gap && arr[j - gap].chave > temp.chave; j -= gap)
+            for (j = i; j >= gap && arr[j - gap]->chave > temp.chave; j -= gap)
             {
                 arr[j] = arr[j - gap];
             }
-            arr[j] = temp;
+            *arr[j] = temp;
         }
     }
 }
@@ -108,11 +66,11 @@ typedef struct Node {
     Node* next;
 } Node;
 
-void insertionSort(ApontadorIndice arr[], int n)
+void insertionSort(ApontadorIndice* arr[], int n)
 {
     
     int i, j;
-    ApontadorIndice aux;
+    ApontadorIndice* aux;
 
     for (i = 2; i <= n; i++)
     {
@@ -120,7 +78,7 @@ void insertionSort(ApontadorIndice arr[], int n)
         j = i - 1;
         arr[0] = aux;   // Sentinela: Evita a verificação de j > 0
 
-        while (aux.chave < arr[j].chave)
+        while (aux->chave < arr[j]->chave)
         {
             arr[j + 1] = arr[j];    // move o elemento para frente
             j--;
