@@ -1,5 +1,6 @@
 #include <algorithm>
 #include "OrdInd.hpp"
+#include "ListaEncadeada.hpp"
 
 /**
  * @brief Implementação do algoritmo de ordenação QuickSort
@@ -102,32 +103,22 @@ void shellSort(ApontadorIndice arr[], int n)
     }
 }
 
-void insertionSort(ApontadorIndice arr[], int n)
+void shellSort(ApontadorIndice arr[], int n)
 {
-    /* TODO - Terminar de implementar 
-    int i, j;
-    ApontadorIndice aux;
-    // considera primeiro como organizado
-    // comeca loop no segundo
-    // confere se anterior é menor que o atual
-    // se menor, trocar
-    // se maior, quebra e insere auxiliar no espaço
-    for (i = 1; i <= n; i++)
+    int gap;
+    for (gap = n / 2; gap > 0; gap /= 2)
     {
-        aux = arr[i];
-        j = i - 1;
-        //arr[0] = aux;
-        while (aux.chave < arr[j].chave)
+        for (int i = gap; i < n; i += 1)
         {
-            arr[j + 1] = arr[j];
-            j--;
+            ApontadorIndice temp = arr[i];
+            int j;
+            for (j = i; j >= gap && arr[j - gap].chave > temp.chave; j -= gap)
+            {
+                arr[j] = arr[j - gap];
+            }
+            arr[j] = temp;
         }
-        arr[j + 1] = aux;
     }
-    */
 }
 
-void bucketSort(ApontadorIndice arr[], int n)
-{
-    // TODO: Implementar Bucket Sort
-}
+
