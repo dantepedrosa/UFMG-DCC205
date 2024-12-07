@@ -1,11 +1,11 @@
-#pragma once
 
 #include <string>
 #include <fstream>
 #include <iostream>
 #include <sstream>
+
 #include "OrdInd.hpp"
-#include "Sorts.cpp"
+
 
 OrdInd::OrdInd() : dados(nullptr), linhas(0), colunas(0), atributos(nullptr), tipoAtributos(nullptr), indices(nullptr){
     // Inicializa todos os membros como 0 ou nullptr
@@ -99,9 +99,10 @@ int OrdInd::NumAtributos() const {
 
 int OrdInd::NomeAtributo(int pos, std::string& nome) const {
     
-    if (pos < 0 || pos >= colunas)
+    if (pos < 0 || pos >= colunas){
         std::cerr << "ID " << pos << " não representa nenhum atributo" << std::endl;
         return -1;
+    }
 
     nome = atributos[pos];
 

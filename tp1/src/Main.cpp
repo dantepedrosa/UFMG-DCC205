@@ -23,3 +23,18 @@ int main(int argc, char ** argv){
     return 0;
 }
 */
+
+
+/*
+Original, liberado pelo professor
+
+#include "Test.h"
+
+int main(int argc, char* argv[]) {
+    Test* pTest = new Test();
+    pTest->Print();
+    return 0;
+}
+
+
+*/

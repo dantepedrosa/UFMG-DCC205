@@ -1,3 +1,5 @@
+/*
+
 #include "ListaEncadeada.hpp"
 
 
@@ -144,3 +146,5 @@ TipoCelula<TipoItem>* ListaEncadeada<TipoItem>::Posiciona(int pos, bool antes=fa
     return p;
 
 }
+
+*/

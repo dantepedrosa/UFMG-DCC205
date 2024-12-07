@@ -1,34 +1,12 @@
 #pragma once
 
 #include <string>
+#include "Sorts.hpp"
 
-class ApontadorIndice {
 
-public:
-    std::string chave;  // Chave, para utilizar na ordenação das entradas
-    int pos;            // Posição da respectiva entrada na lista original inalterada
 
-    bool operator>(const ApontadorIndice &other) const {
-        return chave > other.chave;
-    }
 
-    bool operator<(const ApontadorIndice &other) const {
-        return chave < other.chave;
-    }
-
-    bool operator==(const ApontadorIndice &other) const {
-        return chave == other.chave;
-    }
-
-    bool operator>=(const ApontadorIndice &other) const {
-        return chave >= other.chave;
-    }
-
-    bool operator<=(const ApontadorIndice &other) const {
-        return chave <= other.chave;
-    }
-};
-
+typedef ApontadorIndice* ApontadorIndicePtr;
 
 class OrdInd
 {

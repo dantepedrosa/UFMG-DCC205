@@ -1,3 +1,4 @@
+/*
 template <class TipoItem>
 class TipoCelula {
     public:
@@ -35,3 +36,5 @@ class ListaEncadeada : public Lista {
         int tamanho;
         TipoCelula<TipoItem>* Posiciona(int pos, bool antes);
 };
+
+*/

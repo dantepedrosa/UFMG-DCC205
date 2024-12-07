@@ -1,46 +1,50 @@
-#
-# Copyright 2021 Alysson Ribeiro da Silva - Federal University of Minas Gerais
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy 
-# of this software and associated documentation files (the "Software"), to deal 
-# in the Software without restriction, including without limitation the rights 
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies 
-# of the Software, and to permit persons to whom the Software is furnished to do 
-# so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in all 
-# copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
-# INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 
-# PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT 
-# HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION 
-# OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE 
-# SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-#
-
-# cc and flags
+# Compiler and flags
 CC = g++
 CXXFLAGS = -std=c++11 -g -Wall
-#CXXFLAGS = -std=c++11 -O3 -Wall
 
-# folders
-INCLUDE_FOLDER = ./include/
-BIN_FOLDER = ./bin/
-OBJ_FOLDER = ./obj/
-SRC_FOLDER = ./src/
+# Folders
+SRC_FOLDER = src/
+TEST_FOLDER = test/
+OBJ_FOLDER = obj/
+BIN_FOLDER = bin/
+INCLUDE_FOLDER = include/
 
-# all sources, objs, and header files
-MAIN = Main
-TARGET = run.out
-SRC = $(wildcard $(SRC_FOLDER)*.cc)
-OBJ = $(patsubst $(SRC_FOLDER)%.cc, $(OBJ_FOLDER)%.o, $(SRC))
+# Source files
+SRC = $(wildcard $(SRC_FOLDER)*.cpp)
+OBJ = $(patsubst $(SRC_FOLDER)%.cpp, $(OBJ_FOLDER)%.o, $(SRC))
+TEST_SRC = $(TEST_FOLDER)OrdIndTeste.cpp
+TEST_OBJ = $(patsubst $(TEST_FOLDER)%.cpp, $(OBJ_FOLDER)%.o, $(TEST_SRC))
 
-$(OBJ_FOLDER)%.o: $(SRC_FOLDER)%.cc
+# Targets
+TARGET = main
+TEST_TARGET = test
+
+# Create directories if they don't exist
+$(OBJ_FOLDER):
+	mkdir -p $(OBJ_FOLDER)
+
+$(BIN_FOLDER):
+	mkdir -p $(BIN_FOLDER)
+
+# Compile source files
+$(OBJ_FOLDER)%.o: $(SRC_FOLDER)%.cpp | $(OBJ_FOLDER)
 	$(CC) $(CXXFLAGS) -c $< -o $@ -I$(INCLUDE_FOLDER)
 
-all: $(OBJ)
+# Compile test files
+$(OBJ_FOLDER)%.o: $(TEST_FOLDER)%.cpp | $(OBJ_FOLDER)
+	$(CC) $(CXXFLAGS) -c $< -o $@ -I$(INCLUDE_FOLDER)
+
+# Link the main program
+all: $(OBJ_FOLDER) $(BIN_FOLDER) $(OBJ)
 	$(CC) $(CXXFLAGS) -o $(BIN_FOLDER)$(TARGET) $(OBJ)
 
+# Link the test program
+test: $(OBJ_FOLDER) $(BIN_FOLDER) $(OBJ) $(TEST_OBJ)
+	$(CC) $(CXXFLAGS) -o $(BIN_FOLDER)$(TEST_TARGET) $(OBJ) $(TEST_OBJ)
+	$(BIN_FOLDER)$(TEST_TARGET)
+
+# Clean build artifacts
 clean:
 	@rm -rf $(OBJ_FOLDER)* $(BIN_FOLDER)*
+
+.PHONY: all test clean

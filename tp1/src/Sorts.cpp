@@ -1,6 +1,6 @@
 #include <algorithm>
-#include "OrdInd.hpp"
-#include "ListaEncadeada.hpp"
+#include "Sorts.hpp"
+//#include "ListaEncadeada.hpp"
 
 
 void quicksort_part(ApontadorIndice* arr[], int low, int high, int *i, int *j)
@@ -12,9 +12,9 @@ void quicksort_part(ApontadorIndice* arr[], int low, int high, int *i, int *j)
 
     do
     {
-        while (arr[*i]->chave < pivot->chave)
+        while (arr[*i] < pivot)
             (*i)++;
-        while (arr[*j]->chave > pivot->chave)
+        while (arr[*j] > pivot)
             (*j)--;
         if (*i <= *j)
         {
@@ -50,21 +50,16 @@ void shellSort(ApontadorIndice* arr[], int n)
     {
         for (int i = gap; i < n; i += 1)
         {
-            ApontadorIndice temp = *arr[i];
+            ApontadorIndice* temp = arr[i];
             int j;
-            for (j = i; j >= gap && arr[j - gap]->chave > temp.chave; j -= gap)
+            for (j = i; j >= gap && arr[j - gap] > temp; j -= gap)
             {
                 arr[j] = arr[j - gap];
             }
-            *arr[j] = temp;
+            arr[j] = temp;
         }
     }
 }
-
-typedef struct Node {
-    ApontadorIndice data;
-    Node* next;
-} Node;
 
 void insertionSort(ApontadorIndice* arr[], int n)
 {
@@ -78,7 +73,7 @@ void insertionSort(ApontadorIndice* arr[], int n)
         j = i - 1;
         arr[0] = aux;   // Sentinela: Evita a verificação de j > 0
 
-        while (aux->chave < arr[j]->chave)
+        while (aux < arr[j])
         {
             arr[j + 1] = arr[j];    // move o elemento para frente
             j--;
