@@ -2,10 +2,32 @@
 
 #include <string>
 
-typedef struct ApontadorIndice {
+class ApontadorIndice {
+
+public:
     std::string chave;  // Chave, para utilizar na ordenação das entradas
     int pos;            // Posição da respectiva entrada na lista original inalterada
-} ApontadorIndice;
+
+    bool operator>(const ApontadorIndice &other) const {
+        return chave > other.chave;
+    }
+
+    bool operator<(const ApontadorIndice &other) const {
+        return chave < other.chave;
+    }
+
+    bool operator==(const ApontadorIndice &other) const {
+        return chave == other.chave;
+    }
+
+    bool operator>=(const ApontadorIndice &other) const {
+        return chave >= other.chave;
+    }
+
+    bool operator<=(const ApontadorIndice &other) const {
+        return chave <= other.chave;
+    }
+};
 
 
 class OrdInd
