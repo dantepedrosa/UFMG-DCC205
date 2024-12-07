@@ -103,22 +103,78 @@ void shellSort(ApontadorIndice arr[], int n)
     }
 }
 
-void shellSort(ApontadorIndice arr[], int n)
+typedef struct Node {
+    ApontadorIndice data;
+    Node* next;
+} Node;
+
+void insertionSort(ApontadorIndice arr[], int n)
 {
-    int gap;
-    for (gap = n / 2; gap > 0; gap /= 2)
+    
+    int i, j;
+    ApontadorIndice aux;
+
+    for (i = 2; i <= n; i++)
     {
-        for (int i = gap; i < n; i += 1)
+        aux = arr[i];
+        j = i - 1;
+        arr[0] = aux;   // Sentinela: Evita a verificação de j > 0
+
+        while (aux.chave < arr[j].chave)
         {
-            ApontadorIndice temp = arr[i];
-            int j;
-            for (j = i; j >= gap && arr[j - gap].chave > temp.chave; j -= gap)
-            {
-                arr[j] = arr[j - gap];
+            arr[j + 1] = arr[j];    // move o elemento para frente
+            j--;
+        }
+        arr[j + 1] = aux;
+    }
+    
+}
+
+/* TODO - Corrigir bucketsort
+
+void bucketSort(ApontadorIndice arr[], int n)
+{
+    if (n <= 0)
+        return;
+
+    // Create 36 buckets
+    ListaEncadeada<ApontadorIndice> buckets[36];
+
+    // Determine the range of the initial digit
+    for (int i = 0; i < n; i++) {
+        int bucketIndex = arr[i].chave % 36;
+        buckets[bucketIndex].insereFinal(arr[i]);
+    }
+
+    // Para cada bucket, ordenar
+    for (int i = 0; i < 36; i++) {
+        int bucketSize = buckets[i].tamanho();
+        if (bucketSize > 0) {
+            ApontadorIndice* bucketArray = new ApontadorIndice[bucketSize];
+            Node* current = buckets[i].inicio();
+            for (int j = 0; j < bucketSize; j++) {
+                bucketArray[j] = current->data;
+                current = current->next;
             }
-            arr[j] = temp;
+            insertionSort(bucketArray, bucketSize);
+            current = buckets[i].inicio();
+            for (int j = 0; j < bucketSize; j++) {
+                current->data = bucketArray[j];
+                current = current->next;
+            }
+            delete[] bucketArray;
+        }
+    }
+
+    // Concatenar
+    int index = 0;
+    for (int i = 0; i < 36; i++) {
+        Node* current = buckets[i].inicio();
+        while (current != nullptr) {
+            arr[index++] = current->data;
+            current = current->next;
         }
     }
 }
 
-
+*/

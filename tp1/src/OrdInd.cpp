@@ -5,6 +5,7 @@
 #include <iostream>
 #include <sstream>
 #include "OrdInd.hpp"
+#include "Sorts.cpp"
 
 OrdInd::OrdInd() : dados(nullptr), linhas(0), colunas(0), atributos(nullptr), tipoAtributos(nullptr), indices(nullptr){
     // Inicializa todos os membros como 0 ou nullptr
