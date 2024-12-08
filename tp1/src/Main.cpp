@@ -1,40 +1,36 @@
 #include "OrdInd.hpp"
 #include <string>
 #include <iostream>
-/* TODO
+
 int main(int argc, char ** argv){
 
-    std::string arquivo;
-
+    // Valida a entrada
     if (argc < 2) {
-        std::cerr << "Usage: " << argv[0] << " <filename>" << std::endl;
+        std::cerr << "Uso: " << argv[0] << " <input_file>" << std::endl;
         return 1;
     }
 
-    arquivo = argv[1];
+    std::string inputFile = argv[1];
 
-    OrdInd poi;
-    poi.CarregaArquivo(arquivo);
+    OrdInd ordInd;
+    int result;
+    ordInd.CarregaArquivo(inputFile);
 
-    int idCPF = poi. 
+    // Nomeação dos 3 algoritmos
+    std::string algoritmos[3] = {"quick", "shell", "insertion"};
 
-    poi.CriaIndice()
-
+    // Cicla por todos os algoritmos
+    for (int i = 0; i < 3; i++)
+    {
+        // Cicla por todos os atributos
+        for (int j = 0; j < 3; j++)
+        {
+            // Testa com algoritmo
+            ordInd.CriaIndice(j);
+            ordInd.OrdenaIndice(j, algoritmos[i]);
+            result = ordInd.ImprimeOrdenadoIndice(j);
+        }
+    }
+    
     return 0;
 }
-*/
-
-
-/*
-Original, liberado pelo professor
-
-#include "Test.h"
-
-int main(int argc, char* argv[]) {
-    Test* pTest = new Test();
-    pTest->Print();
-    return 0;
-}
-
-
-*/

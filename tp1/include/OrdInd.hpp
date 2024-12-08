@@ -4,8 +4,6 @@
 #include "Sorts.hpp"
 
 
-
-
 typedef ApontadorIndice* ApontadorIndicePtr;
 
 class OrdInd

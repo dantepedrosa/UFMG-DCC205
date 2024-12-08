@@ -12,9 +12,9 @@ void quicksort_part(ApontadorIndice* arr[], int low, int high, int *i, int *j)
 
     do
     {
-        while (arr[*i] < pivot)
+        while (*arr[*i] < *pivot)
             (*i)++;
-        while (arr[*j] > pivot)
+        while (*arr[*j] > *pivot)
             (*j)--;
         if (*i <= *j)
         {
@@ -52,7 +52,7 @@ void shellSort(ApontadorIndice* arr[], int n)
         {
             ApontadorIndice* temp = arr[i];
             int j;
-            for (j = i; j >= gap && arr[j - gap] > temp; j -= gap)
+            for (j = i; j >= gap && *arr[j - gap] > *temp; j -= gap)
             {
                 arr[j] = arr[j - gap];
             }
@@ -67,13 +67,12 @@ void insertionSort(ApontadorIndice* arr[], int n)
     int i, j;
     ApontadorIndice* aux;
 
-    for (i = 2; i <= n; i++)
+    for (i = 1; i < n; i++)
     {
         aux = arr[i];
         j = i - 1;
-        arr[0] = aux;   // Sentinela: Evita a verificação de j > 0
 
-        while (aux < arr[j])
+        while (j >= 0 && *aux < *arr[j])
         {
             arr[j + 1] = arr[j];    // move o elemento para frente
             j--;

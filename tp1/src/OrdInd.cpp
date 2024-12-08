@@ -63,12 +63,6 @@ int OrdInd::CarregaArquivo(const std::string& nomeentrada) {
         }
     }
 
-    // Inicializa matriz de dados
-    this->dados = new std::string*[this->linhas];
-    for (int i = 0; i < this->linhas; ++i) {
-        this->dados[i] = new std::string[this->colunas];
-    }
-
     // Ler nomes de colunas e tipo de dados
     for(int i=0; i < this->colunas; i++){
         getline(Arquivo, strLinha);
@@ -83,6 +77,12 @@ int OrdInd::CarregaArquivo(const std::string& nomeentrada) {
     getline(Arquivo, strLinha);
     this->linhas = stoi(strLinha);
 
+    // Inicializa matriz de dados
+    this->dados = new std::string*[this->linhas];
+    for (int i = 0; i < this->linhas; ++i) {
+        this->dados[i] = new std::string[this->colunas];
+    }
+
     // Ler entradas de dados e armazenar em dados
     for(int i = 0; i < this->linhas; i++){
         
@@ -90,12 +90,10 @@ int OrdInd::CarregaArquivo(const std::string& nomeentrada) {
         std::stringstream ss(strLinha);
         
         for(int j = 0; j < this->colunas; j++){
-            std::stringstream ss(strLinha);
             getline(ss, substr, ',');
             dados[i][j] = substr;
         }
     }
-
     return 0;
 }
 
@@ -175,14 +173,35 @@ int OrdInd::OrdenaIndice(int atribid, std::string ordenacao) {
 
 int OrdInd::ImprimeOrdenadoIndice(int atribid) const {
     
+    // Imprime num colunas
+    // Imprime nome atributos,tipoatributos
+    // Imprime num linhas
+    // imprime ordenação
+
+
     // Validação de entrada
     if (atribid < 0 || atribid >= colunas) {
         std::cerr << "atribid " << atribid << " fora dos limites" << std::endl;
         return -1;
     }
 
+    std::cout << colunas << std::endl;
+
+    for(int i = 0; i<colunas; i++){
+        std::cout << atributos[i] << "," << tipoAtributos[i] << std::endl;
+    }
+
+    std::cout << linhas << std::endl;
+
     for (int i = 0; i < linhas; ++i) {
-        std::cout << indices[atribid][i]->chave << std::endl;
+        int pos = indices[atribid][i]->pos;
+        for (int j = 0; j < colunas; ++j) {
+            std::cout << dados[pos][j];
+            if (j < colunas - 1) {
+                std::cout << ",";
+            }
+        }
+        std::cout << std::endl;
     }
 
     return 0;
