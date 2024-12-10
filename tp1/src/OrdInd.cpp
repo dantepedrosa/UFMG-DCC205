@@ -1,3 +1,22 @@
+/**
+ * @file OrdInd.cpp
+ * @brief Implementação da classe OrdInd para manipulação de dados tabulares e ordenação de índices.
+ * 
+ * Este arquivo contém a implementação da classe OrdInd, que permite carregar dados de um arquivo,
+ * criar índices para os atributos, ordenar esses índices e imprimir os dados ordenados.
+ * 
+ * A classe oferece funcionalidades para:
+ * - Carregar dados de um arquivo CSV.
+ * - Criar índices para os atributos.
+ * - Ordenar os índices utilizando diferentes algoritmos de ordenação.
+ * - Imprimir os dados ordenados com base em um índice específico.
+ * 
+ * @date 2024
+ * 
+ * @author Dante Junqueira Pedrosa
+ * @institution Universidade Federal de Minas Gerais (UFMG)
+ * @course DCC205 - Estruturas de Dados
+ */
 
 #include <string>
 #include <fstream>
@@ -98,16 +117,18 @@ int OrdInd::CarregaArquivo(const std::string& nomeentrada) {
 }
 
 int OrdInd::NumAtributos() const {
-    return colunas;
+    return colunas;     // Retorna o número de colunas
 }
 
 int OrdInd::NomeAtributo(int pos, std::string& nome) const {
     
+    // Validação de entrada
     if (pos < 0 || pos >= colunas){
         std::cerr << "ID " << pos << " não representa nenhum atributo" << std::endl;
         return -1;
     }
 
+    // Salva o nome do atributo no endereço de nome
     nome = atributos[pos];
 
     return 0;
@@ -126,6 +147,7 @@ int OrdInd::IDAtributo(std::string nome) {
 
 int OrdInd::CriaIndice(int atribid) {
     
+    // Validação da entrada
     if (atribid < 0 || atribid >= colunas) {
         std::cerr << "atribid " << atribid << " fora dos limites" << std::endl;
         return -1;
@@ -133,6 +155,7 @@ int OrdInd::CriaIndice(int atribid) {
 
     indices[atribid] = new ApontadorIndice*[linhas];
 
+    // Para cada item de indice, salva o dado e o atributo
     int i;
     for (i = 0; i < linhas; ++i) {
         indices[atribid][i] = new ApontadorIndice;
@@ -151,6 +174,7 @@ int OrdInd::OrdenaIndice(int atribid, std::string ordenacao) {
         return -1;
     }
 
+    // Chamada de ordenações
     if (ordenacao == "quick") {
         quicksort(indices[atribid], linhas);
     } else if (ordenacao == "shell") {
@@ -161,38 +185,27 @@ int OrdInd::OrdenaIndice(int atribid, std::string ordenacao) {
         std::cerr << "Ordenação " << ordenacao << " não suportada" << std::endl;    // Ordenação não suportada
         return -1;
     }
-    
-    /* TODO - Caso seja implementado bucket sort
-    else if (ordenacao == "bucket") {
-        bucketSort(indices[atribid], linhas);
-    }
-    */ 
 
     return 0;
 }
 
 int OrdInd::ImprimeOrdenadoIndice(int atribid) const {
     
-    // Imprime num colunas
-    // Imprime nome atributos,tipoatributos
-    // Imprime num linhas
-    // imprime ordenação
-
-
     // Validação de entrada
     if (atribid < 0 || atribid >= colunas) {
         std::cerr << "atribid " << atribid << " fora dos limites" << std::endl;
         return -1;
     }
 
-    std::cout << colunas << std::endl;
+    std::cout << colunas << std::endl;  // Quantidade de colunas
 
     for(int i = 0; i<colunas; i++){
-        std::cout << atributos[i] << "," << tipoAtributos[i] << std::endl;
+        std::cout << atributos[i] << "," << tipoAtributos[i] << std::endl;      // Nome e tipo de atributo
     }
 
-    std::cout << linhas << std::endl;
+    std::cout << linhas << std::endl;   // Quantidade de linhas
 
+    // Matriz de dados
     for (int i = 0; i < linhas; ++i) {
         int pos = indices[atribid][i]->pos;
         for (int j = 0; j < colunas; ++j) {

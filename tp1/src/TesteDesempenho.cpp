@@ -33,7 +33,7 @@ void TestaTempoOrdenacao(std::string& atribName, std::string& sortAlgorithm, std
    
 }
 
-int main(int argc, char ** argv){
+int Teste(int argc, char ** argv){
 
     // Valida a entrada
     if (argc < 5) {

@@ -1,3 +1,16 @@
+/**
+ * @file OrdInd.hpp
+ * @brief Declaração da classe OrdInd para manipulação de dados ordenados por índices.
+ * 
+ * Este arquivo contém a declaração da classe OrdInd, que permite carregar dados de um arquivo,
+ * criar índices para atributos específicos, ordenar esses índices e imprimir os dados ordenados.
+ * 
+ * @date 2024
+ * 
+ * @author Dante Junqueira Pedrosa
+ * @institution Universidade Federal de Minas Gerais (UFMG)
+ * @course DCC205 - Estruturas de Dados
+ */
 #pragma once
 
 #include <string>
