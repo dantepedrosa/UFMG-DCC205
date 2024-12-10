@@ -1,34 +1,31 @@
 /**
  * @file OrdInd.hpp
  * @brief Declaração da classe OrdInd para manipulação de dados ordenados por índices.
- * 
+ *
  * Este arquivo contém a declaração da classe OrdInd, que permite carregar dados de um arquivo,
  * criar índices para atributos específicos, ordenar esses índices e imprimir os dados ordenados.
- * 
+ *
  * @date 2024
- * 
+ *
  * @author Dante Junqueira Pedrosa
  * @institution Universidade Federal de Minas Gerais (UFMG)
  * @course DCC205 - Estruturas de Dados
  */
+
 #pragma once
 
 #include <string>
 #include "Sorts.hpp"
 
-
-typedef ApontadorIndice* ApontadorIndicePtr;
-
 class OrdInd
 {
 private:
-    std::string** dados;        // Dados carregados (matriz de strings)
+    std::string **dados;        // Dados carregados (matriz de strings)
     int linhas;                 // Número de linhas
     int colunas;                // Número de colunas (atributos)
     std::string *atributos;     // Nomes dos atributos
     std::string *tipoAtributos; // Tipos de dados dos atributos
-    ApontadorIndice*** indices;  // Índices ordenados por atributo
-    
+    ApontadorIndice ***indices; // Índices ordenados por atributo
 
 public:
     /**

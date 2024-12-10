@@ -1,10 +1,36 @@
-#ifndef SORTS_HPP
-#define SORTS_HPP
+/**
+ * @file Sorts.hpp
+ * @brief Declaração de funções de ordenação para o tipo ApontadorIndice.
+ *
+ * Este arquivo contém as declarações das funções de ordenação que serão
+ * utilizadas para ordenar arrays do tipo ApontadorIndice. As funções
+ * implementadas incluem Insertion Sort, Shell Sort e QuickSort.
+ *
+ * @date 2024
+ *
+ * @author Dante Junqueira Pedrosa
+ * @institution Universidade Federal de Minas Gerais (UFMG)
+ * @course DCC205 - Estruturas de Dados
+ */
+
+#pragma once
 
 #include <string>
 
-// #include "ListaEncadeada.hpp"
-
+/**
+ * @struct ApontadorIndice
+ * @brief Estrutura que representa um índice apontador.
+ *
+ * A estrutura ApontadorIndice contém uma chave e uma posição. A chave é uma
+ * string utilizada para ordenar as entradas, enquanto a posição é um inteiro
+ * que indica a posição da respectiva entrada na lista original inalterada.
+ *
+ * @var ApontadorIndice::chave
+ * Chave utilizada para ordenar as entradas.
+ *
+ * @var ApontadorIndice::pos
+ * Posição da respectiva entrada na lista original inalterada.
+ */
 struct ApontadorIndice
 {
 
@@ -36,6 +62,7 @@ struct ApontadorIndice
         return chave <= other.chave;
     }
 };
+typedef ApontadorIndice *ApontadorIndicePtr;
 
 /**
  * @brief Ordena um array de ApontadorIndice usando o algoritmo Insertion Sort.
@@ -81,13 +108,3 @@ void quicksort_part(ApontadorIndice *arr[], int low, int high, int *i, int *j);
  * @param high Índice final.
  */
 void quicksort_ord(ApontadorIndice *arr[], int low, int high);
-
-/**
- * @brief Ordena um array de ApontadorIndice usando o algoritmo Bucket Sort.
- *
- * @param arr Array de ApontadorIndice a ser ordenado.
- * @param n Tamanho do array.
- */
-// void bucketSort(ApontadorIndice arr[], int n);
-
-#endif // SORTS_HPP
