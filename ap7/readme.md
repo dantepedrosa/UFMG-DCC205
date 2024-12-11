@@ -45,7 +45,6 @@ A leitura dos dados do grafo se dará da seguinte forma:
 
 ```mermaid
 graph TD
-graph TD
     0 --- 2
     1 --- 4
     1 --- 5
