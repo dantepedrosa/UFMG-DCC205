@@ -2,9 +2,9 @@
 
 ## Definições
 
-Para auxiliar nesta prática utilize os slides da aula de grafos. 
+Para auxiliar nesta prática deverão ser utilizados os slides da aula de grafos. 
 
-Vamos precisar de uma definição adicional:
+Será necessário uma definição adicional:
 
     Um grafo é completo se para todo par de vértices u e v, a aresta uv existe. Em outras palavras é um grafo que possui todas as arestas possíveis. Um grafo completo de n vértices é chamado de Kn.
 
@@ -155,6 +155,10 @@ Observações sobre a implementação das listas encadeadas:
 
 ## Código base
 
+Deve ser implementada a classe Grafo, seguindo a estrutura a seguir:
+
+
+**graph.hpp:**
 ```hpp
 class Grafo{
     public:
