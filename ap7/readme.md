@@ -84,7 +84,7 @@ graph TD
 
 ### Exemplos de saída
 
-**Exemplo B((1)) <- Entrada:**
+**Entrada:**
 
 ```terminal
 6
