@@ -28,36 +28,43 @@
  * @param inputFile Caminho para o arquivo de entrada contendo os dados.
  * @param outputFile Caminho para o arquivo de saída onde os dados ordenados serão armazenados.
  */
-void TestaTempoOrdenacao(std::string &atribName, std::string &sortAlgorithm, std::string &inputFile, std::string &outputFile)
+void TestaTempoOrdenacao(std::string &atribName, std::string &sortAlgorithm, std::string &inputFile, std::chrono::duration<double>* result)
 {
 
     OrdInd ordInd;
-    ordInd.CarregaArquivo(inputFile);
-
-    int atrbid = ordInd.IDAtributo(atribName);
+    if (ordInd.CarregaArquivo(inputFile) != 0) {
+        std::cerr << "Error loading file: " << inputFile << std::endl;
+        return;
+    }
+    //int atrbid = ordInd.IDAtributo(atribName);
 
     // Mede tempo gasto por CriaIndice
     auto start = std::chrono::high_resolution_clock::now();
     ordInd.CriaIndice(atrbid);
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> duration = end - start;
-    std::cout << "Time taken by CriaIndice: " << duration.count() << " seconds" << std::endl;
+    result[0] = duration;
+    //std::cout << "Time taken by CriaIndice: " << duration.count() << " seconds" << std::endl;
 
     // Mede tempo gasto por OrdenaIndice
     start = std::chrono::high_resolution_clock::now();
     ordInd.OrdenaIndice(atrbid, sortAlgorithm);
     end = std::chrono::high_resolution_clock::now();
     duration = end - start;
-    std::cout << "Time taken by OrdenaIndice (" << sortAlgorithm << "): " << duration.count() << " seconds" << std::endl;
+    result[1] = duration;
+    //std::cout << "Time taken by OrdenaIndice (" << sortAlgorithm << "): " << duration.count() << " seconds" << std::endl;
+
 
     // Mede tempo gasto por ImprimeOrdenadoIndice
     start = std::chrono::high_resolution_clock::now();
-    int result = ordInd.ImprimeOrdenadoIndice(atrbid);
+    int resultado = ordInd.ImprimeOrdenadoIndice(atrbid);
     end = std::chrono::high_resolution_clock::now();
     duration = end - start;
-    std::cout << "Time taken by ImprimeOrdenadoIndice: " << duration.count() << " seconds" << std::endl;
-}
+    result[2] = duration;
+    //std::cout << "Time taken by ImprimeOrdenadoIndice: " << duration.count() << " seconds" << std::endl;
 
+   
+}
 /**
  * @brief Função principal para testar o desempenho de algoritmos de ordenação.
  *
@@ -70,6 +77,7 @@ void TestaTempoOrdenacao(std::string &atribName, std::string &sortAlgorithm, std
  */
 int Teste(int argc, char **argv)
 {
+
 
     // Valida a entrada
     if (argc < 5)
@@ -85,15 +93,35 @@ int Teste(int argc, char **argv)
         std::string sort = argv[3];
         std::string outputFile = argv[4];
 
-        int result[3]; // TODO colocar resultado no vetor
+         // TODO colocar resultado no vetor
 
-        TestaTempoOrdenacao(atribName, sort, inputFile, outputFile, );
+        //TestaTempoOrdenacao(atribName, sort, inputFile, outputFile, );
 
         return 0;
     }
+    
+
 
     // Caso não tenha input, testar todos e gerar arquivos
     std::string algoritmos[3] = {"quick", "shell", "insertion"};
+    std::string atributos[3] = {"name", "id", "address"};
+
+    std::string inputFile;
+    std::chrono::duration<double>  result[3];
+
+    for(int i = 500; i <= 5000; i+= 500){
+        inputFile = "cad/cad.r" + std::to_string(i) + ".p1000.xcsv";
+        for (int j = 0; j < 3; j++)
+        {
+            for (int k = 0; k < 3; k++)
+            {
+
+                TestaTempoOrdenacao(j, algoritmos[k], inputFile, result);
+                std::cout <<"linhas "<< i << ",algoritmo " << algoritmos[k] << ",atributo " << j << ",resultado " << result[0].count() << "," << result[1].count() << std::endl;
+            }
+        }
+    }
+    
 
     return 0;
 }
