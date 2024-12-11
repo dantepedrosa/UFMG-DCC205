@@ -45,14 +45,14 @@ A leitura dos dados do grafo se dará da seguinte forma:
 
 ```mermaid
 graph TD
-    0 --- 2
-    1 --- 4
-    1 --- 5
-    2 --- 3
-    2 --- 4
-    3 --- 5
-    4 --- 2
-    5 --- 1
+    A((0)) <---> C((2))
+    B((1)) <---> E((4))
+    B((1)) <---> F((5))
+    C((2)) <---> D((3))
+    C((2)) <---> E((4))
+    D((3)) <---> F((5))
+    E((4)) <---> C((2))
+    F((5)) <---> B((1))
 ```
 
 **Exemplo 2:**
@@ -72,19 +72,19 @@ graph TD
 
 ```mermaid
 graph TD
-    0 --- 2
-    0 --- 5
-    1 --- 2
-    1 --- 4
-    1 --- 5
-    2 --- 4
-    3 --- 5
-    4 --- 2
+    A((0)) <---> C((2))
+    A((0)) <---> F((5))
+    B((1)) <---> C((2))
+    B((1)) <---> E((4))
+    B((1)) <---> F((5))
+    C((2)) <---> E((4))
+    D((3)) <---> F((5))
+    E((4)) <---> C((2))
 ```
 
 ### Exemplos de saída
 
-**Exemplo 1 - Entrada:**
+**Exemplo B((1)) <- Entrada:**
 
 ```terminal
 6
@@ -106,10 +106,10 @@ graph TD
 
 Onde:
 
-- 1a linha: Quantidade de vértices
-- 2a linha: Quantidade de arestas
-- 3a linha: Grau mínimo
-- 4a linha: Grau máximo
+-> B((1))a linha: Quantidade de vértices
+-> C((2))a linha: Quantidade de arestas
+-> D((3))a linha: Grau mínimo
+-> E((4))a linha: Grau máximo
 
 **Saída - A partir do comando `./pa3.out -n`:**
 
@@ -124,9 +124,9 @@ Onde:
 
 Onde:
 
-- 1a linha: Vizinhos do vértice 0
-- 2a linha: Vizinhos do vértice 1
-- 3a linha: Vizinhos do vértice 2
+-> B((1))a linha: Vizinhos do vértice 0
+-> C((2))a linha: Vizinhos do vértice 1
+-> D((3))a linha: Vizinhos do vértice 2
 - ...
 
 Note que a saída das vizinhanças deve ser dada na mesma ordem em que os vizinhos aparecem na entrada.
@@ -139,7 +139,7 @@ Note que a saída das vizinhanças deve ser dada na mesma ordem em que os vizinh
 
 Onde:
 
-- 1a linha: O grafo de entrada não é um grafo completo
+-> B((1))a linha: O grafo de entrada não é um grafo completo
 
 ## Observações
 
