@@ -7,6 +7,7 @@
  * usado pela lista, com funções como remoção, pesquisa e impressão de itens.
  */
 
+#pragma once
 
 /**
  * @class TipoCelula
@@ -14,7 +15,7 @@
  * 
  * @tparam TipoItem Tipo do item armazenado na célula.
  */
-template <class TipoItem>
+template <typename TipoItem>
 class TipoCelula
 {
 public:
@@ -45,7 +46,7 @@ private:
  * 
  * @tparam TipoItem Tipo dos itens armazenados na lista.
  */
-template <class TipoItem>
+template <typename TipoItem>
 class ListaEncadeada
 {
 public:
@@ -126,7 +127,7 @@ public:
      * @param c Chave do item a ser pesquisado.
      * @return TipoItem Item encontrado com a chave especificada.
      */
-    TipoItem Pesquisa(TipoChave c) const;
+    TipoItem Pesquisa(TipoChave c);
 
     /**
      * @brief Verifica se a lista encadeada está vazia.
@@ -134,7 +135,7 @@ public:
      * @return true Se a lista estiver vazia.
      * @return false Se a lista não estiver vazia.
      */
-    bool Vazia() const;
+    bool Vazia();
 
     /**
      * @brief Returns the size of the linked list.
@@ -143,12 +144,12 @@ public:
      * 
      * @return int The size of the linked list.
      */
-    int Tamanho() const;
+    int Tamanho();
 
     /**
      * @brief Imprime todos os itens da lista.
      */
-    void Imprime() const;
+    void Imprime();
 
     /**
      * @brief Remove todos os itens da lista.
@@ -170,3 +171,12 @@ private:
      */
     TipoCelula *Posiciona(int pos, bool antes);
 };
+
+template <typename TipoItem>
+TipoItem ListaEncadeada<TipoItem>::GetItem(int pos) {
+    TipoCelula<TipoItem>* atual = primeiro;
+    for (int i = 0; i < pos; i++) {
+        atual = atual->prox;
+    }
+    return atual->item;
+}

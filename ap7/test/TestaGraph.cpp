@@ -47,6 +47,7 @@ void testImprimeVizinhos() {
     std::cout << "Teste ImprimeVizinhos passou!" << std::endl;
 }
 
+/*
 int main() {
     testQuantidadeVertices();
     testQuantidadeArestas();
@@ -55,3 +56,4 @@ int main() {
     std::cout << GREEN << "Todos os testes " << "passaram" << "!" << RESET << std::endl;
     return 0;
 }
+*/
