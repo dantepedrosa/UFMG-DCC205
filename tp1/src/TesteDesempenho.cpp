@@ -28,7 +28,7 @@
  * @param inputFile Caminho para o arquivo de entrada contendo os dados.
  * @param outputFile Caminho para o arquivo de saída onde os dados ordenados serão armazenados.
  */
-void TestaTempoOrdenacao(std::string &atribName, std::string &sortAlgorithm, std::string &inputFile, std::chrono::duration<double>* result)
+void TestaTempoOrdenacao(int atrbid, std::string &sortAlgorithm, std::string &inputFile, std::chrono::duration<double>* result)
 {
 
     OrdInd ordInd;
@@ -57,7 +57,7 @@ void TestaTempoOrdenacao(std::string &atribName, std::string &sortAlgorithm, std
 
     // Mede tempo gasto por ImprimeOrdenadoIndice
     start = std::chrono::high_resolution_clock::now();
-    int resultado = ordInd.ImprimeOrdenadoIndice(atrbid);
+    ordInd.ImprimeOrdenadoIndice(atrbid);
     end = std::chrono::high_resolution_clock::now();
     duration = end - start;
     result[2] = duration;

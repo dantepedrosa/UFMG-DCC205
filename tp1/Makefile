@@ -15,7 +15,7 @@ TEST_SRC = $(TEST_FOLDER)OrdIndTeste.cpp
 TEST_OBJ = $(patsubst $(TEST_FOLDER)%.cpp, $(OBJ_FOLDER)%.o, $(TEST_SRC))
 
 # Targets
-TARGET = main
+TARGET = tp1.out
 TEST_TARGET = test
 
 # Create directories if they don't exist

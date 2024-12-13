@@ -35,7 +35,6 @@ int main(int argc, char **argv)
     std::string inputFile = argv[1];
 
     OrdInd ordInd;
-    int result;
     ordInd.CarregaArquivo(inputFile);
 
     // Nomeação dos 3 algoritmos
@@ -50,7 +49,7 @@ int main(int argc, char **argv)
             // Executa com o algoritmo
             ordInd.CriaIndice(j);
             ordInd.OrdenaIndice(j, algoritmos[i]);
-            result = ordInd.ImprimeOrdenadoIndice(j);
+            ordInd.ImprimeOrdenadoIndice(j);
         }
     }
 
