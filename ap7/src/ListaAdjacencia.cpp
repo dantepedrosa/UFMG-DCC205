@@ -21,8 +21,8 @@ void ListaAdjacencia::adicionarAresta(int v, int w) {
 }
 
 // Obter os vizinhos do vértice v
-ListaEncadeada<int>* ListaAdjacencia::obterVizinhos(int v) {
-    return &adjList.GetItem(v);
+ListaEncadeada<int>& ListaAdjacencia::obterVizinhos(int v) {
+    return adjList.GetItem(v);
 }
 
 // Obter o grau do vértice v

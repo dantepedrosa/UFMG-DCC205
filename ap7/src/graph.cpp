@@ -44,9 +44,9 @@ int Grafo::GrauMaximo() {
 }
 
 void Grafo::ImprimeVizinhos(int v) {
-    ListaEncadeada<int>* vizinhos = vertices.obterVizinhos(v);
-    for (int i = 0; i < vizinhos->Tamanho(); i++) {
-        std::cout << vizinhos->GetItem(i) << " ";
+    ListaEncadeada<int>& vizinhos = vertices.obterVizinhos(v);
+    for (int i = 0; i < vizinhos.Tamanho(); i++) {
+        std::cout << vizinhos.GetItem(i) << " ";
     }
     std::cout << std::endl;
 }

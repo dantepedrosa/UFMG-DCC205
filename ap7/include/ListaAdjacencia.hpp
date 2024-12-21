@@ -40,7 +40,7 @@ public:
      * @param v O vértice cujo vizinhos serão obtidos.
      * @return ListaEncadeada<int>& A lista de vizinhos do vértice.
      */
-    ListaEncadeada<int>* obterVizinhos(int v);
+    ListaEncadeada<int>& obterVizinhos(int v);
 
     /**
      * @brief Obtém o grau de um vértice.
