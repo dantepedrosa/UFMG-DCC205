@@ -48,21 +48,21 @@ public:
      * @param v O vértice cujo grau será obtido.
      * @return int O grau do vértice.
      */
-    int obterGrau(int v) const;
+    int obterGrau(int v);
 
     /**
      * @brief Obtém o número de vértices no grafo.
      * 
      * @return int O número de vértices.
      */
-    int obterNumVertices() const;
+    int obterNumVertices();
 
     /**
      * @brief Obtém o número de arestas no grafo.
      * 
      * @return int O número de arestas.
      */
-    int obterNumArestas() const;
+    int obterNumArestas();
 
 private:
     ListaEncadeada<ListaEncadeada<int>> adjList;    // Lista de adjacência que armazena os vizinhos de cada vértice.

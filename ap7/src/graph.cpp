@@ -1,75 +1,52 @@
 #include "graph.hpp"
+#include <iostream>
 
-/**
- * @brief Construtor da classe Grafo.
- */
-Grafo::Grafo() {
-    // TODO: Implementar o construtor
-}
+Grafo::Grafo() {}
 
-/**
- * @brief Destrutor da classe Grafo.
- */
-Grafo::~Grafo() {
-    // TODO: Implementar o destrutor
-}
+Grafo::~Grafo() {}
 
-/**
- * @brief Insere um novo vértice no grafo.
- */
 void Grafo::InsereVertice() {
-    // TODO: Implementar a inserção de um vértice
+    vertices.adicionarVertice();
 }
 
-/**
- * @brief Insere uma nova aresta entre os vértices v e w.
- * @param v Vértice de origem.
- * @param w Vértice de destino.
- */
 void Grafo::InsereAresta(int v, int w) {
-    // TODO: Implementar a inserção de uma aresta
+    vertices.adicionarAresta(v, w);
 }
 
-/**
- * @brief Retorna a quantidade de vértices no grafo.
- * @return Quantidade de vértices.
- */
 int Grafo::QuantidadeVertices() {
-    // TODO: Implementar a contagem de vértices
-    return 0;
+    return vertices.obterNumVertices();
 }
 
-/**
- * @brief Retorna a quantidade de arestas no grafo.
- * @return Quantidade de arestas.
- */
 int Grafo::QuantidadeArestas() {
-    // TODO: Implementar a contagem de arestas
-    return 0;
+    return vertices.obterNumArestas();
 }
 
-/**
- * @brief Retorna o grau mínimo dos vértices no grafo.
- * @return Grau mínimo.
- */
 int Grafo::GrauMinimo() {
-    // TODO: Implementar a obtenção do grau mínimo
-    return 0;
+    int minGrau = vertices.obterGrau(0);
+    for (int i = 1; i < vertices.obterNumVertices(); i++) {
+        int grau = vertices.obterGrau(i);
+        if (grau < minGrau) {
+            minGrau = grau;
+        }
+    }
+    return minGrau;
 }
 
-/**
- * @brief Retorna o grau máximo dos vértices no grafo.
- * @return Grau máximo.
- */
 int Grafo::GrauMaximo() {
-    // TODO: Implementar a obtenção do grau máximo
-    return 0;
+    int maxGrau = vertices.obterGrau(0);
+    for (int i = 1; i < vertices.obterNumVertices(); i++) {
+        int grau = vertices.obterGrau(i);
+        if (grau > maxGrau) {
+            maxGrau = grau;
+        }
+    }
+    return maxGrau;
 }
 
-/**
- * @brief Imprime os vizinhos do vértice v.
- * @param v Vértice cujos vizinhos serão impressos.
- */
 void Grafo::ImprimeVizinhos(int v) {
-    // TODO: Implementar a impressão dos vizinhos
+    ListaEncadeada<int>& vizinhos = vertices.obterVizinhos(v);
+    for (int i = 0; i < vizinhos.Tamanho(); i++) {
+        std::cout << vizinhos.GetItem(i) << " ";
+    }
+    std::cout << std::endl;
 }

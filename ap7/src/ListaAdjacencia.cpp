@@ -1,41 +1,41 @@
 #include "ListaAdjacencia.hpp"
 
 // Construtor
-ListaAdjacencia::ListaAdjacencia() {
-    // TODO: Implementar construtor
-}
+ListaAdjacencia::ListaAdjacencia() : numVertices(0), numArestas(0) {}
 
 // Destrutor
-ListaAdjacencia::~ListaAdjacencia() {
-    // TODO: Implementar destrutor
-}
+ListaAdjacencia::~ListaAdjacencia() {}
 
 // Adicionar um vértice
 void ListaAdjacencia::adicionarVertice() {
-    // TODO: Implementar adicionarVertice
+    ListaEncadeada<int> novaLista;
+    adjList.InsereFinal(novaLista);
+    numVertices++;
 }
 
 // Adicionar uma aresta entre os vértices v e w
 void ListaAdjacencia::adicionarAresta(int v, int w) {
-    // TODO: Implementar adicionarAresta
+    adjList.GetItem(v).InsereFinal(w);
+    adjList.GetItem(w).InsereFinal(v);
+    numArestas++;
 }
 
 // Obter os vizinhos do vértice v
 ListaEncadeada<int>& ListaAdjacencia::obterVizinhos(int v) {
-    // TODO: Implementar obterVizinhos
+    return adjList.GetItem(v);
 }
 
 // Obter o grau do vértice v
-int ListaAdjacencia::obterGrau(int v) const {
-    // TODO: Implementar obterGrau
+int ListaAdjacencia::obterGrau(int v) {
+    return adjList.GetItem(v).Tamanho();
 }
 
 // Obter o número de vértices
-int ListaAdjacencia::obterNumVertices() const {
-    // TODO: Implementar obterNumVertices
+int ListaAdjacencia::obterNumVertices()  {
+    return numVertices;
 }
 
 // Obter o número de arestas
-int ListaAdjacencia::obterNumArestas() const {
-    // TODO: Implementar obterNumArestas
+int ListaAdjacencia::obterNumArestas() {
+    return numArestas;
 }
