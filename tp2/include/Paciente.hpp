@@ -32,3 +32,16 @@ ente, em particular o tempo ocioso e o tempo sendo atendido. Essas informações
 fundamentais para o cálculo das estatísticas gerais do sistema
 */
 
+
+
+#include <string>
+
+
+class Paciente
+{
+private:
+    
+public:
+    Paciente(/* args */);
+    ~Paciente();
+};
