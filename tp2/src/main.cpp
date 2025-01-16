@@ -1,15 +1,9 @@
 #include <iostream>
-#include <string>
-#include "DataHora.hpp"
+#include <limits>
 
-int main(int argc, char* argv[]) {
-    if (argc != 2) {
-        std::cerr << "Uso: " << argv[0] << " <arquivo.csv>" << std::endl;
-        return 1;
-    }
-
-    std::string nomeArquivo = argv[1];
-    // ... código para processar o arquivo ...
-
+int main() {
+    std::cout << "Tamanho do long long: " << sizeof(unsigned int) << " bytes\n";
+    std::cout << "Máximo valor: " << std::numeric_limits<unsigned int>::max() << "\n";
+    std::cout << "Mínimo valor: " << std::numeric_limits<unsigned int>::min() << "\n";
     return 0;
 }

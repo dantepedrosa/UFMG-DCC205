@@ -1,10 +1,10 @@
 #include <string>
 #include <ctime>
 
-#define ANO 1000000
-#define MES 10000
-#define DIA 100
-#define HORA 60
+#define ANO 100000000
+#define MES 1000000
+#define DIA 10000
+#define HORA 100
 
 /**
  * @brief Estrutura que representa uma data.
@@ -59,16 +59,16 @@ public:
 class DataHora
 {
 private:
-    int codDataHora; // Código que representa a data e hora
+    unsigned int codDataHora; // Código que representa a data e hora
 
     /**
      * @brief Converte uma data e hora para um código personalizado.
      * 
      * @param data Data a ser convertida
      * @param hora Hora a ser convertida
-     * @return int Código personalizado
+     * @return unsigned int Código personalizado
      */
-    int converteParaCodigo(Data data, float hora);
+    unsigned int converteParaCodigo(Data data, float hora);
 
     /**
      * @brief Converte um código personalizado para uma string de data e hora.
@@ -77,17 +77,16 @@ private:
      * @param formato Formato da string de data e hora
      * @return std::string Data e hora como uma string
      */
-    std::string converteDeCodigo(int codigo, std::string formato);
+    std::string converteDeCodigo(unsigned int codigo);
 
 public:
     /**
      * @brief Constrói um novo objeto DataHora.
      * 
-     * @param dataReferencia Data de referência
      * @param dataAtual Data atual
      * @param horaAtual Hora atual
      */
-    DataHora(Data dataReferencia, Data dataAtual, float horaAtual);
+    DataHora(Data dataAtual, float horaAtual);
 
     /**
      * @brief Destrói o objeto DataHora.
@@ -100,28 +99,28 @@ public:
      * @param formato Formato da string de data e hora
      * @return std::string Data e hora como uma string
      */
-    std::string getStringDataHora(std::string formato);
+    std::string getStringDataHora();
 
     /**
      * @brief Imprime a data e hora no formato especificado.
      * 
      * @param formato Formato da string de data e hora
      */
-    void printDataHora(std::string formato);
+    void printDataHora();
 
     /**
      * @brief Obtém o código que representa a data e hora.
      * 
-     * @return int Código que representa a data e hora
+     * @return unsigned int Código que representa a data e hora
      */
-    int getCodDataHora();
+    unsigned int getCodDataHora();
 
     /**
-     * @brief Soma um número de horas ao código de data e hora.
+     * @brief Soma um número de horas ao código de data e hora. Não contabiliza overflow de dias
      * 
      * @param horas Número de horas a serem somadas
      */
-    void somaHoras(float horas);
+    unsigned int somaHoras(float horas);
 
     /**
      * @brief Obtém a data a partir do código de data e hora.
@@ -135,7 +134,14 @@ public:
      * 
      * @return float A hora correspondente ao código
      */
-    float getHora();
+    int getHora();
+
+    /**
+     * @brief Obtém o componente de minutos da hora.
+     * 
+     * @return int O componente de minutos da hora.
+     */
+    int getMinutos();
 
     /**
      * @brief Compara se a data e hora atual é menor que a data e hora passada.
@@ -190,4 +196,20 @@ public:
      * @return false Caso contrário
      */
     bool operator!=(const DataHora& outra) const;
+
+    /**
+     * @brief Obtém o dia da semana a partir de uma data.
+     * 
+     * @param data Data a ser convertida
+     * @return std::string Dia da semana
+     */
+    std::string getDiaSemana(Data data);
+
+    /**
+     * @brief Obtém o mês a partir de uma data.
+     * 
+     * @param data Data a ser convertida
+     * @return std::string Mês
+     */
+    std::string getMes(Data data);
 };

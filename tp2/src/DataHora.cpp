@@ -2,11 +2,7 @@
 #include <iostream>
 #include <iomanip>
 #include <sstream>
-
-#define ANO 1000000
-#define MES 10000
-#define DIA 100
-#define HORA 60
+#include <ctime>
 
 // Implementação da classe Data
 Data::Data(int dia, int mes, int ano) : dia(dia), mes(mes), ano(ano) {}
@@ -17,107 +13,154 @@ int Data::getmes() { return mes; }
 int Data::getAno() { return ano; }
 
 // Implementação da classe DataHora
-DataHora::DataHora(Data dataReferencia, Data dataAtual, float horaAtual)
+DataHora::DataHora(Data dataAtual, float horaAtual)
 {
-    // TODO - Trocar metodo de conversão
     codDataHora = converteParaCodigo(dataAtual, horaAtual);
 }
 
 DataHora::~DataHora() {}
 
-int DataHora::converteParaCodigo(Data data, float hora)
+unsigned int DataHora::converteParaCodigo(Data data, float hora)
 {
-    int codigo = 0;
-    codigo += data.getAno() * ANO;
+    unsigned int codigo = 0;
+    codigo += (data.getAno() - 2000) * ANO;
     codigo += data.getmes() * MES;
     codigo += data.getDia() * DIA;
     codigo += (int)(hora * HORA);
     return codigo;
 }
 
-std::string DataHora::converteDeCodigo(int codigo, std::string formato)
+std::string DataHora::converteDeCodigo(unsigned int codigo)
 {
-    // TODO - Trocar a função para utilizar o getData e getHora
-    // Converte o código personalizado para uma string de data e hora
-    int ano = codigo / ANO;
-    int mes = (codigo / MES) % 100;
-    int dia = (codigo / DIA) % 100;
-    int hora = (codigo % ANO) / HORA;
-    int minutos = codigo % HORA;
+    Data data = getData();
+    int hora = getHora();
+    int minutos = getMinutos();
+    std::string diaSemana = getDiaSemana(data);
+    std::string mes = getMes(data);
 
     std::ostringstream oss;
-    oss << std::setw(2) << std::setfill('0') << dia << "/"
-        << std::setw(2) << std::setfill('0') << mes << "/"
-        << ano << " "
+    oss << diaSemana << " " << mes << " "
+        << std::setw(2) << std::setfill('0') << data.getDia() << " "
         << std::setw(2) << std::setfill('0') << hora << ":"
-        << std::setw(2) << std::setfill('0') << minutos;
+        << std::setw(2) << std::setfill('0') << minutos << ":00 "
+        << data.getAno();
     return oss.str();
 }
 
-std::string DataHora::getStringDataHora(std::string formato)
+std::string DataHora::getStringDataHora()
 {
-    return converteDeCodigo(codDataHora, formato);
+    return converteDeCodigo(codDataHora);
 }
 
-void DataHora::printDataHora(std::string formato)
+void DataHora::printDataHora()
 {
-    std::cout << getStringDataHora(formato) << std::endl;
+    std::cout << getStringDataHora() << std::endl;
 }
 
-int DataHora::getCodDataHora()
+unsigned int DataHora::getCodDataHora()
 {
     return codDataHora;
 }
 
-void DataHora::somaHoras(float horas)
+unsigned int DataHora::somaHoras(float horasSoma)
 {
-    // TODO - Consertar somaHoras
-    int minutosAdicionais = (int)(horas * HORA);
-    codDataHora += minutosAdicionais;
+    int horaAtual = codDataHora % DIA; // Consegue as horas atuais (Ex. 2350)
+    codDataHora -= horaAtual;          // Reseta para realizar os calculos
+
+    horaAtual += (int)(horasSoma * HORA); // Soma com o número Ex. 2350 + 7530 = 9880
+
+    if (horaAtual >= 24 * HORA)
+    {
+        int diasAdicionais = horaAtual / (24 * HORA); // Ex. diasAdicionais = 4
+        codDataHora += diasAdicionais * DIA;          // Ex. codDataHora += 40000
+
+        if (codDataHora % MES >= 31 * DIA)
+            std::overflow_error("Número de dias do mês excedidos");
+
+        horaAtual -= (diasAdicionais * 24 * HORA); // Ex. 9880 - (2400 * 4) = 280
+    }
+
+    codDataHora += horaAtual; // Ex. codDataHora += 280
+
+    return codDataHora;
 }
 
 Data DataHora::getData()
 {
-    int ano = codDataHora / ANO;
-    int mes = (codDataHora / MES) % 100;
-    int dia = (codDataHora / DIA) % 100;
+    int ano = (int)(codDataHora / ANO) + 2000;
+    int mes = ((int)(codDataHora / MES)) % 100;
+    int dia = ((int)(codDataHora / DIA)) % 100;
     return Data(dia, mes, ano);
 }
 
-float DataHora::getHora()
+int DataHora::getHora()
 {
-    int minutosTotais = codDataHora % ANO;
-    int horas = minutosTotais / HORA;
-    int minutos = minutosTotais % HORA;
-    return horas + minutos / 60.0;
+    int horas = codDataHora % DIA;
+    return (horas / 100);
 }
 
-bool DataHora::operator<(const DataHora& outra) const
+int DataHora::getMinutos()
+{
+    float fracaoMinutos = codDataHora % HORA; // 2350 -> 50
+    fracaoMinutos /= 100;
+    int minutos = (int)(fracaoMinutos * 60);
+    return minutos;
+}
+
+std::string DataHora::getDiaSemana(Data data)
+{
+    std::tm timeinfo = {};
+    timeinfo.tm_year = data.getAno() - 1900;
+    timeinfo.tm_mon = data.getmes() - 1;
+    timeinfo.tm_mday = data.getDia();
+
+    std::mktime(&timeinfo);
+
+    char buffer[4];
+    std::strftime(buffer, sizeof(buffer), "%a", &timeinfo);
+    return std::string(buffer);
+}
+
+std::string DataHora::getMes(Data data)
+{
+    std::tm timeinfo = {};
+    timeinfo.tm_year = data.getAno() - 1900;
+    timeinfo.tm_mon = data.getmes() - 1;
+    timeinfo.tm_mday = data.getDia();
+
+    std::mktime(&timeinfo);
+
+    char buffer[4];
+    std::strftime(buffer, sizeof(buffer), "%b", &timeinfo);
+    return std::string(buffer);
+}
+
+bool DataHora::operator<(const DataHora &outra) const
 {
     return codDataHora < outra.codDataHora;
 }
 
-bool DataHora::operator>(const DataHora& outra) const
+bool DataHora::operator>(const DataHora &outra) const
 {
     return codDataHora > outra.codDataHora;
 }
 
-bool DataHora::operator<=(const DataHora& outra) const
+bool DataHora::operator<=(const DataHora &outra) const
 {
     return codDataHora <= outra.codDataHora;
 }
 
-bool DataHora::operator>=(const DataHora& outra) const
+bool DataHora::operator>=(const DataHora &outra) const
 {
     return codDataHora >= outra.codDataHora;
 }
 
-bool DataHora::operator==(const DataHora& outra) const
+bool DataHora::operator==(const DataHora &outra) const
 {
     return codDataHora == outra.codDataHora;
 }
 
-bool DataHora::operator!=(const DataHora& outra) const
+bool DataHora::operator!=(const DataHora &outra) const
 {
     return codDataHora != outra.codDataHora;
 }
