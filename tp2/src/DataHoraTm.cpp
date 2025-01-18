@@ -32,9 +32,11 @@ void DataHoraTm::printDataHora(const std::string& formato)
 
 void DataHoraTm::somaHoras(float horas)
 {
-    dataHora.tm_hour += static_cast<int>(horas);
-    dataHora.tm_min += static_cast<int>((horas - static_cast<int>(horas)) * 60);
-    std::mktime(&dataHora);
+    int horasInteiras = static_cast<int>(horas);
+    int minutosAdicionais = static_cast<int>((horas - horasInteiras) * 60);
+    dataHora.tm_hour += horasInteiras;
+    dataHora.tm_min += minutosAdicionais;
+    std::mktime(&dataHora); // Ajusta a data e hora corretamente
 }
 
 Data DataHoraTm::getData()

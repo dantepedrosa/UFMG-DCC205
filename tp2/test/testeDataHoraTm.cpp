@@ -27,6 +27,13 @@ TEST_CASE("Testando o método getStringDataHora") {
     CHECK(dataHora.getStringDataHora("%d/%m/%Y %H:%M") == "15/08/2023 14:30");
 }
 
+TEST_CASE("Testando o método getStringDataHora com formato completo") {
+    Data dataAtual(15, 8, 2023);
+    float horaAtual = 14.5; // 14:30
+    DataHoraTm dataHora(dataAtual, horaAtual);
+    CHECK(dataHora.getStringDataHora("%a %b %d %H:%M:%S %Y") == "Tue Aug 15 14:30:00 2023");
+}
+
 TEST_CASE("Testando o método somaHoras com overflow de dia") {
     Data dataAtual(15, 8, 2023);
     float horaAtual = 23.5; // 23:30
