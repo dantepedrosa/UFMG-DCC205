@@ -4,14 +4,6 @@
 #include <sstream>
 #include <ctime>
 
-// Implementação da classe Data
-Data::Data(int dia, int mes, int ano) : dia(dia), mes(mes), ano(ano) {}
-Data::~Data() {}
-
-int Data::getDia() { return dia; }
-int Data::getmes() { return mes; }
-int Data::getAno() { return ano; }
-
 // Implementação da classe DataHoraTm
 DataHoraTm::DataHoraTm(Data dataAtual, float horaAtual)
 {
