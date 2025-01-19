@@ -34,8 +34,24 @@ bool Tempo::operator<(const Tempo& outro) const {
     return horasDesdeReferencia < outro.horasDesdeReferencia;
 }
 
+bool Tempo::operator<=(const Tempo& outro) const {
+    return horasDesdeReferencia <= outro.horasDesdeReferencia;
+}
+
+bool Tempo::operator>(const Tempo& outro) const {
+    return horasDesdeReferencia > outro.horasDesdeReferencia;
+}
+
+bool Tempo::operator>=(const Tempo& outro) const {
+    return horasDesdeReferencia >= outro.horasDesdeReferencia;
+}
+
 bool Tempo::operator==(const Tempo& outro) const {
     return horasDesdeReferencia == outro.horasDesdeReferencia;
+}
+
+bool Tempo::operator!=(const Tempo& outro) const {
+    return horasDesdeReferencia != outro.horasDesdeReferencia;
 }
 
 void Tempo::somaHoras(double horas) {

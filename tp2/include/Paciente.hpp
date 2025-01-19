@@ -33,7 +33,7 @@ fundamentais para o cálculo das estatísticas gerais do sistema
 */
 
 #include <string>
-#include "DataHoraTm.hpp"
+//#include "DataHoraTm.hpp"
 
 class Paciente {
 private:
