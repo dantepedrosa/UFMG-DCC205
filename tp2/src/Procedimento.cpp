@@ -8,4 +8,6 @@ ocioso.
 O TAD procedimento deve registrar a utilização de cada unidade de cada procedimento
 e/ou seu tempo ocioso. Também é importante manter a data hora até a qual cada unidade
 está ocupada.
+
+
 */

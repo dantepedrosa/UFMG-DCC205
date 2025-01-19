@@ -32,16 +32,55 @@ ente, em particular o tempo ocioso e o tempo sendo atendido. Essas informações
 fundamentais para o cálculo das estatísticas gerais do sistema
 */
 
-
-
 #include <string>
+#include "DataHoraTm.hpp"
 
-
-class Paciente
-{
+class Paciente {
 private:
-    
+    int id;
+    bool altaImediata;
+    DataHoraTm admissaoHZ;
+    int grauUrgencia;
+
+    int numMH;  // Número de Medidas Hospitalares inicial
+    int numTL;  // Número de Testes de Laboratório inicial
+    int numEI;  // Número de Exames de Imagem inicial 
+    int numIM;  // Número de Instrumentos/Medicamentos inicial
+
+    int estado;  // Estado atual do paciente (1 a 14)
+
+    int* procedimentosPendentes; // Número de procedimentos pendentes de cada tipo
+
+    float* temposEspera; // Tempo de espera em cada fila
+    float* temposAtendimento; // Tempo de atendimento em cada procedimento
+
+    DataHoraTm tempoUltimoEvento; // Data/hora do último evento processado para o paciente
+
+
+    DataHoraTm saidaHZ; // Data/hora de saída do paciente
+    float tempoTotalAtendimento; // Tempo total de atendimento
+    float tempoTotalEspera; // Tempo total de espera
+
+
+
 public:
-    Paciente(/* args */);
-    ~Paciente();
+    Paciente(int id, bool alta, const DataHoraTm& admissao, int urgencia, int mh, int tl, int ei, int im);
+
+    // Atualiza estado do paciente
+    void atualizarEstado(int novoEstado, const DataHoraTm& dataHoraAtual);
+
+    // Adiciona tempo de espera ou atendimento
+    void registrarEspera(float tempo);
+    void registrarAtendimento(float tempo);
+
+    // Métodos de consulta
+    int getEstado() const;
+    std::string estadoParaString() const; // Converte o estado para string legível
+    const DataHoraTm& getAdmissaoHZ() const;
+
+    // Getters para os procedimentos pendentes
+    int getNumMH() const;
+    int getNumTL() const;
+    int getNumEI() const;
+    int getNumIM() const;
 };
