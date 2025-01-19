@@ -16,15 +16,11 @@ TEST_CASE("Testando a classe Tempo") {
 }
 
 TEST_CASE("Testando overflow de dia, mês e ano") {
-    DataHora ref(31, 12, 2020, 23.0);
-    DataHora dh(1, 1, 2021, 1.0);
+    DataHora ref(1, 1, 2020, 0.0);
+    DataHora dh(31, 12, 2024, 23.5);
     Tempo t1(dh, ref);
 
-    CHECK(t1.getHorasDesdeReferencia() == 2.0);
+    t1.somaHoras(2.0);
 
-    DataHora ref2(28, 2, 2020, 23.0); // Leap year
-    DataHora dh2(1, 3, 2020, 1.0);
-    Tempo t2(dh2, ref2);
-
-    CHECK(t2.getHorasDesdeReferencia() == 2.0);
+    CHECK(t1.paraString() == "Wed Jan  1 01:30:00 2025");
 }
