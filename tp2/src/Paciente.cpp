@@ -11,7 +11,7 @@ Paciente::Paciente()
 
 Paciente::Paciente(int id, bool alta, const Tempo& admissao, int urgencia, int mh, int tl, int ei, int im)
     : id(id), altaImediata(alta), admissaoHZ(admissao), grauUrgencia(urgencia),
-      numMH(mh), numTL(tl), numEI(ei), numIM(im), estado(1), tempoUltimoEvento(admissao),
+      numMH(mh), numTL(tl), numEI(ei), numIM(im), estado(2), tempoUltimoEvento(admissao),
       tempoTotalAtendimento(0.0), tempoTotalEspera(0.0) {
     procedimentosPendentes = new int[4]{mh, tl, ei, im};
     temposEspera = new float[14]{0.0};
@@ -36,12 +36,12 @@ void Paciente::atualizarEstado(int novoEstado, const Tempo& dataHoraAtual) {
 }
 
 void Paciente::registrarEspera(float tempo) {
-    temposEspera[estado] += tempo;
+    temposEspera[estado - 1] += tempo; // Corrigir índice do estado
     tempoTotalEspera += tempo;
 }
 
 void Paciente::registrarAtendimento(float tempo) {
-    temposAtendimento[estado] += tempo;
+    temposAtendimento[estado - 1] += tempo; // Corrigir índice do estado
     tempoTotalAtendimento += tempo;
 }
 
