@@ -32,6 +32,9 @@ test: $(TEST_EXEC_FILES)
 run: $(EXEC)
 	./$(EXEC) $(ARGS)
 
+debug: $(EXEC)
+	gdb --args $(EXEC) $(ARGS)
+
 # Compilar o executável principal
 $(EXEC): $(SRC_OBJ_FILES) | $(BIN_DIR)
 	$(CXX) $(CXXFLAGS) -o $@ $^

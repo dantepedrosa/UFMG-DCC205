@@ -51,7 +51,6 @@ public:
     bool operator>=(const Tempo& outro) const;
     bool operator!=(const Tempo& outro) const;
     
-
     void somaHoras(double horas);
 };
 

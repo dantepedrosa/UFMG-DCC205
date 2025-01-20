@@ -31,4 +31,5 @@ public:
 
     std::string getNome() const;
     int getNumUnidades() const;
+    float getTempoAtendimentoMedio() const;
 };

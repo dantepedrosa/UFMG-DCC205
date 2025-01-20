@@ -40,6 +40,9 @@ TEST_CASE("Teste de integração com arquivo CSV") {
     }
     entrada.close();
 
+    // Verificar número de IDs carregados
+    CHECK(linhasEntrada.size() == 17); // 6 linhas de especificações + 10 pacientes + 1 linha de número de pacientes
+
     // Carregar arquivo de saída esperado
     std::ifstream saida("test/load/saida.csv");
     REQUIRE(saida.is_open());
@@ -54,16 +57,13 @@ TEST_CASE("Teste de integração com arquivo CSV") {
     Escalonador escalonador(100);
     escalonador.inicializa(0.0);
 
-    // Inicializar procedimentos a partir do arquivo CSV
-    std::vector<Procedimento> procedimentos;
-    for (size_t i = 1; i < 7; ++i) { // As primeiras 6 linhas são de especificações de procedimentos
-        std::istringstream iss(linhasEntrada[i]);
-        std::string nome;
-        int unidades;
-        double duracao;
-        iss >> nome >> unidades >> duracao;
-        procedimentos.emplace_back(nome, unidades, duracao);
-    }
+    // Inicializar procedimentos
+    Procedimento triagem("Triagem", 2, 0.2);
+    Procedimento atendimento("Atendimento", 2, 0.5);
+    Procedimento medidas("Medidas Hospitalares", 2, 0.1);
+    Procedimento testes("Testes de Laboratório", 2, 0.05);
+    Procedimento imagem("Exames de Imagem", 2, 0.5);
+    Procedimento instrumentos("Instrumentos/Medicamentos", 2, 0.05);
 
     // Escalonar a chegada de pacientes
     DataHora ref(21, 3, 2017, 0.0);
@@ -79,6 +79,9 @@ TEST_CASE("Teste de integração com arquivo CSV") {
         Evento e(tAdmissao, p, 1);
         escalonador.insereEvento(e);
     }
+
+    // Verificação após inserção de eventos
+    REQUIRE(escalonador.temEventos());
 
     // Processar eventos
     while (escalonador.temEventos()) {

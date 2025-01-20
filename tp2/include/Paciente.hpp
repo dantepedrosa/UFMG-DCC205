@@ -78,6 +78,8 @@ public:
     int getEstado() const;
     std::string estadoParaString() const; // Converte o estado para string legível
     const Tempo& getAdmissaoHZ() const;
+    const Tempo& getSaidaHZ() const;
+    int getId() const;
 
     // Getters para os procedimentos pendentes
     int getNumMH() const;
