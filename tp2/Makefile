@@ -4,55 +4,60 @@ CXXFLAGS = -Wall -std=c++11
 
 # Diretórios
 SRC_DIR = src
-INCLUDE_DIR = include
 TEST_DIR = test
+INCLUDE_DIR = include
 BIN_DIR = bin
 OBJ_DIR = obj
 
 # Arquivos fonte e objetos
 SRC_FILES = $(wildcard $(SRC_DIR)/*.cpp)
-OBJ_FILES = $(SRC_FILES:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/%.o)
 TEST_FILES = $(wildcard $(TEST_DIR)/*.cpp)
-TEST_OBJ_FILES = $(TEST_FILES:$(TEST_DIR)/%.cpp=$(OBJ_DIR)/%.o)
 
-# Executável
-EXEC = $(BIN_DIR)/tp2.out
-TEST_EXEC = $(BIN_DIR)/test.out
+SRC_OBJ_FILES = $(SRC_FILES:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/src_%.o)
+TEST_OBJ_FILES = $(TEST_FILES:$(TEST_DIR)/%.cpp=$(OBJ_DIR)/test_%.o)
 
-# Regra padrão
+# Executáveis
+EXEC = $(BIN_DIR)/main.out
+TEST_EXEC_FILES = $(TEST_FILES:$(TEST_DIR)/%.cpp=$(BIN_DIR)/test_%)
+
+# Regras principais
 all: $(EXEC)
 
-# Regra para compilar o executável principal
-$(EXEC): $(OBJ_FILES) | $(BIN_DIR)
+test: $(TEST_EXEC_FILES)
+	@for test_exec in $(TEST_EXEC_FILES); do \
+		echo "Running $$test_exec"; \
+		$$test_exec; \
+	done
+
+run: $(EXEC)
+	./$(EXEC) $(ARGS)
+
+# Compilar o executável principal
+$(EXEC): $(SRC_OBJ_FILES) | $(BIN_DIR)
 	$(CXX) $(CXXFLAGS) -o $@ $^
 
-# Regra para compilar os arquivos objeto
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp | $(OBJ_DIR)
-	$(CXX) $(CXXFLAGS) -I$(INCLUDE_DIR) -c $< -o $@
-
-# Regra para rodar os testes
-test: $(TEST_EXEC)
-	$(TEST_EXEC)
-
-# Regra para compilar o executável de testes
-$(TEST_EXEC): $(TEST_OBJ_FILES) $(filter-out $(OBJ_DIR)/main.o, $(OBJ_FILES)) | $(BIN_DIR)
+# Compilar executáveis de teste
+$(BIN_DIR)/test_%: $(OBJ_DIR)/test_%.o $(filter-out $(OBJ_DIR)/src_main.o, $(SRC_OBJ_FILES)) | $(BIN_DIR)
 	$(CXX) $(CXXFLAGS) -o $@ $^
 
-# Regra para compilar os arquivos objeto de teste
-$(OBJ_DIR)/%.o: $(TEST_DIR)/%.cpp | $(OBJ_DIR)
+# Regras para compilar objetos
+$(OBJ_DIR)/src_%.o: $(SRC_DIR)/%.cpp | $(OBJ_DIR)
 	$(CXX) $(CXXFLAGS) -I$(INCLUDE_DIR) -c $< -o $@
 
-# Regras para criar os diretórios bin e obj se não existirem
+$(OBJ_DIR)/test_%.o: $(TEST_DIR)/%.cpp | $(OBJ_DIR)
+	$(CXX) $(CXXFLAGS) -I$(INCLUDE_DIR) -c $< -o $@
+
+# Diretórios auxiliares
 $(BIN_DIR):
 	mkdir -p $(BIN_DIR)
 
 $(OBJ_DIR):
 	mkdir -p $(OBJ_DIR)
 
-# Limpeza dos arquivos compilados
+# Limpeza
 clean:
-	rm -f $(OBJ_DIR)/*.o $(EXEC) $(TEST_EXEC)
+	rm -rf $(OBJ_DIR) $(BIN_DIR)
 
-# Regra para rodar o programa principal
-run: $(EXEC)
-	$(EXEC) $(file)
+# Dependências
+-include $(SRC_OBJ_FILES:.o=.d)
+-include $(TEST_OBJ_FILES:.o=.d)
