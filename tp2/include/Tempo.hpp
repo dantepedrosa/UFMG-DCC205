@@ -41,6 +41,8 @@ public:
 
     double getHorasDesdeReferencia() const;
     std::string paraString() const;
+    DataHora getReferencia() const;
+    DataHora getDataHora() const; // Novo método para retornar DataHora
 
     bool operator<(const Tempo& outro) const;
     bool operator==(const Tempo& outro) const;

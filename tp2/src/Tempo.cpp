@@ -30,6 +30,18 @@ std::string Tempo::paraString() const {
     return oss.str();
 }
 
+DataHora Tempo::getReferencia() const {
+    return referencia;
+}
+
+DataHora Tempo::getDataHora() const {
+    std::tm ref_time = { 0, 0, 0, referencia.dia, referencia.mes - 1, referencia.ano - 1900 };
+    std::time_t ref_time_t = std::mktime(&ref_time);
+    std::time_t t = ref_time_t + static_cast<std::time_t>(horasDesdeReferencia * 3600);
+    std::tm tm = *std::localtime(&t);
+    return DataHora(tm.tm_mday, tm.tm_mon + 1, tm.tm_year + 1900, tm.tm_hour + tm.tm_min / 60.0);
+}
+
 bool Tempo::operator<(const Tempo& outro) const {
     return horasDesdeReferencia < outro.horasDesdeReferencia;
 }
