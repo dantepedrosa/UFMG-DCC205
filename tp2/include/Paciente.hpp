@@ -22,24 +22,26 @@ Para fins da simulação, um paciente pode estar em 14 estados:
 14. Alta hospitalar
 Note que há uma simplificação importante na simulação, o paciente assume os estados na
 ordem apresentada e não há situação em que ele retorne a um estado anterior. O estado
-“Não chegou ainda ao hospital´´ é o estado inicial de todos os pacientes e ele se encerra na
+“Não chegou ainda ao hospital” é o estado inicial de todos os pacientes e ele se encerra na
 data-hora de admissão atribuída a cada paciente no arquivo de entrada. Um outro caso
 a ser tratado é de quando o paciente tem alta logo após o atendimento, indo de “Sendo
-atendido´´ para "Alta hospitalar´´.
+atendido” para "Alta hospitalar”.
 O TAD paciente, além de manter o prontuário do paciente (quais e quantos procedimentos
 deve realizar), deve armazenar o estado atual, e as estatísticas de atendimento do paci-
 ente, em particular o tempo ocioso e o tempo sendo atendido. Essas informações serão
-fundamentais para o cálculo das estatísticas gerais do sistema
+fundamentais para o cálculo das estatísticas gerais do sistema.
 */
 
+#pragma once
+
 #include <string>
-//#include "DataHoraTm.hpp"
+#include "Tempo.hpp"
 
 class Paciente {
 private:
     int id;
     bool altaImediata;
-    DataHoraTm admissaoHZ;
+    Tempo admissaoHZ;
     int grauUrgencia;
 
     int numMH;  // Número de Medidas Hospitalares inicial
@@ -54,20 +56,19 @@ private:
     float* temposEspera; // Tempo de espera em cada fila
     float* temposAtendimento; // Tempo de atendimento em cada procedimento
 
-    DataHoraTm tempoUltimoEvento; // Data/hora do último evento processado para o paciente
+    Tempo tempoUltimoEvento; // Data/hora do último evento processado para o paciente
 
-
-    DataHoraTm saidaHZ; // Data/hora de saída do paciente
+    Tempo saidaHZ; // Data/hora de saída do paciente
     float tempoTotalAtendimento; // Tempo total de atendimento
     float tempoTotalEspera; // Tempo total de espera
 
-
-
 public:
-    Paciente(int id, bool alta, const DataHoraTm& admissao, int urgencia, int mh, int tl, int ei, int im);
+    Paciente();
+    Paciente(int id, bool alta, const Tempo& admissao, int urgencia, int mh, int tl, int ei, int im);
+    ~Paciente();
 
     // Atualiza estado do paciente
-    void atualizarEstado(int novoEstado, const DataHoraTm& dataHoraAtual);
+    void atualizarEstado(int novoEstado, const Tempo& dataHoraAtual);
 
     // Adiciona tempo de espera ou atendimento
     void registrarEspera(float tempo);
@@ -76,11 +77,15 @@ public:
     // Métodos de consulta
     int getEstado() const;
     std::string estadoParaString() const; // Converte o estado para string legível
-    const DataHoraTm& getAdmissaoHZ() const;
+    const Tempo& getAdmissaoHZ() const;
 
     // Getters para os procedimentos pendentes
     int getNumMH() const;
     int getNumTL() const;
     int getNumEI() const;
     int getNumIM() const;
+
+    // Estatísticas
+    float getTempoTotalAtendimento() const;
+    float getTempoTotalEspera() const;
 };

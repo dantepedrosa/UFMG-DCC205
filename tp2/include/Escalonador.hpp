@@ -16,17 +16,17 @@ geradas quando finalizar.
 
 #pragma once
 
-
-#include "DataHoraTm.hpp"
-#include "Paciente.hpp"
+#include "../include/Tempo.hpp"
+#include "../include/Paciente.hpp"
 #include <iostream>
+#include <stdexcept>
 
 /**
  * @brief Representa um evento na simulação de atendimento hospitalar.
  */
 class Evento {
 public:
-    DataHoraTm dataHora;  // Data e hora do evento
+    Tempo dataHora;  // Data e hora do evento
     Paciente* paciente;   // Ponteiro para o paciente associado ao evento
     int tipoEvento;       // Tipo do evento (1: chegada, 2: triagem, etc.)
 
@@ -42,7 +42,7 @@ public:
      * @param paciente Paciente associado ao evento.
      * @param tipoEvento Tipo do evento.
      */
-    Evento(const DataHoraTm& dataHora, Paciente* paciente, int tipoEvento);
+    Evento(const Tempo& dataHora, Paciente* paciente, int tipoEvento);
 
     /**
      * @brief Operador de comparação para o escalonador.
@@ -56,18 +56,72 @@ public:
     bool operator<(const Evento& outro) const;
 
     /**
+     * @brief Operador de igualdade para o escalonador.
+     * 
+     * Eventos são considerados iguais se ocorrem no mesmo tempo.
+     * 
+     * @param outro O outro evento a ser comparado.
+     * @return true Se este evento ocorre no mesmo tempo que o outro.
+     * @return false Caso contrário.
+     */
+    bool operator==(const Evento& outro) const;
+
+    /**
+     * @brief Operador de desigualdade para o escalonador.
+     * 
+     * Eventos são considerados diferentes se ocorrem em tempos diferentes.
+     * 
+     * @param outro O outro evento a ser comparado.
+     * @return true Se este evento ocorre em tempo diferente do outro.
+     * @return false Caso contrário.
+     */
+    bool operator!=(const Evento& outro) const;
+
+    /**
+     * @brief Operador de comparação maior para o escalonador.
+     * 
+     * Eventos são ordenados pelo tempo, do maior para o menor.
+     * 
+     * @param outro O outro evento a ser comparado.
+     * @return true Se este evento ocorre depois do outro.
+     * @return false Caso contrário.
+     */
+    bool operator>(const Evento& outro) const;
+
+    /**
+     * @brief Operador de comparação menor ou igual para o escalonador.
+     * 
+     * Eventos são ordenados pelo tempo, do menor para o maior.
+     * 
+     * @param outro O outro evento a ser comparado.
+     * @return true Se este evento ocorre antes ou no mesmo tempo que o outro.
+     * @return false Caso contrário.
+     */
+    bool operator<=(const Evento& outro) const;
+
+    /**
+     * @brief Operador de comparação maior ou igual para o escalonador.
+     * 
+     * Eventos são ordenados pelo tempo, do maior para o menor.
+     * 
+     * @param outro O outro evento a ser comparado.
+     * @return true Se este evento ocorre depois ou no mesmo tempo que o outro.
+     * @return false Caso contrário.
+     */
+    bool operator>=(const Evento& outro) const;
+
+    /**
      * @brief Destrutor padrão.
      */
     ~Evento();
 };
 
-
 class Escalonador {
 private:
-    Evento* heap;       // Array estático para armazenar os eventos
-    int capacidade;     // Número máximo de eventos permitidos
-    int tamanho;        // Número atual de eventos no heap
-    float relogio;      // Tempo atual da simulação
+    Evento* heap;  // Array dinâmico para armazenar os eventos
+    int capacidade; // Capacidade máxima do heap
+    int tamanho;    // Tamanho atual do heap
+    float relogio;  // Tempo atual da simulação
 
     /**
      * @brief Restaura a propriedade do heap movendo um nó para baixo.

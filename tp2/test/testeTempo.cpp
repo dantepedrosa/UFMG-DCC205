@@ -20,7 +20,7 @@ TEST_CASE("Testando overflow de dia, mês e ano") {
     DataHora dh(31, 12, 2024, 23.5);
     Tempo t1(dh, ref);
 
-    t1.somaHoras(2.0);
+    t1.somaHoras(2.05);
 
-    CHECK(t1.paraString() == "Wed Jan  1 01:30:00 2025");
+    CHECK(t1.paraString() == "Wed Jan  1 01:33:00 2025");
 }
