@@ -1,6 +1,7 @@
 #ifndef FILA_HPP
 #define FILA_HPP
 
+#include <stdexcept>
 
 template <typename TipoItem>
 class TipoCelula {
@@ -21,10 +22,9 @@ public:
     FilaEncadeada() : frente(nullptr), tras(nullptr) {}
 
     ~FilaEncadeada() {
-    finaliza();
-    delete frente;
-}
-
+        finaliza();
+        delete frente;
+    }
 
     void inicializa() {
         frente = new TipoCelula<TipoItem>();
@@ -43,13 +43,34 @@ public:
             throw std::runtime_error("Fila vazia");
         }
         TipoCelula<TipoItem> *celulaRemovida = frente->prox;
-        TipoItem item = celulaRemovida->item;
+        TipoItem item = celulaRemovida->item; // Copia o objeto para retorno
         frente->prox = celulaRemovida->prox;
         if (frente->prox == nullptr) {
             tras = frente;
         }
-        delete celulaRemovida;
-        return item;
+        delete celulaRemovida; // Libera a célula removida
+        return item;          // Retorna o objeto copiado
+    }
+
+    TipoItem* desenfileiraPonteiro() {
+        if (filaVazia()) {
+            throw std::runtime_error("Fila vazia");
+        }
+        TipoCelula<TipoItem> *celulaRemovida = frente->prox;
+        TipoItem *item = new TipoItem(celulaRemovida->item); // Aloca o objeto dinamicamente
+        frente->prox = celulaRemovida->prox;
+        if (frente->prox == nullptr) {
+            tras = frente;
+        }
+        delete celulaRemovida; // Libera a célula removida
+        return item;           // Retorna um ponteiro para o objeto
+    }
+
+    TipoItem peek() const {
+        if (filaVazia()) {
+            throw std::runtime_error("Fila vazia");
+        }
+        return frente->prox->item; // Retorna o próximo item da fila sem removê-lo
     }
 
     bool filaVazia() const {
@@ -58,7 +79,7 @@ public:
 
     void finaliza() {
         TipoCelula<TipoItem> *p = frente->prox;
-        while (p != NULL) {
+        while (p != nullptr) {
             frente->prox = p->prox;
             delete p;
             p = frente->prox;
