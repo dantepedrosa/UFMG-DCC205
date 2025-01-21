@@ -38,10 +38,10 @@ TEST_CASE("Testando enfileiramento e desenfileiramento na fila geral") {
     procedimento.enfileira(paciente1);
     procedimento.enfileira(paciente2);
 
-    procedimento.desenfileira();
-    //CHECK(desenfileirado1.getId() == 1);
+    Paciente desenfileirado1 = procedimento.desenfileira();
+    CHECK(desenfileirado1.getId() == 1);
 
-    procedimento.desenfileira();
-    //CHECK(desenfileirado2.getId() == 2);
+    Paciente desenfileirado2 = procedimento.desenfileira();
+    CHECK(desenfileirado2.getId() == 2);
 }
 

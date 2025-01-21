@@ -25,10 +25,10 @@ private:
     Unidade unidades[MAXTAM];
     bool comUrgencia;
 
-    FilaEncadeada<Paciente>* filaVerde;
-    FilaEncadeada<Paciente>* filaAmarela;
-    FilaEncadeada<Paciente>* filaVermelha;
-    FilaEncadeada<Paciente>* filaGeral;
+    FilaEncadeada<Paciente> *filaVerde;
+    FilaEncadeada<Paciente> *filaAmarela;
+    FilaEncadeada<Paciente> *filaVermelha;
+    FilaEncadeada<Paciente> *filaGeral;
 
 public:
     Procedimento(const std::string &nome, int numUnidades, float tempoAtendimentoMedio, bool comUrgencia)
@@ -44,32 +44,36 @@ public:
         filaGeral->inicializa();
     }
 
-    ~Procedimento() {
+    ~Procedimento()
+    {
 
-        if (filaVerde) {
-            filaVerde->finaliza();  // Limpa os elementos da fila
-            delete filaVerde;       // Deleta a própria fila
-            filaVerde = nullptr;    // Previne dangling pointers
+        if (filaVerde)
+        {
+            filaVerde->finaliza(); // Limpa os elementos da fila
+            delete filaVerde;      // Deleta a própria fila
+            filaVerde = nullptr;   // Previne dangling pointers
         }
 
-        if (filaAmarela) {
-            filaAmarela->finaliza();  // Limpa os elementos da fila
-            delete filaAmarela;       // Deleta a própria fila
-            filaAmarela = nullptr;    // Previne dangling pointers
+        if (filaAmarela)
+        {
+            filaAmarela->finaliza(); // Limpa os elementos da fila
+            delete filaAmarela;      // Deleta a própria fila
+            filaAmarela = nullptr;   // Previne dangling pointers
         }
 
-        if (filaVermelha) {
-            filaVermelha->finaliza();  // Limpa os elementos da fila
-            delete filaVermelha;       // Deleta a própria fila
-            filaVermelha = nullptr;    // Previne dangling pointers
+        if (filaVermelha)
+        {
+            filaVermelha->finaliza(); // Limpa os elementos da fila
+            delete filaVermelha;      // Deleta a própria fila
+            filaVermelha = nullptr;   // Previne dangling pointers
         }
 
-        if (filaGeral) {
-            filaGeral->finaliza();  // Limpa os elementos da fila
-            delete filaGeral;       // Deleta a própria fila
-            filaGeral = nullptr;    // Previne dangling pointers
+        if (filaGeral)
+        {
+            filaGeral->finaliza(); // Limpa os elementos da fila
+            delete filaGeral;      // Deleta a própria fila
+            filaGeral = nullptr;   // Previne dangling pointers
         }
-
     }
 
     bool unidadeDisponivel(const Tempo &dataHora) const
@@ -150,8 +154,8 @@ public:
             case 2:
                 filaVermelha->enfileira(paciente);
                 break;
-            /* default:
-                throw std::invalid_argument("Urgência inválida para procedimento com urgência"); */
+                /* default:
+                    throw std::invalid_argument("Urgência inválida para procedimento com urgência"); */
             }
         }
         else
@@ -160,37 +164,30 @@ public:
         }
     }
 
-    void desenfileira()
+    Paciente desenfileira()
     {
         if (comUrgencia)
         {
             if (!filaVermelha->filaVazia())
             {
-                filaVermelha->desenfileira();
+                return filaVermelha->desenfileira();
             }
             else if (!filaAmarela->filaVazia())
             {
-                filaAmarela->desenfileira();
+                return filaAmarela->desenfileira();
             }
             else if (!filaVerde->filaVazia())
             {
-                filaVerde->desenfileira();
+                return filaVerde->desenfileira();
             }
-            /* else
-            {
-                throw std::runtime_error("Todas as filas de urgência estão vazias.");
-            } */
         }
         else
         {
             if (!filaGeral->filaVazia())
             {
-                filaGeral->desenfileira();
+                return filaGeral->desenfileira();
             }
-            /* else
-            {
-                throw std::runtime_error("A fila geral está vazia.");
-            } */
         }
+        throw std::runtime_error("Nenhum paciente para desenfileirar.");
     }
 };
