@@ -7,10 +7,10 @@
 #include <chrono>
 
 struct DataHora {
-    int dia;
-    int mes;
-    int ano;
-    float hora; // Representa a hora como um número decimal (por exemplo, 14.5 para 14:30)
+    int dia; //Dia do mês
+    int mes; //Mês do ano
+    int ano; //Ano
+    float hora; //Hora do dia como número decimal (por exemplo, 14.5 para 14:30)
 
     DataHora() : dia(0), mes(0), ano(0), hora(0.0) {} // Construtor padrão
     DataHora(int d, int m, int a, float h) : dia(d), mes(m), ano(a), hora(h) {}
@@ -30,19 +30,48 @@ struct DataHora {
 
 class Tempo {
 private:
-    double horasDesdeReferencia; // Representa o tempo em horas desde a data de referência
-    DataHora referencia; // Referência específica para a instância
+    double horasDesdeReferencia; //Tempo em horas desde a data de referência
+    DataHora referencia; //Data de referência
 
+    /**
+     * @brief Calcula o tempo em horas desde a data de referência.
+     * 
+     * @param dh DataHora a ser calculada.
+     * @return double Tempo em horas desde a data de referência.
+     */
     double calcularHorasReferencia(const DataHora& dh) const;
 
 public:
     Tempo() : horasDesdeReferencia(0.0), referencia() {} // Construtor padrão
     Tempo(const DataHora& dh, const DataHora& ref);
 
+    /**
+     * @brief Obtém o tempo em horas desde a data de referência.
+     * 
+     * @return double Tempo em horas desde a data de referência.
+     */
     double getHorasDesdeReferencia() const;
+
+    /**
+     * @brief Converte o tempo para string.
+     * 
+     * @return std::string Tempo em formato string.
+     */
     std::string paraString() const;
+
+    /**
+     * @brief Obtém a data de referência.
+     * 
+     * @return DataHora Data de referência.
+     */
     DataHora getReferencia() const;
-    DataHora getDataHora() const; // Novo método para retornar DataHora
+
+    /**
+     * @brief Obtém a data e hora correspondente ao tempo.
+     * 
+     * @return DataHora Data e hora correspondente ao tempo.
+     */
+    DataHora getDataHora() const;
 
     bool operator<(const Tempo& outro) const;
     bool operator==(const Tempo& outro) const;
@@ -50,7 +79,12 @@ public:
     bool operator>(const Tempo& outro) const;
     bool operator>=(const Tempo& outro) const;
     bool operator!=(const Tempo& outro) const;
-    
+
+    /**
+     * @brief Soma um tempo em horas ao tempo atual.
+     * 
+     * @param horas Tempo em horas a ser somado.
+     */
     void somaHoras(double horas);
 };
 

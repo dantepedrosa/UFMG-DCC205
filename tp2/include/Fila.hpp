@@ -9,8 +9,8 @@ public:
     TipoCelula() : prox(nullptr) {}
 
 private:
-    TipoItem item;
-    TipoCelula *prox;
+    TipoItem item; // Item armazenado na célula
+    TipoCelula *prox; // Ponteiro para a próxima célula
 
     template <typename T>
     friend class FilaEncadeada;
@@ -26,11 +26,19 @@ public:
         delete frente;
     }
 
+    /**
+     * @brief Inicializa a fila encadeada.
+     */
     void inicializa() {
         frente = new TipoCelula<TipoItem>();
         tras = frente;
     }
 
+    /**
+     * @brief Enfileira um item na fila.
+     * 
+     * @param item Item a ser enfileirado.
+     */
     void enfileira(TipoItem item) {
         TipoCelula<TipoItem> *novaCelula = new TipoCelula<TipoItem>();
         novaCelula->item = item;
@@ -38,6 +46,12 @@ public:
         tras = novaCelula;
     }
 
+    /**
+     * @brief Desenfileira um item da fila.
+     * 
+     * @return TipoItem Item desenfileirado.
+     * @throws std::runtime_error Se a fila estiver vazia.
+     */
     TipoItem desenfileira() {
         if (filaVazia()) {
             throw std::runtime_error("Fila vazia");
@@ -52,6 +66,12 @@ public:
         return item;          // Retorna o objeto copiado
     }
 
+    /**
+     * @brief Desenfileira um item da fila e retorna um ponteiro para ele.
+     * 
+     * @return TipoItem* Ponteiro para o item desenfileirado.
+     * @throws std::runtime_error Se a fila estiver vazia.
+     */
     TipoItem* desenfileiraPonteiro() {
         if (filaVazia()) {
             throw std::runtime_error("Fila vazia");
@@ -66,6 +86,12 @@ public:
         return item;           // Retorna um ponteiro para o objeto
     }
 
+    /**
+     * @brief Retorna o próximo item da fila sem removê-lo.
+     * 
+     * @return TipoItem Próximo item da fila.
+     * @throws std::runtime_error Se a fila estiver vazia.
+     */
     TipoItem peek() const {
         if (filaVazia()) {
             throw std::runtime_error("Fila vazia");
@@ -73,10 +99,19 @@ public:
         return frente->prox->item; // Retorna o próximo item da fila sem removê-lo
     }
 
+    /**
+     * @brief Verifica se a fila está vazia.
+     * 
+     * @return true Se a fila estiver vazia.
+     * @return false Caso contrário.
+     */
     bool filaVazia() const {
         return frente == tras;
     }
 
+    /**
+     * @brief Finaliza a fila encadeada, liberando todos os recursos.
+     */
     void finaliza() {
         TipoCelula<TipoItem> *p = frente->prox;
         while (p != nullptr) {
@@ -88,8 +123,8 @@ public:
     }
 
 private:
-    TipoCelula<TipoItem> *frente;
-    TipoCelula<TipoItem> *tras;
+    TipoCelula<TipoItem> *frente; // Ponteiro para a frente da fila
+    TipoCelula<TipoItem> *tras; // Ponteiro para o final da fila
 };
 
 #endif // FILA_HPP

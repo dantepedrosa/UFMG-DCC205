@@ -13,7 +13,6 @@ horas, incluindo frações, a partir de uma data de referência. As estatística
 geradas quando finalizar.
  */
 
-
 #pragma once
 
 #include "../include/Tempo.hpp"
@@ -26,9 +25,9 @@ geradas quando finalizar.
  */
 class Evento {
 public:
-    Tempo dataHora;  // Data e hora do evento
-    Paciente* paciente;   // Ponteiro para o paciente associado ao evento
-    int tipoEvento;       // Tipo do evento (1: chegada, 2: triagem, etc.)
+    Tempo dataHora; ///< Data e hora do evento
+    Paciente* paciente; ///< Ponteiro para o paciente associado ao evento
+    int tipoEvento; ///< Tipo do evento (1: chegada, 2: triagem, etc.)
 
     /**
      * @brief Construtor padrão.
@@ -116,12 +115,15 @@ public:
     ~Evento();
 };
 
+/**
+ * @brief Classe que representa o escalonador de eventos.
+ */
 class Escalonador {
 private:
-    Evento* heap;  // Array dinâmico para armazenar os eventos
-    int capacidade; // Capacidade máxima do heap
-    int tamanho;    // Tamanho atual do heap
-    float relogio;  // Tempo atual da simulação
+    Evento* heap; ///< Array dinâmico para armazenar os eventos
+    int capacidade; ///< Capacidade máxima do heap
+    int tamanho; ///< Tamanho atual do heap
+    float relogio; ///< Tempo atual da simulação
 
     /**
      * @brief Restaura a propriedade do heap movendo um nó para baixo.
