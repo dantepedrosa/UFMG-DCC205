@@ -29,6 +29,12 @@ test: $(TEST_EXEC_FILES)
 		$$test_exec; \
 	done
 
+memtest: $(TEST_EXEC_FILES)
+	@for test_exec in $(TEST_EXEC_FILES); do \
+		echo "Running $$test_exec with Valgrind"; \
+		valgrind --leak-check=full $$test_exec; \
+	done
+
 run: $(EXEC)
 	./$(EXEC) $(ARGS)
 

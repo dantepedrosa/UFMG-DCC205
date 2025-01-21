@@ -1,28 +1,11 @@
-/*
-O TAD fila tem por objetivo controlar os pacientes aguardando para cada procedimento
-e, se for o caso, em cada prioridade. Idealmente você deve implementar um único TAD
-que será instanciado múltiplas vezes, um para cada fila a ser simulada.
-As operações a serem suportadas pelo TAD são as tradicionais:
-1. Inicializa
-2. Enfileira
-3. Desenfileira
-4. FilaVazia
-5. Finaliza
-Em termos de estatísticas, é importante registrar o tempo que um dado paciente ficou na
-fila e o tamanho da fila em cada intervalo de tempo, com vistas a calcular a contenção
-pelo procedimento. As estatísticas devem ser geradas quando da finalização da fila
- */
-
-#pragma once
-
 #ifndef FILA_HPP
 #define FILA_HPP
 
+
 template <typename TipoItem>
-class TipoCelula
-{
+class TipoCelula {
 public:
-    TipoCelula();
+    TipoCelula() : prox(nullptr) {}
 
 private:
     TipoItem item;
@@ -33,17 +16,55 @@ private:
 };
 
 template <typename TipoItem>
-class FilaEncadeada
-{
+class FilaEncadeada {
 public:
-    FilaEncadeada();
-    virtual ~FilaEncadeada();
+    FilaEncadeada() : frente(nullptr), tras(nullptr) {}
 
-    void inicializa();
-    void enfileira(TipoItem item);
-    TipoItem desenfileira();
-    bool filaVazia() const;
-    void finaliza();
+    ~FilaEncadeada() {
+    finaliza();
+    delete frente;
+}
+
+
+    void inicializa() {
+        frente = new TipoCelula<TipoItem>();
+        tras = frente;
+    }
+
+    void enfileira(TipoItem item) {
+        TipoCelula<TipoItem> *novaCelula = new TipoCelula<TipoItem>();
+        novaCelula->item = item;
+        tras->prox = novaCelula;
+        tras = novaCelula;
+    }
+
+    TipoItem desenfileira() {
+        if (filaVazia()) {
+            throw std::runtime_error("Fila vazia");
+        }
+        TipoCelula<TipoItem> *celulaRemovida = frente->prox;
+        TipoItem item = celulaRemovida->item;
+        frente->prox = celulaRemovida->prox;
+        if (frente->prox == nullptr) {
+            tras = frente;
+        }
+        delete celulaRemovida;
+        return item;
+    }
+
+    bool filaVazia() const {
+        return frente == tras;
+    }
+
+    void finaliza() {
+        TipoCelula<TipoItem> *p = frente->prox;
+        while (p != NULL) {
+            frente->prox = p->prox;
+            delete p;
+            p = frente->prox;
+        }
+        tras = frente;
+    }
 
 private:
     TipoCelula<TipoItem> *frente;

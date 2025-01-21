@@ -1,37 +1,3 @@
-/*
-O paciente, cujas informações de entrada são lidas de um arquivo, representa a trajetória
-de atendimento e serviços prestados pelo hospital. Além dessas informações de entrada, é
-importante armazenar todos os momentos quando o paciente foi de alguma forma atendido,
-assim como os intervalos de tempo que ele ficou em cada uma das filas. A partir dessas
-informações é que será possível realizar as estatísticas de atendimento do hospital e avaliar
-cenários de alocação de recursos e tempos para os procedimentos.
-Para fins da simulação, um paciente pode estar em 14 estados:
-1. Não chegou ainda ao hospital
-2. Na fila de triagem
-3. Sendo triado
-4. Na fila de atendimento
-5. Sendo atendido
-6. Na fila de medidas hospitalares
-7. Realizando medidas hospitalares
-8. Na fila de testes de laboratório
-9. Realizando testes de laboratório
-10. Na fila de exames de imagem
-11. Realizando exames de imagem
-12. Na fila para instrumentos/medicamentos
-13. Sendo aplicados instrumentos/medicamentos
-14. Alta hospitalar
-Note que há uma simplificação importante na simulação, o paciente assume os estados na
-ordem apresentada e não há situação em que ele retorne a um estado anterior. O estado
-“Não chegou ainda ao hospital” é o estado inicial de todos os pacientes e ele se encerra na
-data-hora de admissão atribuída a cada paciente no arquivo de entrada. Um outro caso
-a ser tratado é de quando o paciente tem alta logo após o atendimento, indo de “Sendo
-atendido” para "Alta hospitalar”.
-O TAD paciente, além de manter o prontuário do paciente (quais e quantos procedimentos
-deve realizar), deve armazenar o estado atual, e as estatísticas de atendimento do paci-
-ente, em particular o tempo ocioso e o tempo sendo atendido. Essas informações serão
-fundamentais para o cálculo das estatísticas gerais do sistema.
-*/
-
 #pragma once
 
 #include <string>
@@ -43,51 +9,109 @@ private:
     bool altaImediata;
     Tempo admissaoHZ;
     int grauUrgencia;
-
-    int numMH;  // Número de Medidas Hospitalares inicial
-    int numTL;  // Número de Testes de Laboratório inicial
-    int numEI;  // Número de Exames de Imagem inicial 
-    int numIM;  // Número de Instrumentos/Medicamentos inicial
-
-    int estado;  // Estado atual do paciente (1 a 14)
-
-    int* procedimentosPendentes; // Número de procedimentos pendentes de cada tipo
-
-    float* temposEspera; // Tempo de espera em cada fila
-    float* temposAtendimento; // Tempo de atendimento em cada procedimento
-
-    Tempo tempoUltimoEvento; // Data/hora do último evento processado para o paciente
-
-    Tempo saidaHZ; // Data/hora de saída do paciente
-    float tempoTotalAtendimento; // Tempo total de atendimento
-    float tempoTotalEspera; // Tempo total de espera
+    int numMH;
+    int numTL;
+    int numEI;
+    int numIM;
+    int estado;
+    Tempo tempoUltimoEvento;
+    float tempoTotalAtendimento;
+    float tempoTotalEspera;
+    int* procedimentosPendentes;
+    float* temposEspera;
+    float* temposAtendimento;
 
 public:
-    Paciente();
-    Paciente(int id, bool alta, const Tempo& admissao, int urgencia, int mh, int tl, int ei, int im);
-    ~Paciente();
+    Paciente()
+        : id(0), altaImediata(false), admissaoHZ(), grauUrgencia(0),
+          numMH(0), numTL(0), numEI(0), numIM(0), estado(1), tempoUltimoEvento(),
+          tempoTotalAtendimento(0.0), tempoTotalEspera(0.0) {
+        procedimentosPendentes = new int[4]{0, 0, 0, 0};
+        temposEspera = new float[14]{0.0};
+        temposAtendimento = new float[14]{0.0};
+    }
 
-    // Atualiza estado do paciente
-    void atualizarEstado(int novoEstado, const Tempo& dataHoraAtual);
+    Paciente(int id, bool alta, const Tempo& admissao, int urgencia, int mh, int tl, int ei, int im)
+        : id(id), altaImediata(alta), admissaoHZ(admissao), grauUrgencia(urgencia),
+          numMH(mh), numTL(tl), numEI(ei), numIM(im), estado(2), tempoUltimoEvento(admissao),
+          tempoTotalAtendimento(0.0), tempoTotalEspera(0.0) {
+        procedimentosPendentes = new int[4]{mh, tl, ei, im};
+        temposEspera = new float[14]{0.0};
+        temposAtendimento = new float[14]{0.0};
+    }
 
-    // Adiciona tempo de espera ou atendimento
-    void registrarEspera(float tempo);
-    void registrarAtendimento(float tempo);
+    ~Paciente() {
+        delete[] procedimentosPendentes;
+        delete[] temposEspera;
+        delete[] temposAtendimento;
+    }
 
-    // Métodos de consulta
-    int getEstado() const;
-    std::string estadoParaString() const; // Converte o estado para string legível
-    const Tempo& getAdmissaoHZ() const;
-    const Tempo& getSaidaHZ() const;
-    int getId() const;
+    void atualizarEstado(int novoEstado, const Tempo& dataHoraAtual) {
+        float tempoDecorrido = dataHoraAtual.getHorasDesdeReferencia() - tempoUltimoEvento.getHorasDesdeReferencia();
+        if (estado % 2 == 0) { // Se o estado é par, é tempo de espera
+            registrarEspera(tempoDecorrido);
+        } else { // Se o estado é ímpar, é tempo de atendimento
+            registrarAtendimento(tempoDecorrido);
+        }
+        estado = novoEstado;
+        tempoUltimoEvento = dataHoraAtual;
+    }
 
-    // Getters para os procedimentos pendentes
-    int getNumMH() const;
-    int getNumTL() const;
-    int getNumEI() const;
-    int getNumIM() const;
+    void registrarEspera(float tempo) {
+        temposEspera[estado - 1] += tempo; // Corrigir índice do estado
+        tempoTotalEspera += tempo;
+    }
 
-    // Estatísticas
-    float getTempoTotalAtendimento() const;
-    float getTempoTotalEspera() const;
+    void registrarAtendimento(float tempo) {
+        temposAtendimento[estado - 1] += tempo; // Corrigir índice do estado
+        tempoTotalAtendimento += tempo;
+    }
+
+    int getEstado() const {
+        return estado;
+    }
+
+    int getId() const {
+        return id;
+    }
+
+    std::string estadoParaString() const {
+        static const char* estados[] = {
+            "Não chegou ainda ao hospital", "Na fila de triagem", "Sendo triado",
+            "Na fila de atendimento", "Sendo atendido", "Na fila de medidas hospitalares",
+            "Realizando medidas hospitalares", "Na fila de testes de laboratório",
+            "Realizando testes de laboratório", "Na fila de exames de imagem",
+            "Realizando exames de imagem", "Na fila para instrumentos/medicamentos",
+            "Sendo aplicados instrumentos/medicamentos", "Alta hospitalar"
+        };
+        return estados[estado - 1];
+    }
+
+    const Tempo& getAdmissaoHZ() const {
+        return admissaoHZ;
+    }
+
+    int getNumMH() const {
+        return procedimentosPendentes[0];
+    }
+
+    int getNumTL() const {
+        return procedimentosPendentes[1];
+    }
+
+    int getNumEI() const {
+        return procedimentosPendentes[2];
+    }
+
+    int getNumIM() const {
+        return procedimentosPendentes[3];
+    }
+
+    float getTempoTotalAtendimento() const {
+        return tempoTotalAtendimento;
+    }
+
+    float getTempoTotalEspera() const {
+        return tempoTotalEspera;
+    }
 };
