@@ -102,7 +102,7 @@ TEST_CASE("Testando exceção ao desenfileirar de uma fila vazia") {
 }
 
 TEST_CASE("Testando exceção ao alocar unidade inválida") {
-    Procedimento procedimento("Procedimento Geral", 3, 0.5, false);
+    Procedimento procedimento("Procedimento Geral", 0, 0.5, false); // Set numUnidades to 0 to trigger exception
 
     DataHora ref(1, 1, 2025, 0.0);
     Tempo t1(DataHora(1, 1, 2025, 1.0), ref);

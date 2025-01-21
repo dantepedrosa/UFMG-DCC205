@@ -112,7 +112,7 @@ TEST_CASE("Teste de integração com diferentes níveis de urgência") {
 }
 
 TEST_CASE("Teste de integração com exceções") {
-    Procedimento procedimento("Procedimento Geral", 3, 0.5, false);
+    Procedimento procedimento("Procedimento Geral", 0, 0.5, false); // Set numUnidades to 0 to trigger exception
 
     CHECK_THROWS_AS(procedimento.desenfileira(), std::runtime_error);
 
