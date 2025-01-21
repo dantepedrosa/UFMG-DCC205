@@ -17,34 +17,24 @@ private:
     Tempo tempoUltimoEvento;
     float tempoTotalAtendimento;
     float tempoTotalEspera;
-    int* procedimentosPendentes;
-    float* temposEspera;
-    float* temposAtendimento;
+    int procedimentosPendentes[4];
+    float temposEspera[14];
+    float temposAtendimento[14];
 
 public:
     Paciente()
         : id(0), altaImediata(false), admissaoHZ(), grauUrgencia(0),
           numMH(0), numTL(0), numEI(0), numIM(0), estado(1), tempoUltimoEvento(),
-          tempoTotalAtendimento(0.0), tempoTotalEspera(0.0) {
-        procedimentosPendentes = new int[4]{0, 0, 0, 0};
-        temposEspera = new float[14]{0.0};
-        temposAtendimento = new float[14]{0.0};
-    }
+          tempoTotalAtendimento(0.0), tempoTotalEspera(0.0),
+          procedimentosPendentes{0, 0, 0, 0}, temposEspera{0.0}, temposAtendimento{0.0} {}
 
     Paciente(int id, bool alta, const Tempo& admissao, int urgencia, int mh, int tl, int ei, int im)
         : id(id), altaImediata(alta), admissaoHZ(admissao), grauUrgencia(urgencia),
           numMH(mh), numTL(tl), numEI(ei), numIM(im), estado(2), tempoUltimoEvento(admissao),
-          tempoTotalAtendimento(0.0), tempoTotalEspera(0.0) {
-        procedimentosPendentes = new int[4]{mh, tl, ei, im};
-        temposEspera = new float[14]{0.0};
-        temposAtendimento = new float[14]{0.0};
-    }
+          tempoTotalAtendimento(0.0), tempoTotalEspera(0.0),
+          procedimentosPendentes{mh, tl, ei, im}, temposEspera{0.0}, temposAtendimento{0.0} {}
 
-    ~Paciente() {
-        delete[] procedimentosPendentes;
-        delete[] temposEspera;
-        delete[] temposAtendimento;
-    }
+    ~Paciente() = default;
 
     void atualizarEstado(int novoEstado, const Tempo& dataHoraAtual) {
         float tempoDecorrido = dataHoraAtual.getHorasDesdeReferencia() - tempoUltimoEvento.getHorasDesdeReferencia();

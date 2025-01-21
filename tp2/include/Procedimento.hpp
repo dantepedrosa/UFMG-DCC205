@@ -5,6 +5,8 @@
 #include "../include/Fila.hpp"
 #include "../include/Paciente.hpp" // Include the Paciente header
 
+#define MAXTAM 15
+
 struct Unidade
 {
     bool ocupada;
@@ -20,27 +22,54 @@ private:
     std::string nome;
     int numUnidades;
     float tempoAtendimentoMedio;
-    Unidade *unidades;
+    Unidade unidades[MAXTAM];
     bool comUrgencia;
 
-    FilaEncadeada<Paciente> filaVerde;
-    FilaEncadeada<Paciente> filaAmarela;
-    FilaEncadeada<Paciente> filaVermelha;
-    FilaEncadeada<Paciente> filaGeral;
+    FilaEncadeada<Paciente>* filaVerde;
+    FilaEncadeada<Paciente>* filaAmarela;
+    FilaEncadeada<Paciente>* filaVermelha;
+    FilaEncadeada<Paciente>* filaGeral;
 
 public:
     Procedimento(const std::string &nome, int numUnidades, float tempoAtendimentoMedio, bool comUrgencia)
         : nome(nome), numUnidades(numUnidades), tempoAtendimentoMedio(tempoAtendimentoMedio), comUrgencia(comUrgencia)
     {
-        unidades = new Unidade[numUnidades];
-        filaVerde.inicializa();
-        filaAmarela.inicializa();
-        filaVermelha.inicializa();
-        filaGeral.inicializa();
+        filaVerde = new FilaEncadeada<Paciente>();
+        filaAmarela = new FilaEncadeada<Paciente>();
+        filaVermelha = new FilaEncadeada<Paciente>();
+        filaGeral = new FilaEncadeada<Paciente>();
+        filaVerde->inicializa();
+        filaAmarela->inicializa();
+        filaVermelha->inicializa();
+        filaGeral->inicializa();
     }
 
     ~Procedimento() {
-        delete[] unidades;
+
+        if (filaVerde) {
+            filaVerde->finaliza();  // Limpa os elementos da fila
+            delete filaVerde;       // Deleta a própria fila
+            filaVerde = nullptr;    // Previne dangling pointers
+        }
+
+        if (filaAmarela) {
+            filaAmarela->finaliza();  // Limpa os elementos da fila
+            delete filaAmarela;       // Deleta a própria fila
+            filaAmarela = nullptr;    // Previne dangling pointers
+        }
+
+        if (filaVermelha) {
+            filaVermelha->finaliza();  // Limpa os elementos da fila
+            delete filaVermelha;       // Deleta a própria fila
+            filaVermelha = nullptr;    // Previne dangling pointers
+        }
+
+        if (filaGeral) {
+            filaGeral->finaliza();  // Limpa os elementos da fila
+            delete filaGeral;       // Deleta a própria fila
+            filaGeral = nullptr;    // Previne dangling pointers
+        }
+
     }
 
     bool unidadeDisponivel(const Tempo &dataHora) const
@@ -113,13 +142,13 @@ public:
             switch (urgencia)
             {
             case 0:
-                filaVerde.enfileira(paciente);
+                filaVerde->enfileira(paciente);
                 break;
             case 1:
-                filaAmarela.enfileira(paciente);
+                filaAmarela->enfileira(paciente);
                 break;
             case 2:
-                filaVermelha.enfileira(paciente);
+                filaVermelha->enfileira(paciente);
                 break;
             /* default:
                 throw std::invalid_argument("Urgência inválida para procedimento com urgência"); */
@@ -127,25 +156,25 @@ public:
         }
         else
         {
-            filaGeral.enfileira(paciente);
+            filaGeral->enfileira(paciente);
         }
     }
 
-    Paciente desenfileira()
+    void desenfileira()
     {
         if (comUrgencia)
         {
-            if (!filaVermelha.filaVazia())
+            if (!filaVermelha->filaVazia())
             {
-                return filaVermelha.desenfileira();
+                filaVermelha->desenfileira();
             }
-            else if (!filaAmarela.filaVazia())
+            else if (!filaAmarela->filaVazia())
             {
-                return filaAmarela.desenfileira();
+                filaAmarela->desenfileira();
             }
-            else if (!filaVerde.filaVazia())
+            else if (!filaVerde->filaVazia())
             {
-                return filaVerde.desenfileira();
+                filaVerde->desenfileira();
             }
             /* else
             {
@@ -154,9 +183,9 @@ public:
         }
         else
         {
-            if (!filaGeral.filaVazia())
+            if (!filaGeral->filaVazia())
             {
-                return filaGeral.desenfileira();
+                filaGeral->desenfileira();
             }
             /* else
             {
