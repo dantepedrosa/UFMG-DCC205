@@ -2,6 +2,7 @@
 #include "../include/doctest.hpp"
 #include "../include/Paciente.hpp"
 #include "../include/Tempo.hpp"
+#include "../include/Procedimento.hpp"
 
 TEST_CASE("Testando a classe Paciente") {
     DataHora ref(21, 3, 2017, 0.0);

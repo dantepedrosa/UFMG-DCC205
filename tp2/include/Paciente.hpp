@@ -230,4 +230,14 @@ public:
     int getUrgencia() const {
         return grauUrgencia;
     }
+
+    /**
+     * @brief Verifica se o paciente ainda precisa de serviços.
+     * 
+     * @return true Se o paciente ainda precisa de serviços.
+     * @return false Caso contrário.
+     */
+    bool precisaDeServicos() const {
+        return numMH > 0 || numTL > 0 || numEI > 0 || numIM > 0;
+    }
 };

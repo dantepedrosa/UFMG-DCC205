@@ -34,18 +34,6 @@ Gerar relatórios de estatísticas
 
 */
 
-Paciente* criarPaciente(const std::string& linha, const DataHora& referencia) {
-    std::istringstream iss(linha);
-    int id, alta, ano, mes, dia, hora, urgencia, mh, tl, ei, im;
-    
-    iss >> id >> alta >> ano >> mes >> dia >> hora >> urgencia >> mh >> tl >> ei >> im;
-
-    DataHora admissao(ano, mes, dia, hora);
-    Tempo tAdmissao(admissao, referencia);
-
-    return new Paciente(id, alta == 1, tAdmissao, urgencia, mh, tl, ei, im);
-}
-
 
 int main(int argc, char const *argv[])
 {
@@ -119,7 +107,7 @@ int main(int argc, char const *argv[])
     // Criar Pacientes e Escalonar ---------------------------------------------
     // Complexidade: O(n)
 
-    FilaEncadeada<Paciente> cadastroPacientes;
+    FilaEncadeada<Paciente*> cadastroPacientes;
 
     int numPacientes;
     std::getline(inputFile, line);
@@ -127,23 +115,144 @@ int main(int argc, char const *argv[])
     iss >> numPacientes;
     iss.clear();
 
+    Escalonador escalonador(numPacientes);
+
     for(int i = 0; i < numPacientes; i++) {
         std::getline(inputFile, line);
-        Paciente* paciente = criarPaciente(line, ref);
-        cadastroPacientes.enfileira(*paciente);
+        Paciente* paciente = new Paciente(line, ref);
+        cadastroPacientes.enfileira(paciente);
+        triagem.enfileira(*paciente, paciente->getUrgencia());
+    }
+
+    // Processar Eventos -------------------------------------------------------
+    // Complexidade: O(?)
+
+    while(escalonador.temEventos()) {
+        Evento evento = escalonador.retiraProximoEvento();
+        float tempoEvento = escalonador.avancaRelogio();
+
         
     }
 
 
+    // Processar Eventos -------------------------------------------------------
+    while (escalonador.temEventos()) {
+        // Retira o próximo evento a ser processado
+        Evento evento = escalonador.retiraProximoEvento();
+
+        // Avança o relógio para o instante do próximo evento
+        float tempoEvento = escalonador.avancaRelogio();
+
+        // TODO - Analisar lógica relógio
+
+        // Verifica o estado atual do paciente com base no evento
+        Paciente* paciente = evento.getPaciente();
+
+        // se evento retirado é finalização de atendimento de paciente1:
+            // registrar soma de horas em atendimento em paciente1
+            // verificar se paciente1 possui mais procedimentos
+                // se alguma unidade de procedimento está disponivel
+                    // ocupar unidade disponível
+                    // escalonar evento de termino de atendimento de paciente1
+                // se nao
+                    // enfileirar paciente no próximo procedimento
+            // senão
+                // finalizar atendimento (alta hospitalar):
+                // calcular tempo total de cada atendimento para paciente
+                // calcular tempo total gasto em fila para paciente
+            // liberar unidade
+
+        // para cada procedimento, se houver unidade de atendimento disponivel
+            // se tiver paciente na fila:
+                // retirar paciente de fila de espera e conferir relogio
+                // conferir tempoUltimoEvento (entradaFila) de Paciente e somar tempo gasto em fila em tempoTotalEspera
+                // atualizar tempoUltimoEvento de paciente
+                // escalonar evento de finalização de triagem para paciente, com horário de termino
+
+        // se evento retirado é 
+        
+        // Dependendo do tipo de evento, altere o estado do paciente e enfileire-o
+        switch (evento.getTipo()) {
+            case 1: // Chegada do paciente
+                // Todos os pacientes entram na fila de triagem ao chegar
+                triagem.enfileira(*paciente, paciente->getUrgencia());
+
+                // Verifica se há unidade disponível para a triagem
+                if (triagem.unidadeDisponivel(tempoEvento)) {
+                    // Aloca a unidade para triagem e escalona evento de execução
+                    int unidade = triagem.alocarUnidade(tempoEvento, triagem.getDuracaoMedia());
+                    Evento eventoTriagem(tempoEvento + triagem.getDuracaoMedia(), paciente, 2, unidade);
+                    escalonador.insereEvento(eventoTriagem);
+                }
+                break;
+
+            case 2: // Execução de um procedimento (incluindo triagem)
+                // Verifica se o paciente pode continuar com os próximos procedimentos
+                if (paciente->temProcedimentoPendentes()) {
+                    Procedimento* procedimento = paciente->getProximoProcedimento();
+                    
+                    // Enfileirar o paciente no próximo procedimento
+                    procedimento->enfileira(*paciente, paciente->getUrgencia());
+                } else {
+                    // Alta hospitalar
+                    paciente->finalizaAtendimento();
+                }
+                break;
+
+            case 3: // Finalização de um procedimento
+                // Similar ao código original, libera unidade e escalona próximos eventos
+                Procedimento* procedimentoFinalizado = paciente->getProcedimentoEmExecucao();
+                procedimentoFinalizado->liberarUnidade(evento.getUnidade(), tempoEvento);
+                paciente->finalizaProcedimento();
+
+                // Se o paciente ainda precisar de mais procedimentos, enfileira
+                if (paciente->temProcedimentoPendentes()) {
+                    Procedimento* proximoProcedimento = paciente->getProximoProcedimento();
+                    proximoProcedimento->enfileira(*paciente, paciente->getUrgencia());
+                } else {
+                    // Alta hospitalar
+                    paciente->finalizaAtendimento();
+                }
+                break;
+        }
+
+
+        // Para cada fila de espera que tenha pacientes, verifica unidades disponíveis
+        for (Procedimento* proc : {&triagem, &atendimento, &mh, &tl, &ei, &im}) {
+            if (!proc->filaVazia()) {
+                if (proc->unidadeDisponivel(tempoEvento)) {
+                    Paciente* pacienteFila = proc->desenfileira();
+                    int unidade = proc->alocarUnidade(tempoEvento, pacienteFila->getDuracaoProcedimento());
+                    Evento eventoExecucao(tempoEvento + pacienteFila->getDuracaoProcedimento(), pacienteFila, 3, unidade);
+                    escalonador.insereEvento(eventoExecucao);
+                }
+            }
+        }
+
+        // Atualizar as estatísticas do sistema
+        // (Pode ser acumulando tempo ocioso das unidades, tempo de espera dos pacientes, etc)
+    }
 
 
 
     inputFile.close();
 
+
+
+    // Imprimir Resultados -----------------------------------------------------
+    // Complexidade: O(n)
+
+    while (!cadastroPacientes.filaVazia()) {
+        Paciente* paciente = cadastroPacientes.desenfileira();
+        // Imprimir resultados
+        delete paciente;
+    }
+
     return 0;
 }
 
 
+/*
 // main
 
 // abrir arquivo - ok
@@ -153,15 +262,15 @@ int main(int argc, char const *argv[])
 // ler numero de linhas - ok
 
 
-// definir data de referência
-// loop de pacientes (linhas)
+// definir data de referência - ok
+// loop de pacientes (linhas) - ok
     // para cada paciente (linhas), chamar função de criar paciente a partir de string.]
     // para cada paciente, enfileirar em cadastroPacientes (os pacientes devem ser impressos na mesma ordem no arquivo de saída)
     // para cada paciente, criado, criar evento de chegada e adicionar ao escalonador
+ok
 
-
-// apos escalonar todos os pacientes
-// loop while com temEventos()
+// apos escalonar todos os pacientes - ok
+// loop while com temEventos() - ok
     // retirar proximo evento
     // avançar relógio para o instante do próximo evento
     // conferir qual deve ser o proximo estado do paciente (a partir de vários ifs)
@@ -180,3 +289,4 @@ int main(int argc, char const *argv[])
 
 
 
+*/

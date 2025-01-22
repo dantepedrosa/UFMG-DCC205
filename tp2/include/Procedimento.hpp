@@ -1,34 +1,26 @@
 #pragma once
 
 #include <string>
-#include "../include/Tempo.hpp"
-#include "../include/Fila.hpp"
-#include "../include/Paciente.hpp" // Include the Paciente header
+#include "Paciente.hpp"
+#include "Tempo.hpp"
+#include "Fila.hpp"
+
 
 #define MAXTAM 15
-
-struct Unidade
-{
-    bool ocupada; // Indica se a unidade está ocupada
-    float tempoOcioso; // Tempo ocioso da unidade
-    Tempo ocupadoAte; // Tempo até quando a unidade estará ocupada
-
-    Unidade() : ocupada(false), tempoOcioso(0.0), ocupadoAte() {}
-};
 
 class Procedimento
 {
 private:
-    std::string nome; // Nome do procedimento
-    int numUnidades; // Número de unidades disponíveis
-    float tempoAtendimentoMedio; // Tempo médio de atendimento
-    Unidade unidades[MAXTAM]; // Array de unidades
-    bool comUrgencia; // Indica se o procedimento tem urgência
+    std::string nome;               // Nome do procedimento
+    int numUnidades;                // Número de unidades total
+    int numDisponiveis;             // Número de unidades disponíveis
+    float tempoAtendimentoMedio;    // Tempo médio de atendimento
+    bool comUrgencia;               // Indica se o procedimento tem urgência
 
-    FilaEncadeada<Paciente>* filaVerde; // Fila de pacientes com urgência verde
-    FilaEncadeada<Paciente>* filaAmarela; // Fila de pacientes com urgência amarela
-    FilaEncadeada<Paciente>* filaVermelha; // Fila de pacientes com urgência vermelha
-    FilaEncadeada<Paciente>* filaGeral; // Fila geral de pacientes
+    FilaEncadeada<Paciente>* filaVerde;     // Fila de pacientes com urgência verde
+    FilaEncadeada<Paciente>* filaAmarela;   // Fila de pacientes com urgência amarela
+    FilaEncadeada<Paciente>* filaVermelha;  // Fila de pacientes com urgência vermelha
+    FilaEncadeada<Paciente>* filaGeral;     // Fila geral de pacientes
 
 public:
     /**
@@ -40,16 +32,12 @@ public:
      * @param comUrgencia Indica se o procedimento tem urgência.
      */
     Procedimento(const std::string &nome, int numUnidades, float tempoAtendimentoMedio, bool comUrgencia)
-        : nome(nome), numUnidades(numUnidades), tempoAtendimentoMedio(tempoAtendimentoMedio), comUrgencia(comUrgencia)
+        : nome(nome), numUnidades(numUnidades), numDisponiveis(numUnidades), tempoAtendimentoMedio(tempoAtendimentoMedio), comUrgencia(comUrgencia)
     {
         filaVerde = new FilaEncadeada<Paciente>();
         filaAmarela = new FilaEncadeada<Paciente>();
         filaVermelha = new FilaEncadeada<Paciente>();
         filaGeral = new FilaEncadeada<Paciente>();
-        filaVerde->inicializa();
-        filaAmarela->inicializa();
-        filaVermelha->inicializa();
-        filaGeral->inicializa();
     }
 
     /**
@@ -96,14 +84,7 @@ public:
      */
     bool unidadeDisponivel(const Tempo &dataHora) const
     {
-        for (int i = 0; i < numUnidades; ++i)
-        {
-            if (!unidades[i].ocupada || unidades[i].ocupadoAte.getHorasDesdeReferencia() <= dataHora.getHorasDesdeReferencia())
-            {
-                return true;
-            }
-        }
-        return false;
+        return numDisponiveis > 0;
     }
 
     /**
@@ -116,16 +97,10 @@ public:
      */
     int alocarUnidade(const Tempo &dataHoraInicio, float duracao)
     {
-        for (int i = 0; i < numUnidades; ++i)
+        if (numDisponiveis > 0)
         {
-            if (!unidades[i].ocupada || unidades[i].ocupadoAte.getHorasDesdeReferencia() <= dataHoraInicio.getHorasDesdeReferencia())
-            {
-                unidades[i].ocupada = true;
-                DataHora dhFim = dataHoraInicio.getReferencia();
-                dhFim.hora += duracao;
-                unidades[i].ocupadoAte = Tempo(dhFim, dataHoraInicio.getReferencia());
-                return i;
-            }
+            numDisponiveis--;
+            return numUnidades - numDisponiveis - 1;
         }
         throw std::runtime_error("Nenhuma unidade disponível");
     }
@@ -143,8 +118,7 @@ public:
         {
             throw std::out_of_range("Índice de unidade inválido");
         }
-        unidades[indice].ocupada = false;
-        unidades[indice].tempoOcioso += dataHoraFim.getHorasDesdeReferencia() - unidades[indice].ocupadoAte.getHorasDesdeReferencia();
+        numDisponiveis++;
     }
 
     /**
@@ -154,12 +128,7 @@ public:
      */
     float calcularTempoOciosoTotal() const
     {
-        float tempoOciosoTotal = 0.0;
-        for (int i = 0; i < numUnidades; ++i)
-        {
-            tempoOciosoTotal += unidades[i].tempoOcioso;
-        }
-        return tempoOciosoTotal;
+        return (numUnidades - numDisponiveis) * tempoAtendimentoMedio;
     }
 
     /**
