@@ -7,6 +7,11 @@
 #include "../include/Procedimento.hpp"
 #include "../include/Escalonador.hpp"
 
+#define DIA_REF 1
+#define MES_REF 1
+#define ANO_REF 2000
+#define HORA_REF 0.0
+
 /*
 Inicializa Condição de Término para FALSO
 Inicializa as variáveis de estado do sistema
@@ -27,6 +32,7 @@ Enquanto houver eventos ou filas não vazias
 Fim
 Gerar relatórios de estatísticas
 
+*/
 
 Paciente* criarPaciente(const std::string& linha, const DataHora& referencia) {
     std::istringstream iss(linha);
@@ -41,10 +47,9 @@ Paciente* criarPaciente(const std::string& linha, const DataHora& referencia) {
 }
 
 
-
-
 int main(int argc, char const *argv[])
 {
+
     // Erro entrada
     if (argc < 2) {
         std::cerr << "Uso: " << argv[0] << " <caminho_para_arquivo>" << std::endl;
@@ -59,53 +64,77 @@ int main(int argc, char const *argv[])
         return 1;
     }
 
+    DataHora ref(DIA_REF, MES_REF, ANO_REF, HORA_REF);
+
+    // Inicializa Procedimentos ------------------------------------------------
+    // Complexidade: O(1)
+    
     std::string line;
 
+    int durMin; float unidades;
+
     // Cria Triagem
     std::getline(inputFile, line);
     std::istringstream iss(line);
-    int durMin; float unidades;
     iss >> durMin >> unidades;
-    Procedimento triagem("Triagem", durMin, unidades);
+    Procedimento triagem("Triagem", unidades, durMin, false);
     
-    // Cria Triagem
+    // Cria Atendimento
     std::getline(inputFile, line);
-    std::istringstream iss(line);
-    int durMin; float unidades;
+    iss.clear();
+    iss.str(line);
     iss >> durMin >> unidades;
-    Procedimento triagem("Triagem", durMin, unidades);
+    Procedimento atendimento("Atendimento", unidades, durMin, true);
 
-    // Cria Triagem
+    // Cria Medidas
     std::getline(inputFile, line);
-    std::istringstream iss(line);
-    int durMin; float unidades;
+    iss.clear();
+    iss.str(line);
     iss >> durMin >> unidades;
-    Procedimento triagem("Triagem", durMin, unidades);
+    Procedimento mh("Medidas", unidades, durMin, true);
 
-    // Cria Triagem
+    // Cria Testes Laboratoriais
     std::getline(inputFile, line);
-    std::istringstream iss(line);
-    int durMin; float unidades;
+    iss.clear();
+    iss.str(line);
     iss >> durMin >> unidades;
-    Procedimento triagem("Triagem", durMin, unidades);
+    Procedimento tl("Testes", unidades, durMin, true);
 
-    // Cria Triagem
+    // Cria Exame de Imagem
     std::getline(inputFile, line);
-    std::istringstream iss(line);
-    int durMin; float unidades;
+    iss.clear();
+    iss.str(line);
     iss >> durMin >> unidades;
-    Procedimento triagem("Triagem", durMin, unidades);
+    Procedimento ei("Imagem", unidades, durMin, true);
 
-    // Cria Triagem
+    // Cria Instrumentos/Medicamentos
     std::getline(inputFile, line);
-    std::istringstream iss(line);
-    int durMin; float unidades;
+    iss.clear();
+    iss.str(line);
     iss >> durMin >> unidades;
-    Procedimento triagem("Triagem", durMin, unidades);
+    Procedimento im("Instrumentos/Medicamentos", unidades, durMin, true);
+
+    iss.clear();
+
+    // Criar Pacientes e Escalonar ---------------------------------------------
+    // Complexidade: O(n)
+
+    FilaEncadeada<Paciente> cadastroPacientes;
+
+    int numPacientes;
+    std::getline(inputFile, line);
+    iss.str(line);
+    iss >> numPacientes;
+    iss.clear();
+
+    for(int i = 0; i < numPacientes; i++) {
+        std::getline(inputFile, line);
+        Paciente* paciente = criarPaciente(line, ref);
+        cadastroPacientes.enfileira(*paciente);
+        
+    }
 
 
-
-    
 
 
 
@@ -114,15 +143,14 @@ int main(int argc, char const *argv[])
     return 0;
 }
 
-*/
 
 // main
 
-// abrir arquivo
+// abrir arquivo - ok
 
-// inicializa variaveis
-// para cada linha, chamar função de criar procedimento a partir de string x 6 vezes
-// ler numero de linhas
+// inicializa variaveis - ok
+// para cada linha, chamar função de criar procedimento a partir de string x 6 vezes - ok
+// ler numero de linhas - ok
 
 
 // definir data de referência

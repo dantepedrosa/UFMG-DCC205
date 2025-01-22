@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <sstream>
 #include "Tempo.hpp"
 
 class Paciente {
@@ -50,6 +51,38 @@ public:
           procedimentosPendentes{mh, tl, ei, im}, temposEspera{0.0}, temposAtendimento{0.0} {}
 
     /**
+     * @brief Construtor simplificado da classe Paciente.
+     * 
+     * @param linha String contendo os dados do paciente.
+     * @param referencia Data de referência.
+     */
+    Paciente(const std::string& linha, const DataHora& referencia) {
+        std::istringstream iss(linha);
+        int alta, ano, mes, dia, hora, urgencia, mh, tl, ei, im;
+        
+        iss >> id >> alta >> ano >> mes >> dia >> hora >> urgencia >> mh >> tl >> ei >> im;
+
+        DataHora admissao(dia, mes, ano, hora);
+        admissaoHZ = Tempo(admissao, referencia);
+        altaImediata = (alta == 1);
+        grauUrgencia = urgencia;
+        numMH = mh;
+        numTL = tl;
+        numEI = ei;
+        numIM = im;
+        estado = 2;
+        tempoUltimoEvento = admissaoHZ;
+        tempoTotalAtendimento = 0.0;
+        tempoTotalEspera = 0.0;
+        procedimentosPendentes[0] = mh;
+        procedimentosPendentes[1] = tl;
+        procedimentosPendentes[2] = ei;
+        procedimentosPendentes[3] = im;
+        std::fill(std::begin(temposEspera), std::end(temposEspera), 0.0);
+        std::fill(std::begin(temposAtendimento), std::end(temposAtendimento), 0.0);
+    }
+
+    /**
      * @brief Destrutor da classe Paciente.
      */
     ~Paciente() = default;
@@ -89,24 +122,6 @@ public:
     void registrarAtendimento(float tempo) {
         temposAtendimento[estado - 1] += tempo; // Corrigir índice do estado
         tempoTotalAtendimento += tempo;
-    }
-
-    /**
-     * @brief Obtém o estado atual do paciente.
-     * 
-     * @return int Estado atual do paciente.
-     */
-    int getEstado() const {
-        return estado;
-    }
-
-    /**
-     * @brief Obtém o identificador do paciente.
-     * 
-     * @return int Identificador do paciente.
-     */
-    int getId() const {
-        return id;
     }
 
     /**
@@ -187,5 +202,32 @@ public:
      */
     float getTempoTotalEspera() const {
         return tempoTotalEspera;
+    }
+
+    /**
+     * @brief Obtém o estado atual do paciente.
+     * 
+     * @return int Estado atual do paciente.
+     */
+    int getEstado() const {
+        return estado;
+    }
+
+    /**
+     * @brief Obtém o identificador do paciente.
+     * 
+     * @return int Identificador do paciente.
+     */
+    int getId() const {
+        return id;
+    }
+
+    /**
+     * @brief Obtém o grau de urgência do paciente.
+     * 
+     * @return int Grau de urgência do paciente.
+     */
+    int getUrgencia() const {
+        return grauUrgencia;
     }
 };
