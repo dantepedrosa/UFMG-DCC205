@@ -74,7 +74,6 @@ public:
 
     void ImprimeVizinhos() const {
         for (int i = 0; i < quantidadeVertices; ++i) {
-            std::cout << i << ":";
             vertices[i].Imprime();
         }
     }
