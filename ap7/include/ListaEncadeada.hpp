@@ -1,40 +1,71 @@
-#ifndef LISTAENCADEADA_HPP
-#define LISTAENCADEADA_HPP
+#ifndef LISTA_ENCADEADA_HPP
+#define LISTA_ENCADEADA_HPP
 
-#include <stdexcept>
 #include <iostream>
 
-template <typename TipoItem>
-class ListaEncadeada;
-
-template <typename TipoItem>
-class TipoCelula {
-    friend class ListaEncadeada<TipoItem>; // Permite acesso de ListaEncadeada aos atributos privados
-private:
-    TipoItem item;
-    TipoCelula* prox;
-};
-
-template <typename TipoItem>
+template <typename T>
 class ListaEncadeada {
-public:
-    ListaEncadeada();
-    ~ListaEncadeada();
-    void InsereInicio(TipoItem valor);
-    void InsereFinal(TipoItem valor);
-    TipoItem RemoveInicio();
-    TipoItem RemoveFinal();
-    bool Vazia() const;
-    int Tamanho() const;
-    TipoItem& GetItem(int pos); // Retorna uma referência ao item
-    void Imprime() const; // Adiciona a declaração do método Imprime
-    void Limpa(); // Adiciona a declaração do método Limpa
-
 private:
-    TipoCelula<TipoItem>* primeiro;
-    TipoCelula<TipoItem>* ultimo;
-    int tamanho;
+    struct No {
+        T dado;
+        No* prox;
+    };
+    No* inicio;
+
+public:
+    ListaEncadeada() : inicio(nullptr) {}
+
+    ~ListaEncadeada() {
+        No* atual = inicio;
+        while (atual) {
+            No* temp = atual;
+            atual = atual->prox;
+            delete temp;
+        }
+    }
+
+    void InsereFinal(T dado) {
+        No* novo = new No{dado, nullptr};
+        if (!inicio) {
+            inicio = novo;
+        } else {
+            No* atual = inicio;
+            while (atual->prox) {
+                atual = atual->prox;
+            }
+            atual->prox = novo;
+        }
+    }
+
+    bool Contem(T dado) const {
+        No* atual = inicio;
+        while (atual) {
+            if (atual->dado == dado) {
+                return true;
+            }
+            atual = atual->prox;
+        }
+        return false;
+    }
+
+    int Tamanho() const {
+        int tamanho = 0;
+        No* atual = inicio;
+        while (atual) {
+            tamanho++;
+            atual = atual->prox;
+        }
+        return tamanho;
+    }
+
+    void Imprime() const {
+        No* atual = inicio;
+        while (atual) {
+            std::cout << " " << atual->dado;
+            atual = atual->prox;
+        }
+        std::cout << std::endl;
+    }
 };
 
-#endif // LISTAENCADEADA_HPP
-
+#endif
