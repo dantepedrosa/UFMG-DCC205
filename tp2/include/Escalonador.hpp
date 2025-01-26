@@ -11,7 +11,7 @@
  */
 class Evento {
 
-    Tempo dataHora; // Data e hora do evento
+    double dataHora; // Data e hora do evento
     Paciente* paciente; // Ponteiro para o paciente associado ao evento
     int tipoEvento; // Tipo do evento (1: chegada, 2: triagem, etc.)
 
@@ -21,7 +21,7 @@ public:
     
     Evento() : dataHora(), paciente(nullptr), tipoEvento(0) {}
 
-    Evento(const Tempo& dataHora, Paciente* paciente, int tipoEvento)
+    Evento(double dataHora, Paciente* paciente, int tipoEvento)
         : dataHora(dataHora), paciente(paciente), tipoEvento(tipoEvento) {}
 
     Paciente* getPaciente() const {
@@ -32,7 +32,7 @@ public:
         return tipoEvento;
     }
 
-    Tempo getTempo() const {
+    double getTempo() const {
         return dataHora;
     }
 
@@ -143,7 +143,7 @@ public:
             throw std::underflow_error("Heap vazio");
         }
 
-        relogio = heap[0].getTempo().getHorasDesdeReferencia();
+        relogio = heap[0].getTempo();
         return relogio;
     }
 
