@@ -170,7 +170,7 @@ int main(int argc, char const* argv[]) {
 
     while (!cadastroPacientes.filaVazia()) {
         Paciente* paciente = cadastroPacientes.desenfileira();
-        // Imprimir resultados
+        paciente->imprimeEstatisticas();
         delete paciente;
     }
 
