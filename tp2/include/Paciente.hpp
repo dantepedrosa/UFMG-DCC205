@@ -14,9 +14,10 @@
  */
 class Paciente {
 private:
-    int id; // Identificador do paciente
+    std::string id; // Identificador do paciente
     bool altaImediata; // Indica se o paciente tem alta imediata
     Tempo admissaoHZ; // Tempo de admissão no hospital
+    Tempo saidaHZ; // Tempo de saída do hospital
     int grauUrgencia; // Grau de urgência do paciente
     int estado; // Estado atual do paciente
     double tempoUltimoEvento; // Tempo do último evento
@@ -28,6 +29,7 @@ private:
 
     float temposEspera[6]; // Tempos de espera
     float temposAtendimento[6]; // Tempos de atendimento
+    float permanenciaHZ;
 
 public:
     /**
@@ -122,8 +124,8 @@ public:
                 return (i+1)*2; // Retorna qual a próxima fila
             }
         }
+        return -1;
     }
-
 
     int proximoProcedimentoEficiente(){
         // Confere o tamanho da fila * tempo medio atendimento de cada próximo atendimento
@@ -149,6 +151,39 @@ public:
     void registrarAtendimento(float tempo) {
         temposAtendimento[estado - 1] += tempo; // Corrigir índice do estado
         tempoTotalAtendimento += tempo;
+    }
+
+    void registraSaida(double horaSaida){
+        permanenciaHZ = horaSaida - admissaoHZ.getHorasDesdeReferencia();
+
+        if (permanenciaHZ != (tempoTotalEspera + tempoTotalAtendimento))
+            throw std::invalid_argument("Erro: permanência do paciente não corresponde ao tempo total de espera e atendimento");
+
+        saidaHZ = admissaoHZ;
+        saidaHZ.somaHoras(permanenciaHZ);
+        estado = 14;
+    }
+
+    /**
+     * @brief Imprime os dados e estatísticas do paciente.
+     * 
+     * @details Imprime o paciente no formato, em uma linha apenas:
+     * 
+     * <id> 
+     * <ddddChegada> <mChegada> <dChegada> <hChegada>:<mChegada>:00 <yChegada>
+     * <ddddSaida> <mSaida> <dSaida> <hSaida>:<mSaida>:00 <ySaida>
+     * <permanenciaHZ> <tempoTotalAtendimento> <tempoTotalEspera>
+     * 
+     */
+    void imprimeEstatisticas() const {
+        std::cout 
+            << id << " " 
+            << admissaoHZ.paraString() << " " 
+            << saidaHZ.paraString() << " "
+            << permanenciaHZ << " " 
+            << tempoTotalAtendimento << " " 
+            << tempoTotalEspera 
+            << std::endl;
     }
 
     /**
@@ -245,7 +280,7 @@ public:
      * 
      * @return int Identificador do paciente.
      */
-    int getId() const {
+    std::string getId() const {
         return id;
     }
 
