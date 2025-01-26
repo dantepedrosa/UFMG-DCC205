@@ -82,7 +82,7 @@ public:
      * @return true Se há unidades disponíveis.
      * @return false Caso contrário.
      */
-    bool unidadeDisponivel(const Tempo &dataHora) const
+    bool unidadeDisponivel()
     {
         return numDisponiveis > 0;
     }
@@ -95,7 +95,7 @@ public:
      * @return int Índice da unidade alocada.
      * @throws std::runtime_error Se não houver unidades disponíveis.
      */
-    int alocarUnidade(const Tempo &dataHoraInicio, float duracao)
+    int alocarUnidade()
     {
         if (numDisponiveis > 0)
         {

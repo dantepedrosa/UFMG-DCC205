@@ -1,18 +1,21 @@
-#ifndef TEMPO_HPP
-#define TEMPO_HPP
+#pragma once
 
 #include <string>
 #include <sstream>
 #include <iomanip>
 #include <chrono>
+#include <ctime>
 
+/**
+ * @brief Estrutura que representa data e hora.
+ */
 struct DataHora {
-    int dia; //Dia do mês
-    int mes; //Mês do ano
-    int ano; //Ano
-    float hora; //Hora do dia como número decimal (por exemplo, 14.5 para 14:30)
+    int dia;  // Dia do mês
+    int mes;  // Mês do ano
+    int ano;  // Ano
+    float hora;  // Hora do dia como número decimal (ex.: 14.5 para 14:30)
 
-    DataHora() : dia(0), mes(0), ano(0), hora(0.0) {} // Construtor padrão
+    DataHora() : dia(0), mes(0), ano(0), hora(0.0) {}  // Construtor padrão
     DataHora(int d, int m, int a, float h) : dia(d), mes(m), ano(a), hora(h) {}
 
     bool operator<(const DataHora& outro) const {
@@ -23,15 +26,18 @@ struct DataHora {
     }
 
     bool operator==(const DataHora& outro) const {
-        return (dia == outro.dia) && (mes == outro.mes) && 
+        return (dia == outro.dia) && (mes == outro.mes) &&
                (ano == outro.ano) && (hora == outro.hora);
     }
 };
 
+/**
+ * @brief Classe que representa o tempo relativo a uma data de referência.
+ */
 class Tempo {
 private:
-    double horasDesdeReferencia; //Tempo em horas desde a data de referência
-    DataHora referencia; //Data de referência
+    double horasDesdeReferencia;  // Tempo em horas desde a data de referência
+    DataHora referencia;          // Data de referência
 
     /**
      * @brief Calcula o tempo em horas desde a data de referência.
@@ -39,53 +45,78 @@ private:
      * @param dh DataHora a ser calculada.
      * @return double Tempo em horas desde a data de referência.
      */
-    double calcularHorasReferencia(const DataHora& dh) const;
+    double calcularHorasReferencia(const DataHora& dh) const {
+        std::tm ref_time = { 0, 0, 0, referencia.dia, referencia.mes - 1, referencia.ano - 1900 };
+        std::tm dh_time = { 0, 0, 0, dh.dia, dh.mes - 1, dh.ano - 1900 };
+        std::time_t ref_time_t = std::mktime(&ref_time);
+        std::time_t dh_time_t = std::mktime(&dh_time);
+        double diff_seconds = std::difftime(dh_time_t, ref_time_t);
+        double diff_hours = diff_seconds / 3600.0 + dh.hora - referencia.hora;
+        return diff_hours;
+    }
 
 public:
-    Tempo() : horasDesdeReferencia(0.0), referencia() {} // Construtor padrão
-    Tempo(const DataHora& dh, const DataHora& ref);
+    Tempo() : horasDesdeReferencia(0.0), referencia() {}  // Construtor padrão
 
-    /**
-     * @brief Obtém o tempo em horas desde a data de referência.
-     * 
-     * @return double Tempo em horas desde a data de referência.
-     */
-    double getHorasDesdeReferencia() const;
+    Tempo(const DataHora& dh, const DataHora& ref) : referencia(ref) {
+        horasDesdeReferencia = calcularHorasReferencia(dh);
+    }
 
-    /**
-     * @brief Converte o tempo para string.
-     * 
-     * @return std::string Tempo em formato string.
-     */
-    std::string paraString() const;
+    double getHorasDesdeReferencia() const {
+        return horasDesdeReferencia;
+    }
 
-    /**
-     * @brief Obtém a data de referência.
-     * 
-     * @return DataHora Data de referência.
-     */
-    DataHora getReferencia() const;
+    void setHorasDesdeReferencia(double horas) {
+        horasDesdeReferencia = horas;
+    }
 
-    /**
-     * @brief Obtém a data e hora correspondente ao tempo.
-     * 
-     * @return DataHora Data e hora correspondente ao tempo.
-     */
-    DataHora getDataHora() const;
+    std::string paraString() const {
+        std::tm ref_time = { 0, 0, 0, referencia.dia, referencia.mes - 1, referencia.ano - 1900 };
+        std::time_t ref_time_t = std::mktime(&ref_time);
+        std::time_t t = ref_time_t + static_cast<std::time_t>(horasDesdeReferencia * 3600);
+        std::tm tm = *std::localtime(&t);
+        std::ostringstream oss;
+        oss << std::put_time(&tm, "%c");
+        return oss.str();
+    }
 
-    bool operator<(const Tempo& outro) const;
-    bool operator==(const Tempo& outro) const;
-    bool operator<=(const Tempo& outro) const;
-    bool operator>(const Tempo& outro) const;
-    bool operator>=(const Tempo& outro) const;
-    bool operator!=(const Tempo& outro) const;
+    DataHora getReferencia() const {
+        return referencia;
+    }
 
-    /**
-     * @brief Soma um tempo em horas ao tempo atual.
-     * 
-     * @param horas Tempo em horas a ser somado.
-     */
-    void somaHoras(double horas);
+    DataHora getDataHora() const {
+        std::tm ref_time = { 0, 0, 0, referencia.dia, referencia.mes - 1, referencia.ano - 1900 };
+        std::time_t ref_time_t = std::mktime(&ref_time);
+        std::time_t t = ref_time_t + static_cast<std::time_t>(horasDesdeReferencia * 3600);
+        std::tm tm = *std::localtime(&t);
+        return DataHora(tm.tm_mday, tm.tm_mon + 1, tm.tm_year + 1900, tm.tm_hour + tm.tm_min / 60.0);
+    }
+
+    bool operator<(const Tempo& outro) const {
+        return horasDesdeReferencia < outro.horasDesdeReferencia;
+    }
+
+    bool operator<=(const Tempo& outro) const {
+        return horasDesdeReferencia <= outro.horasDesdeReferencia;
+    }
+
+    bool operator>(const Tempo& outro) const {
+        return horasDesdeReferencia > outro.horasDesdeReferencia;
+    }
+
+    bool operator>=(const Tempo& outro) const {
+        return horasDesdeReferencia >= outro.horasDesdeReferencia;
+    }
+
+    bool operator==(const Tempo& outro) const {
+        return horasDesdeReferencia == outro.horasDesdeReferencia;
+    }
+
+    bool operator!=(const Tempo& outro) const {
+        return horasDesdeReferencia != outro.horasDesdeReferencia;
+    }
+
+    void somaHoras(double horas) {
+        horasDesdeReferencia += horas;
+    }
 };
-
-#endif  // TEMPO_HPP
