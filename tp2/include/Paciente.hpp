@@ -10,46 +10,18 @@ private:
     bool altaImediata; // Indica se o paciente tem alta imediata
     Tempo admissaoHZ; // Tempo de admissão no hospital
     int grauUrgencia; // Grau de urgência do paciente
-    int numMH; // Número de medidas hospitalares
-    int numTL; // Número de testes de laboratório
-    int numEI; // Número de exames de imagem
-    int numIM; // Número de instrumentos/medicamentos
     int estado; // Estado atual do paciente
-    Tempo tempoUltimoEvento; // Tempo do último evento
+    double tempoUltimoEvento; // Tempo do último evento
     float tempoTotalAtendimento; // Tempo total de atendimento
     float tempoTotalEspera; // Tempo total de espera
-    int procedimentosPendentes[4]; // Procedimentos pendentes
-    float temposEspera[14]; // Tempos de espera
-    float temposAtendimento[14]; // Tempos de atendimento
+
+    int procedimentosTotais[6]; // Procedimentos totais
+    int procedimentosPendentes[6]; // Procedimentos pendentes
+
+    float temposEspera[6]; // Tempos de espera
+    float temposAtendimento[6]; // Tempos de atendimento
 
 public:
-    /**
-     * @brief Construtor padrão da classe Paciente.
-     */
-    Paciente()
-        : id(0), altaImediata(false), admissaoHZ(), grauUrgencia(0),
-          numMH(0), numTL(0), numEI(0), numIM(0), estado(1), tempoUltimoEvento(),
-          tempoTotalAtendimento(0.0), tempoTotalEspera(0.0),
-          procedimentosPendentes{0, 0, 0, 0}, temposEspera{0.0}, temposAtendimento{0.0} {}
-
-    /**
-     * @brief Construtor parametrizado da classe Paciente.
-     * 
-     * @param id Identificador do paciente.
-     * @param alta Indica se o paciente tem alta imediata.
-     * @param admissao Tempo de admissão no hospital.
-     * @param urgencia Grau de urgência do paciente.
-     * @param mh Número de medidas hospitalares.
-     * @param tl Número de testes de laboratório.
-     * @param ei Número de exames de imagem.
-     * @param im Número de instrumentos/medicamentos.
-     */
-    Paciente(int id, bool alta, const Tempo& admissao, int urgencia, int mh, int tl, int ei, int im)
-        : id(id), altaImediata(alta), admissaoHZ(admissao), grauUrgencia(urgencia),
-          numMH(mh), numTL(tl), numEI(ei), numIM(im), estado(2), tempoUltimoEvento(admissao),
-          tempoTotalAtendimento(0.0), tempoTotalEspera(0.0),
-          procedimentosPendentes{mh, tl, ei, im}, temposEspera{0.0}, temposAtendimento{0.0} {}
-
     /**
      * @brief Construtor simplificado da classe Paciente.
      * 
@@ -66,18 +38,33 @@ public:
         admissaoHZ = Tempo(admissao, referencia);
         altaImediata = (alta == 1);
         grauUrgencia = urgencia;
-        numMH = mh;
-        numTL = tl;
-        numEI = ei;
-        numIM = im;
-        estado = 2;
-        tempoUltimoEvento = admissaoHZ;
+        estado = 1;
+
+        procedimentosTotais[0] = 1;
+        procedimentosTotais[1] = 1;
+        procedimentosTotais[2] = mh;
+        procedimentosTotais[3] = tl;
+        procedimentosTotais[4] = ei;
+        procedimentosTotais[5] = im;
+
+
+        tempoUltimoEvento = admissaoHZ.getHorasDesdeReferencia();
         tempoTotalAtendimento = 0.0;
         tempoTotalEspera = 0.0;
-        procedimentosPendentes[0] = mh;
-        procedimentosPendentes[1] = tl;
-        procedimentosPendentes[2] = ei;
-        procedimentosPendentes[3] = im;
+
+        // Inicializa os arrays
+        for (int i = 0; i < 6; i++){
+            temposEspera[i] = 0.0;
+            temposAtendimento[i] = 0.0;
+            if (i > 1 && altaImediata){
+                procedimentosPendentes[i] = 0;  // Receberá alta imediata
+            }
+            else{
+                procedimentosPendentes[i] = procedimentosTotais[i];
+            }
+        }
+
+
         std::fill(std::begin(temposEspera), std::end(temposEspera), 0.0);
         std::fill(std::begin(temposAtendimento), std::end(temposAtendimento), 0.0);
     }
@@ -93,15 +80,47 @@ public:
      * @param novoEstado Novo estado do paciente.
      * @param dataHoraAtual Tempo atual.
      */
-    void atualizarEstado(int novoEstado, const Tempo& dataHoraAtual) {
-        float tempoDecorrido = dataHoraAtual.getHorasDesdeReferencia() - tempoUltimoEvento.getHorasDesdeReferencia();
-        if (estado % 2 == 0) { // Se o estado é par, é tempo de espera
-            registrarEspera(tempoDecorrido);
-        } else { // Se o estado é ímpar, é tempo de atendimento
-            registrarAtendimento(tempoDecorrido);
+    void atualizarEstado(int novoEstado, double dataHoraAtual) {
+        if (novoEstado ==  1){
+            throw std::invalid_argument("Erro: paciente não pode voltar para o estado 1");
         }
+    
+        float tempoDecorrido = dataHoraAtual - tempoUltimoEvento;
+
+        int i;
+        // Evento é impar: Paciente será atendido
+        if( novoEstado % 2 == 1){
+            i = (novoEstado - 3)/2;
+            procedimentosPendentes[i]--;
+            // Registrar tempo de espera da última fila
+            temposEspera[i] += tempoDecorrido; 
+        }
+        // Evento é par: Paciente entrará em fila
+        else if(novoEstado % 2 == 1){
+            i = (novoEstado - 4)/2;
+            procedimentosPendentes[i]--;
+            // Registrar tempo de atendimento do último atendimento
+            temposAtendimento[i] += tempoDecorrido;    
+        }     
+        
         estado = novoEstado;
         tempoUltimoEvento = dataHoraAtual;
+    }
+
+
+    int proximaFilaProcedimento() {
+        for(int i = 0; i < 6; i++){
+            if(procedimentosPendentes[i] > 0){
+                return (i+1)*2; // Retorna qual a próxima fila
+            }
+        }
+    }
+
+
+    int proximoProcedimentoEficiente(){
+        // Confere o tamanho da fila * tempo medio atendimento de cada próximo atendimento
+        // proximo procedimento = min(fila * tempo medio atendimento)
+        return -1;
     }
 
     /**
@@ -238,6 +257,12 @@ public:
      * @return false Caso contrário.
      */
     bool precisaDeServicos() const {
-        return numMH > 0 || numTL > 0 || numEI > 0 || numIM > 0;
+        for(int i = 0; i < 6; i++){
+            if(procedimentosPendentes[i] > 0){
+                return true; // Retorna qual a próxima fila
+            }
+        }
+        return false;
     }
+
 };
