@@ -13,13 +13,6 @@
 #define ANO_REF 2000
 #define HORA_REF 0.0
 
-#define TRIAGEM 0
-#define ATENDIMENTO 1
-#define MH 2
-#define TL 3
-#define EI 4
-#define IM 5
-
 
 /*
 PSEUDOCÓDIGO

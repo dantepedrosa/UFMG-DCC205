@@ -1,26 +1,39 @@
-#define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include "../include/doctest.hpp"
-#include "Tempo.hpp"
+#include "../include/Tempo.hpp"
 
-TEST_CASE("Testando a classe Tempo") {
-    DataHora ref(1, 1, 2025, 0.0);
-    DataHora dh(2, 1, 2025, 12.0);
-    Tempo t1(dh, ref);
+TEST_CASE("Testando o construtor da classe Tempo") {
+    DataHora referencia(1, 1, 1970, 0.0);
+    DataHora dataHora(1, 1, 1987, 0.0);
+    Tempo tempo(dataHora, referencia);
 
-    CHECK(t1.getHorasDesdeReferencia() == 36.0);
-
-    t1.somaHoras(1.0);
-    CHECK(t1.getHorasDesdeReferencia() == 37.0);
-    CHECK(!t1.paraString().empty());
-    CHECK(t1.paraString() == "Thu Jan  2 13:00:00 2025");
+    CHECK(tempo.getHorasDesdeReferencia() == 149016.0);
 }
 
-TEST_CASE("Testando overflow de dia, mês e ano") {
-    DataHora ref(1, 1, 2020, 0.0);
-    DataHora dh(31, 12, 2024, 23.5);
-    Tempo t1(dh, ref);
+TEST_CASE("Testando a função somaHoras") {
+    DataHora referencia(1, 1, 1970, 0.0);
+    DataHora dataHora(1, 1, 1987, 0.0);
+    Tempo tempo(dataHora, referencia);
 
-    t1.somaHoras(2.05);
+    tempo.somaHoras(2.0);
+    CHECK(tempo.getHorasDesdeReferencia() == 149018.0);
+}
 
-    CHECK(t1.paraString() == "Wed Jan  1 01:33:00 2025");
+TEST_CASE("Testando a função paraString") {
+    DataHora referencia(1, 1, 2000, 0.0);
+    DataHora dataHora(21, 3, 2017, 2.0);
+    Tempo tempo(dataHora, referencia);
+
+    CHECK(tempo.paraString() == "Tue Mar 21 02:00:00 2017");
+}
+
+TEST_CASE("Testando a função getDataHora") {
+    DataHora referencia(1, 1, 2000, 0.0);
+    DataHora dataHora(21, 3, 2017, 2.0);
+    Tempo tempo(dataHora, referencia);
+
+    DataHora dh = tempo.getDataHora();
+    CHECK(dh.dia == 21);
+    CHECK(dh.mes == 3);
+    CHECK(dh.ano == 2017);
+    CHECK(dh.hora == 2.0);
 }

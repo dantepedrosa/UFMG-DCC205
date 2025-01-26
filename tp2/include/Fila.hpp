@@ -27,19 +27,14 @@ private:
 template <typename TipoItem>
 class FilaEncadeada {
 public:
-    FilaEncadeada() : frente(nullptr), tras(nullptr) {}
+    FilaEncadeada() : frente(nullptr), tras(nullptr) {
+        frente = new TipoCelula<TipoItem>();
+        tras = frente;
+    }
 
     ~FilaEncadeada() {
         finaliza();
         delete frente;
-    }
-
-    /**
-     * @brief Inicializa a fila encadeada.
-     */
-    void inicializa() {
-        frente = new TipoCelula<TipoItem>();
-        tras = frente;
     }
 
     /**
@@ -117,6 +112,20 @@ public:
         return frente == tras;
     }
 
+    
+
+private:
+    TipoCelula<TipoItem> *frente; // Ponteiro para a frente da fila
+    TipoCelula<TipoItem> *tras; // Ponteiro para o final da fila
+
+    /**
+     * @brief Inicializa a fila encadeada.
+     */
+    void inicializa() {
+        frente = new TipoCelula<TipoItem>();
+        tras = frente;
+    }
+
     /**
      * @brief Finaliza a fila encadeada, liberando todos os recursos.
      */
@@ -129,10 +138,6 @@ public:
         }
         tras = frente;
     }
-
-private:
-    TipoCelula<TipoItem> *frente; // Ponteiro para a frente da fila
-    TipoCelula<TipoItem> *tras; // Ponteiro para o final da fila
 };
 
 #endif // FILA_HPP

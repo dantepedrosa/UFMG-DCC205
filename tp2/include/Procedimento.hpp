@@ -1,12 +1,20 @@
 #pragma once
 
 #include <string>
+#include <stdexcept>
 
 #include "Fila.hpp"
 #include "Paciente.hpp"
 #include "Tempo.hpp"
 
 #define MAXTAM 15
+
+#define TRIAGEM 0
+#define ATENDIMENTO 1
+#define MH 2
+#define TL 3
+#define EI 4
+#define IM 5
 
 /**
  * @file Procedimento.hpp
@@ -45,41 +53,23 @@ class Procedimento {
         : numUnidades(numUnidades),
           numDisponiveis(numUnidades),
           tempoAtendimentoMedio(tempoAtendimentoMedio),
-          comUrgencia(comUrgencia) {
-        filaVerde = new FilaEncadeada<Paciente*>();
-        filaAmarela = new FilaEncadeada<Paciente*>();
-        filaVermelha = new FilaEncadeada<Paciente*>();
-        filaGeral = new FilaEncadeada<Paciente*>();
-    }
+          comUrgencia(comUrgencia),
+          filaVerde(new FilaEncadeada<Paciente*>()),
+          filaAmarela(new FilaEncadeada<Paciente*>()),
+          filaVermelha(new FilaEncadeada<Paciente*>()),
+          filaGeral(new FilaEncadeada<Paciente*>()) {}
 
     /**
      * @brief Destrutor da classe Procedimento.
      */
     ~Procedimento() {
-        if (filaVerde) {
-            filaVerde->finaliza();  // Limpa os elementos da fila
-            delete filaVerde;       // Deleta a própria fila
-            filaVerde = nullptr;    // Previne dangling pointers
-        }
-
-        if (filaAmarela) {
-            filaAmarela->finaliza();  // Limpa os elementos da fila
-            delete filaAmarela;       // Deleta a própria fila
-            filaAmarela = nullptr;    // Previne dangling pointers
-        }
-
-        if (filaVermelha) {
-            filaVermelha->finaliza();  // Limpa os elementos da fila
-            delete filaVermelha;       // Deleta a própria fila
-            filaVermelha = nullptr;    // Previne dangling pointers
-        }
-
-        if (filaGeral) {
-            filaGeral->finaliza();  // Limpa os elementos da fila
-            delete filaGeral;       // Deleta a própria fila
-            filaGeral = nullptr;    // Previne dangling pointers
-        }
+        delete filaVerde;
+        delete filaAmarela;
+        delete filaVermelha;
+        delete filaGeral;
     }
+
+
 
     /**
      * @brief Verifica se há unidades disponíveis no tempo especificado.
@@ -112,9 +102,12 @@ class Procedimento {
      *
      * @param indice Índice da unidade a ser liberada.
      * @param dataHoraFim Tempo de término do atendimento.
-     * @throws std::out_of_range Se o índice da unidade for inválido.
+     * @throws std::runtime_error Se o índice da unidade for inválido.
      */
     void liberarUnidade(double dataHoraFim) {
+        if (numDisponiveis >= numUnidades) {
+            throw std::runtime_error("Todas as unidades já estão disponíveis");
+        }
         numDisponiveis++;
         // TODO - Estatisticas de unidades/procedimentos
     }
@@ -180,22 +173,20 @@ class Procedimento {
      */
     Paciente* desenfileira() {
         if (comUrgencia) {
-            if (!filaVermelha->filaVazia()) 
+            if (filaVermelha && !filaVermelha->filaVazia())
                 return filaVermelha->desenfileira();
-            
-            else if (!filaAmarela->filaVazia()) 
+            else if (filaAmarela && !filaAmarela->filaVazia())
                 return filaAmarela->desenfileira();
-            
-            else if (!filaVerde->filaVazia()) 
+            else if (filaVerde && !filaVerde->filaVazia())
                 return filaVerde->desenfileira();
-            
-            else throw std::runtime_error("Todas as filas de urgência estão vazias.");
-
+            else
+                throw std::runtime_error(
+                    "Todas as filas de urgência estão vazias.");
         } else {
-            if (!filaGeral->filaVazia()) 
+            if (filaGeral && !filaGeral->filaVazia())
                 return filaGeral->desenfileira();
-            
-            else throw std::runtime_error("A fila geral está vazia.");
+            else
+                throw std::runtime_error("A fila geral está vazia.");
         }
     }
 

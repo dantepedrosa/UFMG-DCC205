@@ -1,59 +1,44 @@
-#define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include "../include/doctest.hpp"
 #include "../include/Fila.hpp"
 
-TEST_CASE("Testando a inicialização da fila") {
+TEST_CASE("Testando o construtor da classe FilaEncadeada") {
     FilaEncadeada<int> fila;
-    fila.inicializa();
     CHECK(fila.filaVazia() == true);
 }
 
-TEST_CASE("Testando a enfileiração de elementos") {
+TEST_CASE("Testando a função enfileira e desenfileira") {
     FilaEncadeada<int> fila;
-    fila.inicializa();
-    fila.enfileira(10);
-    CHECK(fila.filaVazia() == false);
-    fila.enfileira(20);
-    fila.enfileira(30);
-    CHECK(fila.filaVazia() == false);
-}
+    fila.enfileira(1);
+    fila.enfileira(2);
+    fila.enfileira(3);
 
-TEST_CASE("Testando a desenfileiração de elementos") {
-    FilaEncadeada<int> fila;
-    fila.inicializa();
-    fila.enfileira(10);
-    fila.enfileira(20);
-    fila.enfileira(30);
-    CHECK(fila.desenfileira() == 10);
-    CHECK(fila.desenfileira() == 20);
-    CHECK(fila.desenfileira() == 30);
+    CHECK(fila.filaVazia() == false);
+    CHECK(fila.desenfileira() == 1);
+    CHECK(fila.desenfileira() == 2);
+    CHECK(fila.desenfileira() == 3);
     CHECK(fila.filaVazia() == true);
 }
 
-TEST_CASE("Testando a fila vazia") {
+TEST_CASE("Testando a função desenfileiraPonteiro") {
     FilaEncadeada<int> fila;
-    fila.inicializa();
-    CHECK(fila.filaVazia() == true);
-    fila.enfileira(10);
-    CHECK(fila.filaVazia() == false);
+    fila.enfileira(1);
+    fila.enfileira(2);
+
+    int* item = fila.desenfileiraPonteiro();
+    CHECK(*item == 1);
+    delete item;
+
+    item = fila.desenfileiraPonteiro();
+    CHECK(*item == 2);
+    delete item;
+}
+
+TEST_CASE("Testando a função peek") {
+    FilaEncadeada<int> fila;
+    fila.enfileira(1);
+    fila.enfileira(2);
+
+    CHECK(fila.peek() == 1);
     fila.desenfileira();
-    CHECK(fila.filaVazia() == true);
+    CHECK(fila.peek() == 2);
 }
-
-TEST_CASE("Testando a finalização da fila") {
-    FilaEncadeada<int> fila;
-    fila.inicializa();
-    fila.enfileira(10);
-    fila.enfileira(20);
-    fila.enfileira(30);
-    fila.finaliza();
-    CHECK(fila.filaVazia() == true);
-}
-
-/*
-TEST_CASE("Testando exceção ao desenfileirar de uma fila vazia") {
-    FilaEncadeada<int> fila;
-    fila.inicializa();
-    CHECK_THROWS_AS(fila.desenfileira(), std::runtime_error);
-}
-*/
