@@ -3,6 +3,11 @@
 
 #include <stdexcept>
 
+/**
+ * @file Fila.hpp
+ * @brief Declaração das classes TipoCelula e FilaEncadeada.
+ */
+
 template <typename TipoItem>
 class TipoCelula {
 public:
@@ -16,6 +21,9 @@ private:
     friend class FilaEncadeada;
 };
 
+/**
+ * @brief Classe que representa uma fila encadeada.
+ */
 template <typename TipoItem>
 class FilaEncadeada {
 public:
@@ -40,7 +48,7 @@ public:
      * @param item Item a ser enfileirado.
      */
     void enfileira(TipoItem item) {
-        TipoCelula<TipoItem> *novaCelula = new TipoCelula<TipoItem>();
+        TipoCelula<TipoItem>* novaCelula = new TipoCelula<TipoItem>();
         novaCelula->item = item;
         tras->prox = novaCelula;
         tras = novaCelula;

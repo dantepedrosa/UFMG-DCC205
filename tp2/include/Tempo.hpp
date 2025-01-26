@@ -7,6 +7,11 @@
 #include <ctime>
 
 /**
+ * @file Tempo.hpp
+ * @brief Declaração da classe Tempo e da estrutura DataHora.
+ */
+
+/**
  * @brief Estrutura que representa data e hora.
  */
 struct DataHora {
