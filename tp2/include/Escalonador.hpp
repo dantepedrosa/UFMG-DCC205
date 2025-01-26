@@ -156,5 +156,5 @@ class Escalonador {
         capacidade = 0;
     }
 
-    float getRelogio() const { return relogio; }
+    double getRelogio() const { return relogio; }
 };

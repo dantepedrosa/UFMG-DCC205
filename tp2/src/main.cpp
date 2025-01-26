@@ -99,6 +99,7 @@ int main(int argc, char const* argv[]) {
 
         Paciente* paciente = new Paciente(line, ref);
         double tempoChegada = paciente->getAdmissaoHZ().getHorasDesdeReferencia();
+
         Evento chegadaHospital(tempoChegada, paciente, 1);
 
         cadastroPacientes.enfileira(paciente);  // Para manter a ordem do documento de entrada
@@ -112,7 +113,7 @@ int main(int argc, char const* argv[]) {
     {
         // Inicialização de variaveis uteis
         Evento evento = escalonador.retiraProximoEvento();      // Retira o próximo evento a ser processado    
-        double tempoEvento = escalonador.avancaRelogio();       // Avança o relógio para o instante do evento
+        double tempoEvento = escalonador.getRelogio();
         Paciente* paciente = evento.getPaciente();
         int tipoEvento = evento.getTipoEvento();
 
