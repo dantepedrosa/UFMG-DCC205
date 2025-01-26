@@ -4,6 +4,9 @@
 #include <sstream>
 #include "Tempo.hpp"
 
+/**
+ * @brief Classe que representa um paciente na simulação de atendimento hospitalar.
+ */
 class Paciente {
 private:
     int id; // Identificador do paciente
@@ -107,7 +110,11 @@ public:
         tempoUltimoEvento = dataHoraAtual;
     }
 
-
+    /**
+     * @brief Obtém a próxima fila de procedimento que o paciente deve entrar.
+     * 
+     * @return int O índice da próxima fila de procedimento.
+     */
     int proximaFilaProcedimento() {
         for(int i = 0; i < 6; i++){
             if(procedimentosPendentes[i] > 0){
@@ -116,7 +123,11 @@ public:
         }
     }
 
-
+    /**
+     * @brief Obtém o próximo procedimento eficiente para o paciente.
+     * 
+     * @return int O índice do próximo procedimento eficiente.
+     */
     int proximoProcedimentoEficiente(){
         // Confere o tamanho da fila * tempo medio atendimento de cada próximo atendimento
         // proximo procedimento = min(fila * tempo medio atendimento)
