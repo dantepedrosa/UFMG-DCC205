@@ -11,7 +11,6 @@
 class Procedimento
 {
 private:
-    std::string nome;               // Nome do procedimento
     int numUnidades;                // Número de unidades total
     int numDisponiveis;             // Número de unidades disponíveis
     float tempoAtendimentoMedio;    // Tempo médio de atendimento
@@ -31,8 +30,8 @@ public:
      * @param tempoAtendimentoMedio Tempo médio de atendimento.
      * @param comUrgencia Indica se o procedimento tem urgência.
      */
-    Procedimento(const std::string &nome, int numUnidades, float tempoAtendimentoMedio, bool comUrgencia)
-        : nome(nome), numUnidades(numUnidades), numDisponiveis(numUnidades), tempoAtendimentoMedio(tempoAtendimentoMedio), comUrgencia(comUrgencia)
+    Procedimento(int numUnidades, float tempoAtendimentoMedio, bool comUrgencia)
+        : numUnidades(numUnidades), numDisponiveis(numUnidades), tempoAtendimentoMedio(tempoAtendimentoMedio), comUrgencia(comUrgencia)
     {
         filaVerde = new FilaEncadeada<Paciente>();
         filaAmarela = new FilaEncadeada<Paciente>();
@@ -129,16 +128,6 @@ public:
     float calcularTempoOciosoTotal() const
     {
         return (numUnidades - numDisponiveis) * tempoAtendimentoMedio;
-    }
-
-    /**
-     * @brief Obtém o nome do procedimento.
-     * 
-     * @return std::string Nome do procedimento.
-     */
-    std::string getNome() const
-    {
-        return nome;
     }
 
     /**
