@@ -25,19 +25,19 @@ all: $(EXEC)
 
 unittest: $(TEST_EXEC)
 	@echo "Running all unit tests:"
-	@$(TEST_EXEC) --test-case-exclude=[sistema]
+	@$(TEST_EXEC) --source-file-exclude=*testeSistema.cpp*
 
 systest: $(TEST_EXEC)
 	@echo "Running system tests:"
-	@$(TEST_EXEC) --test-case=[sistema]
+	@$(TEST_EXEC) --source-file=*testeSistema.cpp*
 
 unitmemtest: $(TEST_EXEC)
 	@echo "Running all tests with Valgrind:"
-	valgrind --leak-check=full $(TEST_EXEC) --test-case-exclude=[sistema]
+	valgrind --leak-check=full $(TEST_EXEC) --source-file-exclude=*testeSistema.cpp*
 
 sysmemtest: $(TEST_EXEC)
 	@echo "Running all tests with Valgrind:"
-	valgrind --leak-check=full $(TEST_EXEC) --test-case=[sistema]
+	valgrind --leak-check=full $(TEST_EXEC) --test-case=*testeSistema.cpp*
 
 run: $(EXEC)
 	./$(EXEC) $(ARGS)

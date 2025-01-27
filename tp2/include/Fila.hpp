@@ -30,6 +30,7 @@ public:
     FilaEncadeada() : frente(nullptr), tras(nullptr) {
         frente = new TipoCelula<TipoItem>();
         tras = frente;
+        tamanho = 0;
     }
 
     ~FilaEncadeada() {
@@ -47,6 +48,7 @@ public:
         novaCelula->item = item;
         tras->prox = novaCelula;
         tras = novaCelula;
+        tamanho++;
     }
 
     /**
@@ -65,6 +67,8 @@ public:
         if (frente->prox == nullptr) {
             tras = frente;
         }
+
+        tamanho--;
         delete celulaRemovida; // Libera a célula removida
         return item;          // Retorna o objeto copiado
     }
@@ -85,6 +89,8 @@ public:
         if (frente->prox == nullptr) {
             tras = frente;
         }
+
+        tamanho--;
         delete celulaRemovida; // Libera a célula removida
         return item;           // Retorna um ponteiro para o objeto
     }
@@ -112,11 +118,15 @@ public:
         return frente == tras;
     }
 
+    /** @brief Retorna o tamanho da fila. */
+    int getTamanho() const { return tamanho; }
     
 
 private:
     TipoCelula<TipoItem> *frente; // Ponteiro para a frente da fila
     TipoCelula<TipoItem> *tras; // Ponteiro para o final da fila
+    int tamanho; // Tamanho da fila
+
 
     /**
      * @brief Inicializa a fila encadeada.

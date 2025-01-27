@@ -157,4 +157,6 @@ class Escalonador {
     }
 
     double getRelogio() const { return relogio; }
+
+    int getTamanho() const { return tamanho; }
 };

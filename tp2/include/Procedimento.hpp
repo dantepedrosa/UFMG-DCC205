@@ -204,4 +204,7 @@ class Procedimento {
             return filaGeral->filaVazia();
         }
     }
+
+    /** @brief Retorna o número de unidades disponíveis. */
+    int getNumDisponiveis() const { return numDisponiveis; }
 };
