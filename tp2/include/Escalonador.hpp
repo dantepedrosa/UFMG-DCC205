@@ -32,14 +32,15 @@ class Evento {
     double dataHora;     // Data e hora do evento
     Paciente* paciente;  // Ponteiro para o paciente associado ao evento
     int tipoEvento;      // Tipo do evento (1: chegada, 2: triagem, etc.)
+    int indiceInsercao;  // Índice de inserção para resolver empates
 
     friend class Escalonador;  // Declara Escalonador como friend class
 
-   public:
-    Evento() : dataHora(), paciente(nullptr), tipoEvento(0) {}
+public:
+    Evento() : dataHora(), paciente(nullptr), tipoEvento(0), indiceInsercao(-1) {}
 
     Evento(double dataHora, Paciente* paciente, int tipoEvento)
-        : dataHora(dataHora), paciente(paciente), tipoEvento(tipoEvento) {}
+        : dataHora(dataHora), paciente(paciente), tipoEvento(tipoEvento), indiceInsercao(-1) {}
 
     Paciente* getPaciente() const { return paciente; }
 
@@ -48,6 +49,9 @@ class Evento {
     double getTempo() const { return dataHora; }
 
     bool operator<(const Evento& outro) const {
+        if (dataHora == outro.dataHora) {
+            return indiceInsercao < outro.indiceInsercao; // Resolve empate com o índice
+        }
         return dataHora < outro.dataHora;
     }
 
@@ -58,6 +62,9 @@ class Evento {
     bool operator!=(const Evento& outro) const { return !(*this == outro); }
 
     bool operator>(const Evento& outro) const {
+        if (dataHora == outro.dataHora) {
+            return indiceInsercao > outro.indiceInsercao; // Resolve empate com o índice
+        }
         return dataHora > outro.dataHora;
     }
 
@@ -68,6 +75,7 @@ class Evento {
     ~Evento() {}
 };
 
+
 /**
  * @brief Classe que representa o escalonador de eventos.
  */
@@ -77,6 +85,7 @@ class Escalonador {
     int capacidade;  // Capacidade máxima do heap
     int tamanho;     // Tamanho atual do heap
     double relogio;  // Tempo atual da simulação
+    int contadorInsercao;  // Contador de inserção, para manter o índice
 
     void heapifyDown(int indice) {
         int menor = indice;
@@ -117,7 +126,7 @@ class Escalonador {
 
    public:
     Escalonador(int capacidadeMax, const DataHora& ref)
-        : capacidade(capacidadeMax), tamanho(0) {
+        : capacidade(capacidadeMax), tamanho(0), contadorInsercao(0) {
         heap = new Evento[capacidade];
         relogio = 0.0;
     }
@@ -129,8 +138,12 @@ class Escalonador {
             throw std::overflow_error("Heap cheio");
         }
 
-        heap[tamanho] = evento;
-        heapifyUp(tamanho);
+        // Cria uma cópia do evento e atribui o índice de inserção
+        Evento eventoComIndice = evento;
+        eventoComIndice.indiceInsercao = contadorInsercao++;
+
+        heap[tamanho] = eventoComIndice;
+        heapifyUp(tamanho);  // Ajusta o heap para manter a propriedade do min-heap
         tamanho++;
     }
 
