@@ -5,6 +5,7 @@
 #include <iomanip>
 #include <chrono>
 #include <ctime>
+#include <cmath>
 
 /**
  * @file Tempo.hpp
@@ -33,6 +34,15 @@ struct DataHora {
     bool operator==(const DataHora& outro) const {
         return (dia == outro.dia) && (mes == outro.mes) &&
                (ano == outro.ano) && (hora == outro.hora);
+    }
+
+    std::string paraString() const {
+
+        std::ostringstream oss;
+        oss << dia << "/" << mes << "/" << ano << " " << std::fixed << std::setprecision(2) << hora;
+
+        
+        return oss.str();
     }
 };
 
@@ -66,6 +76,8 @@ public:
     Tempo(const DataHora& dh, const DataHora& ref) : referencia(ref) {
         horasDesdeReferencia = calcularHorasReferencia(dh);
     }
+
+    Tempo(double horas, const DataHora& ref) : horasDesdeReferencia(horas), referencia(ref) {}
 
     double getHorasDesdeReferencia() const {
         return horasDesdeReferencia;
