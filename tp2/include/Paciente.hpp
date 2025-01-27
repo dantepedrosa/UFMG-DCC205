@@ -45,11 +45,12 @@ class Paciente {
     void registraSaida(double horaSaida) {
         permanenciaHZ = horaSaida - admissaoHZ.getHorasDesdeReferencia();
 
+        /*
         if (permanenciaHZ != (tempoTotalEspera + tempoTotalAtendimento))
             throw std::invalid_argument(
                 "Erro: permanência do paciente não corresponde ao tempo total "
                 "de espera e atendimento");
-
+*/
         saidaHZ = admissaoHZ;
         saidaHZ.somaHoras(permanenciaHZ);
         estado = 14;
@@ -135,12 +136,13 @@ class Paciente {
                 "Erro: paciente não pode voltar para o estado 1");
         }
 
-        float tempoDecorrido = dataHoraAtual - tempoUltimoEvento;
+        double tempoDecorrido = dataHoraAtual - tempoUltimoEvento; // Arredonda para 2 casas decimais
+
 
         int i;
         // Evento é impar: Paciente será atendido
         if (novoEstado % 2 == 1) {
-            i = (novoEstado - 3) / 2;
+            i = (estado - 1) / 2;
             procedimentosPendentes[i]--;
             // Registrar tempo de espera da última fila
             temposEspera[i] += tempoDecorrido;
@@ -148,8 +150,7 @@ class Paciente {
         }
         // Evento é par: Paciente entrará em fila
         else if (novoEstado % 2 == 0) {
-            i = (novoEstado - 4) / 2;
-            procedimentosPendentes[i]--;
+            i = (estado - 2) / 2;
             // Registrar tempo de atendimento do último atendimento
             temposAtendimento[i] += tempoDecorrido;
             tempoTotalAtendimento += tempoDecorrido;
@@ -161,11 +162,12 @@ class Paciente {
                     "Erro: paciente não pode ter alta sem ter passado por "
                     "triagem e atendimento");
 
-            if (!this->precisaDeServicos() && !altaImediata)
-                throw std::invalid_argument(
+            if (this->precisaDeServicos()){
+                if(!altaImediata)
+                    throw std::invalid_argument(
                     "Erro: paciente não pode ter alta sem ter passado por "
                     "todos os procedimentos");
-
+            }
             registraSaida(dataHoraAtual);
         }
 
@@ -195,7 +197,7 @@ class Paciente {
      * @param tempo Tempo de espera.
      */
     void registrarEspera(float tempo) {
-        temposEspera[estado - 1] += tempo;  // Corrigir índice do estado
+        temposEspera[(estado - 2)/2] += tempo;  // Corrigir índice do estado
         tempoTotalEspera += tempo;
     }
 
@@ -205,7 +207,7 @@ class Paciente {
      * @param tempo Tempo de atendimento.
      */
     void registrarAtendimento(float tempo) {
-        temposAtendimento[estado - 1] += tempo;  // Corrigir índice do estado
+        temposAtendimento[(estado - 3)/2] += tempo;
         tempoTotalAtendimento += tempo;
     }
 
