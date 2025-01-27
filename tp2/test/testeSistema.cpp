@@ -86,7 +86,7 @@ TEST_CASE("Sistema: Teste completo do programa") {
         int tipoEvento = evento.getTipoEvento();
 
         dhtest = Tempo(tempoEvento, ref).getDataHora();
-        std::cout << dhtest.paraString() << ": Evento " << tipoEvento << " com paciente " << paciente->getId() << std::endl;
+        std::cout << dhtest.paraString() << ": Paciente " << paciente->getId() << " | Estado: " << paciente->estadoParaString() << std::endl;
         REQUIRE(tempoEvento >= 0);
 
         // Caso evento é finalização de procedimento
@@ -106,16 +106,16 @@ TEST_CASE("Sistema: Teste completo do programa") {
                 
                 paciente->atualizarEstado(proxProcedimento, tempoEvento);
 
-                dhtest = Tempo(tempoEvento, ref).getDataHora();
-                std::cout << dhtest.paraString() << ": Paciente* " << paciente->getId() << " | Estado: " << paciente->estadoParaString() << std::endl;
+                //dhtest = Tempo(tempoEvento, ref).getDataHora();
+                //std::cout << dhtest.paraString() << ": Paciente* " << paciente->getId() << " | Estado: " << paciente->estadoParaString() << std::endl;
             }
             else {
                 
                 REQUIRE(paciente->precisaDeServicos() == false);
                 paciente->atualizarEstado(14, tempoEvento);
 
-                dhtest = Tempo(tempoEvento, ref).getDataHora();
-                std::cout << dhtest.paraString() << ": Paciente " << paciente->getId() << " | Estado: " << paciente->estadoParaString() << std::endl;
+                //dhtest = Tempo(tempoEvento, ref).getDataHora();
+                //std::cout << dhtest.paraString() << ": Paciente " << paciente->getId() << " | Estado: " << paciente->estadoParaString() << std::endl;
                 
                 numAltas++;
             }
@@ -139,12 +139,15 @@ TEST_CASE("Sistema: Teste completo do programa") {
                 escalonador.insereEvento(eventoProcedimento);
 
                 dhtest = Tempo(horaSaida, ref).getDataHora();
-                std::cout << dhtest.paraString() << "*: Paciente " << pacienteFila->getId() << " | Estado: " << paciente->estadoParaString() << std::endl;
+                std::cout << dhtest.paraString() << "*: Paciente " << pacienteFila->getId() << " | Agendado: " << paciente->estadoParaString() << std::endl;
             }
         }
 
+        dhtest = Tempo(tempoEvento, ref).getDataHora();
+        std::cout << dhtest.paraString() << ": Paciente " << paciente->getId() << " | Estado: " << paciente->estadoParaString() << std::endl;
+
         count++;
-        //if(count > 100) {break;}
+        //if(count > 400) {break;}
     } while (escalonador.temEventos());
 
     REQUIRE(cadastroPacientes.getTamanho() == numAltas);

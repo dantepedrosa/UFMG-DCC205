@@ -50,7 +50,7 @@ class Paciente {
             throw std::invalid_argument(
                 "Erro: permanência do paciente não corresponde ao tempo total "
                 "de espera e atendimento");
-*/
+        */
         saidaHZ = admissaoHZ;
         saidaHZ.somaHoras(permanenciaHZ);
         estado = 14;
@@ -145,15 +145,13 @@ class Paciente {
             i = (estado - 1) / 2;
             procedimentosPendentes[i]--;
             // Registrar tempo de espera da última fila
-            temposEspera[i] += tempoDecorrido;
-            tempoTotalEspera += tempoDecorrido;
+            registrarEspera(tempoDecorrido);
         }
         // Evento é par: Paciente entrará em fila
         else if (novoEstado % 2 == 0) {
             i = (estado - 2) / 2;
             // Registrar tempo de atendimento do último atendimento
-            temposAtendimento[i] += tempoDecorrido;
-            tempoTotalAtendimento += tempoDecorrido;
+            registrarAtendimento(tempoDecorrido);
         }
 
         if (novoEstado == 14) {

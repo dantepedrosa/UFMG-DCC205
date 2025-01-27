@@ -40,7 +40,7 @@ sysmemtest: $(TEST_EXEC)
 	valgrind --leak-check=full $(TEST_EXEC) --test-case=*testeSistema.cpp*
 
 run: $(EXEC)
-	./$(EXEC) $(ARGS)
+	./$(EXEC) $(ARGS) ./test/load/entrada.csv
 
 debug: $(EXEC)
 	gdb --args $(EXEC) $(ARGS)
