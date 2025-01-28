@@ -126,7 +126,7 @@ Para o projeto, deverão ser implementados 4 tipos abstratos de dados:
 - Paciente
 - Procedimento
 - Fila
-- Escalonador
+- Escalonador   
 
 ## Entrega e VPL
 

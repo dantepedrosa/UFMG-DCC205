@@ -31,13 +31,17 @@ systest: $(TEST_EXEC)
 	@echo "Running system tests:"
 	@$(TEST_EXEC) --source-file=*testeSistema.cpp*
 
-unitmemtest: $(TEST_EXEC)
+unitmemtest: $(TEST_EXEC)@
 	@echo "Running all tests with Valgrind:"
 	valgrind --leak-check=full $(TEST_EXEC) --source-file-exclude=*testeSistema.cpp*
 
 sysmemtest: $(TEST_EXEC)
 	@echo "Running all tests with Valgrind:"
-	valgrind --leak-check=full $(TEST_EXEC) --test-case=*testeSistema.cpp*
+	valgrind --leak-check=full $(TEST_EXEC) --source-file=*testeSistema.cpp*
+
+timetest: $(TEST_EXEC)
+	@echo "Running time test:"
+	time $(TEST_EXEC) --source-file=*testeProcessamento.cpp*
 
 run: $(EXEC)
 	./$(EXEC) $(ARGS) ./test/load/entrada.csv

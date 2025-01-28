@@ -28,7 +28,7 @@ int main(int argc, char const* argv[]) {
         return 1;
     }
 
-    // abertura de arquivo
+    // abertura de arquivo  - O(1)
     std::string filePath = argv[1];
 
     std::ifstream inputFile(filePath);
@@ -39,7 +39,7 @@ int main(int argc, char const* argv[]) {
     std::string line;
     std::istringstream iss;
 
-    // Inicializa procedimentos
+    // Inicializa procedimentos - O(1)
     float duracao;
     int unidades;
     for (int i = 0; i < 6; i++) {
@@ -51,8 +51,7 @@ int main(int argc, char const* argv[]) {
 
     }
 
-
-
+    // Registra o número de pacientes - O(1)
     FilaEncadeada<Paciente*> cadastroPacientes;
     int numPacientes;
     std::getline(inputFile, line);
@@ -62,50 +61,50 @@ int main(int argc, char const* argv[]) {
 
     Escalonador escalonador(numPacientes, ref);
 
-    // Coloca todos os pacientes no hospital
-    for (int i = 0; i < numPacientes; i++) {
+    // Coloca todos os pacientes no hospital - O(nlogn)
+    for (int i = 0; i < numPacientes; i++) {    // O(n)
         std::getline(inputFile, line);
         Paciente* paciente = new Paciente(line, ref);
         double tempoChegada = paciente->getAdmissaoHZ().getHorasDesdeReferencia();
         Evento chegadaHospital(tempoChegada, paciente, 1);
-        cadastroPacientes.enfileira(paciente);
-        escalonador.insereEvento(chegadaHospital);
+        cadastroPacientes.enfileira(paciente);      // O(1)
+        escalonador.insereEvento(chegadaHospital);  // O(logn)
     }
 
     inputFile.close();
 
-    // Processar eventos
+    // Processar eventos - O(mlogm)
     do {
-        Evento evento = escalonador.retiraProximoEvento();
+        Evento evento = escalonador.retiraProximoEvento();  // O(logm)
         double tempoEvento = escalonador.getRelogio();
         Paciente* paciente = evento.getPaciente();
         int tipoEvento = evento.getTipoEvento();
 
-        // Caso evento é finalização de procedimento
+        // Caso evento é finalização de procedimento - O(1)
         if (tipoEvento % 2 == 1) {
             
-            if(tipoEvento != 1){
+            if(tipoEvento != 1){    // O(1)
                 int procIndex = (tipoEvento - 3) / 2;
                 procedimentos[procIndex]->liberarUnidade(tempoEvento);
             }
             
             int proxProcedimento = paciente->proximaFilaProcedimento();
 
-            if (proxProcedimento >= 0){
+            if (proxProcedimento >= 0){ // O(1)
                 procedimentos[(proxProcedimento - 2) / 2]->enfileira(*paciente, paciente->getUrgencia());
                 
                 paciente->atualizarEstado(proxProcedimento, tempoEvento);
 
             }
-            else {
+            else {  // O(1)
                 paciente->atualizarEstado(14, tempoEvento);
             }
         }
 
 
-        // Cria eventos de finalização de procedimento
-        // Apenas caso haja pacientes esperando e unidades disponíveis
+        // Cria eventos de finalização de procedimento, retirando pacientes da fila - O(1)
         for (int i = 0; i < 6; i++) {
+            // Apenas caso haja pacientes esperando e unidades disponíveis
             while (procedimentos[i]->unidadeDisponivel() && !procedimentos[i]->filasVazias()) {
                 
                 Paciente* pacienteFila = procedimentos[i]->desenfileira();
@@ -122,9 +121,9 @@ int main(int argc, char const* argv[]) {
         }
 
 
-    } while (escalonador.temEventos());
+    } while (escalonador.temEventos()); // O(m) - m é o número de eventos = pacientes * procedimentos
 
-    // Imprime estatísticas
+    // Imprime estatísticas - O(n)
     std::ostringstream output;
         while (!cadastroPacientes.filaVazia()) {
             Paciente* paciente = cadastroPacientes.desenfileira();
