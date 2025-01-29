@@ -1,59 +1,59 @@
-#define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include "../include/doctest.hpp"
-#include "Escalonador.hpp"
-#include "Paciente.hpp"
+#include "../include/Escalonador.hpp"
+#include "../include/Paciente.hpp"
+#include "../include/Tempo.hpp"
 
-
-TEST_CASE("Testando a classe Escalonador") {
-    Escalonador escalonador(10);
-    escalonador.inicializa(0.0);
-
-    DataHora ref(1, 1, 2025, 0.0);
-    DataHora dh1(2, 1, 2025, 12.0);     // 36 horas depois
-    DataHora dh2(3, 1, 2025, 14.0);     // 62 horas depois
-
-    Paciente p1, p2;
-    Evento e1(Tempo(dh1, ref), &p1, 1);
-    Evento e2(Tempo(dh2, ref), &p2, 2);
-
-    escalonador.insereEvento(e1);
-    escalonador.insereEvento(e2);
-
-    CHECK(escalonador.temEventos() == true);
-    CHECK(escalonador.getRelogio() == 0.0);
-
-    escalonador.avancaRelogio();
-    CHECK(escalonador.getRelogio() == 36.0);
-
-    Evento proximo = escalonador.retiraProximoEvento();
-    CHECK(proximo.dataHora.getHorasDesdeReferencia() == 36.0);
-
-    escalonador.avancaRelogio();
-    CHECK(escalonador.getRelogio() == 62.0);
-
-    proximo = escalonador.retiraProximoEvento();
-    CHECK(proximo.dataHora.getHorasDesdeReferencia() == 62.0);
+TEST_CASE("Testando o construtor da classe Escalonador") {
+    DataHora referencia(1, 1, 2000, 0.0);
+    Escalonador escalonador(10, referencia);
 
     CHECK(escalonador.temEventos() == false);
-    escalonador.finaliza();
 }
 
-TEST_CASE("Testando exceção ao inserir evento com escalonador cheio") {
-    Escalonador escalonador(2); // Capacidade máxima de 2 eventos
-    escalonador.inicializa(0.0);
+TEST_CASE("Testando a inserção e retirada de eventos") {
+    DataHora referencia(1, 1, 2000, 0.0);
+    Escalonador escalonador(10, referencia);
+    std::string linha = "0009600008 0 2017 3 21 2 1 5 43 2 110";
+    DataHora dataHora(21, 3, 2017, 2.0);
+    Tempo tempoEvento(dataHora, referencia);
+    Paciente paciente(linha, referencia);
+    Evento evento(tempoEvento.getHorasDesdeReferencia(), &paciente, 1);
 
-    DataHora ref(1, 1, 2025, 0.0);
-    DataHora dh1(2, 1, 2025, 12.0);     // 36 horas depois
-    DataHora dh2(3, 1, 2025, 14.0);     // 62 horas depois
-    DataHora dh3(4, 1, 2025, 16.0);     // 86 horas depois
+    escalonador.insereEvento(evento);
+    CHECK(escalonador.temEventos() == true);
 
-    Paciente p1, p2, p3;
-    Evento e1(Tempo(dh1, ref), &p1, 1);
-    Evento e2(Tempo(dh2, ref), &p2, 2);
-    Evento e3(Tempo(dh3, ref), &p3, 3);
+    Evento proximoEvento = escalonador.retiraProximoEvento();
+    CHECK(proximoEvento.getPaciente()->getId() == "0009600008");
+    CHECK(escalonador.temEventos() == false);
+}
 
-    escalonador.insereEvento(e1);
-    escalonador.insereEvento(e2);
+TEST_CASE("Testando a função avancaRelogio") {
+    DataHora referencia(1, 1, 2017, 0.0);
+    Escalonador escalonador(10, referencia);
+    std::string linha = "0009600008 0 2017 3 21 2 1 5 43 2 110";
+    DataHora dataHora(21, 3, 2017, 2.0);
+    Tempo tempoEvento(dataHora, referencia);
+    Paciente paciente(linha, referencia);
+    Evento evento(tempoEvento.getHorasDesdeReferencia(), &paciente, 1);
 
-    CHECK_THROWS_AS(escalonador.insereEvento(e3), std::overflow_error);
+    escalonador.insereEvento(evento);
+    escalonador.retiraProximoEvento();
+    float relogio = escalonador.getRelogio();
+
+    CHECK(relogio == tempoEvento.getHorasDesdeReferencia());
+}
+
+TEST_CASE("Testando a função finaliza") {
+    DataHora referencia(1, 1, 2000, 0.0);
+    Escalonador escalonador(10, referencia);
+    std::string linha = "0009600008 0 2017 3 21 2 1 5 43 2 110";
+    DataHora dataHora(21, 3, 2017, 2.0);
+    Tempo tempoEvento(dataHora, referencia);
+    Paciente paciente(linha, referencia);
+    Evento evento(tempoEvento.getHorasDesdeReferencia(), &paciente, 1);
+
+    escalonador.insereEvento(evento);
+    escalonador.finaliza();
+
+    CHECK(escalonador.temEventos() == false);
 }

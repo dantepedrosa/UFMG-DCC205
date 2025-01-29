@@ -3,6 +3,11 @@
 
 #include <stdexcept>
 
+/**
+ * @file Fila.hpp
+ * @brief Declaração das classes TipoCelula e FilaEncadeada.
+ */
+
 template <typename TipoItem>
 class TipoCelula {
 public:
@@ -16,22 +21,21 @@ private:
     friend class FilaEncadeada;
 };
 
+/**
+ * @brief Classe que representa uma fila encadeada.
+ */
 template <typename TipoItem>
 class FilaEncadeada {
 public:
-    FilaEncadeada() : frente(nullptr), tras(nullptr) {}
+    FilaEncadeada() : frente(nullptr), tras(nullptr) {
+        frente = new TipoCelula<TipoItem>();
+        tras = frente;
+        tamanho = 0;
+    }
 
     ~FilaEncadeada() {
         finaliza();
         delete frente;
-    }
-
-    /**
-     * @brief Inicializa a fila encadeada.
-     */
-    void inicializa() {
-        frente = new TipoCelula<TipoItem>();
-        tras = frente;
     }
 
     /**
@@ -40,10 +44,11 @@ public:
      * @param item Item a ser enfileirado.
      */
     void enfileira(TipoItem item) {
-        TipoCelula<TipoItem> *novaCelula = new TipoCelula<TipoItem>();
+        TipoCelula<TipoItem>* novaCelula = new TipoCelula<TipoItem>();
         novaCelula->item = item;
         tras->prox = novaCelula;
         tras = novaCelula;
+        tamanho++;
     }
 
     /**
@@ -62,6 +67,8 @@ public:
         if (frente->prox == nullptr) {
             tras = frente;
         }
+
+        tamanho--;
         delete celulaRemovida; // Libera a célula removida
         return item;          // Retorna o objeto copiado
     }
@@ -82,6 +89,8 @@ public:
         if (frente->prox == nullptr) {
             tras = frente;
         }
+
+        tamanho--;
         delete celulaRemovida; // Libera a célula removida
         return item;           // Retorna um ponteiro para o objeto
     }
@@ -109,6 +118,24 @@ public:
         return frente == tras;
     }
 
+    /** @brief Retorna o tamanho da fila. */
+    int getTamanho() const { return tamanho; }
+    
+
+private:
+    TipoCelula<TipoItem> *frente; // Ponteiro para a frente da fila
+    TipoCelula<TipoItem> *tras; // Ponteiro para o final da fila
+    int tamanho; // Tamanho da fila
+
+
+    /**
+     * @brief Inicializa a fila encadeada.
+     */
+    void inicializa() {
+        frente = new TipoCelula<TipoItem>();
+        tras = frente;
+    }
+
     /**
      * @brief Finaliza a fila encadeada, liberando todos os recursos.
      */
@@ -121,10 +148,6 @@ public:
         }
         tras = frente;
     }
-
-private:
-    TipoCelula<TipoItem> *frente; // Ponteiro para a frente da fila
-    TipoCelula<TipoItem> *tras; // Ponteiro para o final da fila
 };
 
 #endif // FILA_HPP

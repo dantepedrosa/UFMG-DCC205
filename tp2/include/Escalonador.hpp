@@ -1,204 +1,175 @@
 /*
-O escalonador é um elemento central da simulação de eventos discretos. Ele é implemen-
-tado como uma fila de prioridade que recupera o próximo evento (ou seja o evento de
-menor data-hora que está na fila). Sugere-se implementar a fila de prioridade utilizando
-um minheap.
-As operações a serem implementadas incluem:
+O escalonador é um elemento central da simulação de eventos discretos. Ele é
+implemen- tado como uma fila de prioridade que recupera o próximo evento (ou
+seja o evento de menor data-hora que está na fila). Sugere-se implementar a fila
+de prioridade utilizando um minheap. As operações a serem implementadas incluem:
 1. Inicializa
 2. InsereEvento
 3. RetiraProximoEvento
 4. Finaliza
-Para fins de escalonamento, você pode converter as várias data-hora para o número de
-horas, incluindo frações, a partir de uma data de referência. As estatísticas devem ser
-geradas quando finalizar.
+Para fins de escalonamento, você pode converter as várias data-hora para o
+número de horas, incluindo frações, a partir de uma data de referência. As
+estatísticas devem ser geradas quando finalizar.
  */
 
 #pragma once
 
-#include "../include/Tempo.hpp"
-#include "../include/Paciente.hpp"
 #include <iostream>
 #include <stdexcept>
+
+#include "../include/Paciente.hpp"
+#include "../include/Tempo.hpp"
+
+/**
+ * @file Escalonador.hpp
+ * @brief Declaração das classes Evento e Escalonador.
+ */
 
 /**
  * @brief Representa um evento na simulação de atendimento hospitalar.
  */
 class Evento {
+    double dataHora;     // Data e hora do evento
+    Paciente* paciente;  // Ponteiro para o paciente associado ao evento
+    int tipoEvento;      // Tipo do evento (1: chegada, 2: triagem, etc.)
+    int indiceInsercao;  // Índice de inserção para resolver empates
+
+    friend class Escalonador;  // Declara Escalonador como friend class
+
 public:
-    Tempo dataHora; // Data e hora do evento
-    Paciente* paciente; // Ponteiro para o paciente associado ao evento
-    int tipoEvento; // Tipo do evento (1: chegada, 2: triagem, etc.)
+    Evento() : dataHora(), paciente(nullptr), tipoEvento(0), indiceInsercao(-1) {}
 
-    /**
-     * @brief Construtor padrão.
-     */
-    Evento();
+    Evento(double dataHora, Paciente* paciente, int tipoEvento)
+        : dataHora(dataHora), paciente(paciente), tipoEvento(tipoEvento), indiceInsercao(-1) {}
 
-    /**
-     * @brief Construtor parametrizado.
-     *
-     * @param dataHora Data e hora do evento.
-     * @param paciente Paciente associado ao evento.
-     * @param tipoEvento Tipo do evento.
-     */
-    Evento(const Tempo& dataHora, Paciente* paciente, int tipoEvento);
+    Paciente* getPaciente() const { return paciente; }
 
-    /**
-     * @brief Operador de comparação para o escalonador.
-     * 
-     * Eventos são ordenados pelo tempo, do menor para o maior.
-     * 
-     * @param outro O outro evento a ser comparado.
-     * @return true Se este evento ocorre antes do outro.
-     * @return false Caso contrário.
-     */
-    bool operator<(const Evento& outro) const;
+    int getTipoEvento() const { return tipoEvento; }
 
-    /**
-     * @brief Operador de igualdade para o escalonador.
-     * 
-     * Eventos são considerados iguais se ocorrem no mesmo tempo.
-     * 
-     * @param outro O outro evento a ser comparado.
-     * @return true Se este evento ocorre no mesmo tempo que o outro.
-     * @return false Caso contrário.
-     */
-    bool operator==(const Evento& outro) const;
+    double getTempo() const { return dataHora; }
 
-    /**
-     * @brief Operador de desigualdade para o escalonador.
-     * 
-     * Eventos são considerados diferentes se ocorrem em tempos diferentes.
-     * 
-     * @param outro O outro evento a ser comparado.
-     * @return true Se este evento ocorre em tempo diferente do outro.
-     * @return false Caso contrário.
-     */
-    bool operator!=(const Evento& outro) const;
+    bool operator<(const Evento& outro) const {
+        if (dataHora == outro.dataHora) {
+            return indiceInsercao < outro.indiceInsercao; // Resolve empate com o índice
+        }
+        return dataHora < outro.dataHora;
+    }
 
-    /**
-     * @brief Operador de comparação maior para o escalonador.
-     * 
-     * Eventos são ordenados pelo tempo, do maior para o menor.
-     * 
-     * @param outro O outro evento a ser comparado.
-     * @return true Se este evento ocorre depois do outro.
-     * @return false Caso contrário.
-     */
-    bool operator>(const Evento& outro) const;
+    bool operator==(const Evento& outro) const {
+        return dataHora == outro.dataHora;
+    }
 
-    /**
-     * @brief Operador de comparação menor ou igual para o escalonador.
-     * 
-     * Eventos são ordenados pelo tempo, do menor para o maior.
-     * 
-     * @param outro O outro evento a ser comparado.
-     * @return true Se este evento ocorre antes ou no mesmo tempo que o outro.
-     * @return false Caso contrário.
-     */
-    bool operator<=(const Evento& outro) const;
+    bool operator!=(const Evento& outro) const { return !(*this == outro); }
 
-    /**
-     * @brief Operador de comparação maior ou igual para o escalonador.
-     * 
-     * Eventos são ordenados pelo tempo, do maior para o menor.
-     * 
-     * @param outro O outro evento a ser comparado.
-     * @return true Se este evento ocorre depois ou no mesmo tempo que o outro.
-     * @return false Caso contrário.
-     */
-    bool operator>=(const Evento& outro) const;
+    bool operator>(const Evento& outro) const {
+        if (dataHora == outro.dataHora) {
+            return indiceInsercao > outro.indiceInsercao; // Resolve empate com o índice
+        }
+        return dataHora > outro.dataHora;
+    }
 
-    /**
-     * @brief Destrutor padrão.
-     */
-    ~Evento();
+    bool operator<=(const Evento& outro) const { return !(*this > outro); }
+
+    bool operator>=(const Evento& outro) const { return !(*this < outro); }
+
+    ~Evento() {}
 };
+
 
 /**
  * @brief Classe que representa o escalonador de eventos.
  */
 class Escalonador {
-private:
-    Evento* heap;       // Array dinâmico para armazenar os eventos
-    int capacidade;     // Capacidade máxima do heap
-    int tamanho;        // Tamanho atual do heap
-    float relogio;      // Tempo atual da simulação
+   private:
+    Evento* heap;    // Array dinâmico para armazenar os eventos
+    int capacidade;  // Capacidade máxima do heap
+    int tamanho;     // Tamanho atual do heap
+    double relogio;  // Tempo atual da simulação
+    int contadorInsercao;  // Contador de inserção, para manter o índice
 
-    /**
-     * @brief Restaura a propriedade do heap movendo um nó para baixo.
-     *
-     * @param indice O índice inicial a ser ajustado.
-     */
-    void heapifyDown(int indice);
+    void heapifyDown(int indice) {
+        int menor = indice;
+        int esquerda = 2 * indice + 1;
+        int direita = 2 * indice + 2;
 
-    /**
-     * @brief Restaura a propriedade do heap movendo um nó para cima.
-     *
-     * @param indice O índice inicial a ser ajustado.
-     */
-    void heapifyUp(int indice);
+        if (esquerda < tamanho && heap[esquerda] < heap[menor]) {
+            menor = esquerda;
+        }
 
-public:
-    /**
-     * @brief Construtor do escalonador.
-     *
-     * @param capacidadeMax O número máximo de eventos no heap.
-     */
-    Escalonador(int capacidadeMax);
+        if (direita < tamanho && heap[direita] < heap[menor]) {
+            menor = direita;
+        }
 
-    /**
-     * @brief Destrutor do escalonador.
-     */
-    ~Escalonador();
+        if (menor != indice) {
+            std::swap(heap[indice], heap[menor]);
+            heapifyDown(menor);
+        }
+    }
 
-    /**
-     * @brief Inicializa o escalonador com um tempo inicial.
-     *
-     * @param tempoInicial Tempo inicial da simulação (em horas).
-     */
-    void inicializa(float tempoInicial);
+    void heapifyUp(int indice) {
+        int pai = (indice - 1) / 2;
 
-    /**
-     * @brief Insere um evento no heap.
-     *
-     * @param evento O evento a ser inserido.
-     * @throws std::overflow_error Se o heap estiver cheio.
-     */
-    void insereEvento(const Evento& evento);
+        if (indice && heap[indice] < heap[pai]) {
+            std::swap(heap[indice], heap[pai]);
+            heapifyUp(pai);
+        }
+    }
 
-    /**
-     * @brief Remove e retorna o próximo evento (com menor tempo) do heap.
-     *
-     * @return Evento O próximo evento no heap.
-     * @throws std::underflow_error Se o heap estiver vazio.
-     */
-    Evento retiraProximoEvento();
+    float avancaRelogio() {
+        if (tamanho == 0) {
+            throw std::underflow_error("Heap vazio");
+        }
 
-    /**
-     * @brief Verifica se ainda há eventos no escalonador.
-     *
-     * @return true Se há eventos no heap.
-     * @return false Se o heap está vazio.
-     */
-    bool temEventos() const;
+        relogio = heap[0].getTempo();
+        return relogio;
+    }
 
-    /**
-     * @brief Avança o relógio da simulação para o próximo evento.
-     *
-     * @return float O tempo do próximo evento.
-     */
-    float avancaRelogio();
+   public:
+    Escalonador(int capacidadeMax, const DataHora& ref)
+        : capacidade(capacidadeMax), tamanho(0), contadorInsercao(0) {
+        heap = new Evento[capacidade];
+        relogio = 0.0;
+    }
 
-    /**
-     * @brief Finaliza o escalonador e limpa recursos.
-     */
-    void finaliza();
+    ~Escalonador() { delete[] heap; }
 
-    /**
-     * @brief Obtém o tempo atual da simulação.
-     *
-     * @return float O tempo atual em horas.
-     */
-    float getRelogio() const;
+    void insereEvento(const Evento& evento) {
+        if (tamanho == capacidade) {
+            throw std::overflow_error("Heap cheio");
+        }
+
+        // Cria uma cópia do evento e atribui o índice de inserção
+        Evento eventoComIndice = evento;
+        eventoComIndice.indiceInsercao = contadorInsercao++;
+
+        heap[tamanho] = eventoComIndice;
+        heapifyUp(tamanho);  // Ajusta o heap para manter a propriedade do min-heap
+        tamanho++;
+    }
+
+    Evento retiraProximoEvento() {
+        if (tamanho == 0) {
+            throw std::underflow_error("Heap vazio");
+        }
+        avancaRelogio();
+        Evento evento = heap[0];
+        heap[0] = heap[tamanho - 1];
+        tamanho--;
+        heapifyDown(0);
+
+        return evento;
+    }
+
+    bool temEventos() const { return tamanho > 0; }
+
+    void finaliza() {
+        delete[] heap;
+        heap = nullptr;
+        tamanho = 0;
+        capacidade = 0;
+    }
+
+    double getRelogio() const { return relogio; }
+
+    int getTamanho() const { return tamanho; }
 };

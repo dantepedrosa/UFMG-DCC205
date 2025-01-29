@@ -18,25 +18,33 @@ TEST_OBJ_FILES = $(TEST_FILES:$(TEST_DIR)/%.cpp=$(OBJ_DIR)/test_%.o)
 
 # Executáveis
 EXEC = $(BIN_DIR)/main.out
-TEST_EXEC_FILES = $(TEST_FILES:$(TEST_DIR)/%.cpp=$(BIN_DIR)/test_%)
+TEST_EXEC = $(BIN_DIR)/tests.out
 
 # Regras principais
 all: $(EXEC)
 
-test: $(TEST_EXEC_FILES)
-	@for test_exec in $(TEST_EXEC_FILES); do \
-		echo "Running $$test_exec"; \
-		$$test_exec; \
-	done
+unittest: $(TEST_EXEC)
+	@echo "Running all unit tests:"
+	@$(TEST_EXEC) --source-file-exclude=*testeSistema.cpp*
 
-memtest: $(TEST_EXEC_FILES)
-	@for test_exec in $(TEST_EXEC_FILES); do \
-		echo "Running $$test_exec with Valgrind"; \
-		valgrind --leak-check=full $$test_exec; \
-	done
+systest: $(TEST_EXEC)
+	@echo "Running system tests:"
+	@$(TEST_EXEC) --source-file=*testeSistema.cpp*
+
+unitmemtest: $(TEST_EXEC)@
+	@echo "Running all tests with Valgrind:"
+	valgrind --leak-check=full $(TEST_EXEC) --source-file-exclude=*testeSistema.cpp*
+
+sysmemtest: $(TEST_EXEC)
+	@echo "Running all tests with Valgrind:"
+	valgrind --leak-check=full $(TEST_EXEC) --source-file=*testeSistema.cpp*
+
+timetest: $(TEST_EXEC)
+	@echo "Running time test:"
+	time $(TEST_EXEC) --source-file=*testeProcessamento.cpp*
 
 run: $(EXEC)
-	./$(EXEC) $(ARGS)
+	./$(EXEC) $(ARGS) ./test/load/entrada.csv
 
 debug: $(EXEC)
 	gdb --args $(EXEC) $(ARGS)
@@ -45,8 +53,8 @@ debug: $(EXEC)
 $(EXEC): $(SRC_OBJ_FILES) | $(BIN_DIR)
 	$(CXX) $(CXXFLAGS) -o $@ $^
 
-# Compilar executáveis de teste
-$(BIN_DIR)/test_%: $(OBJ_DIR)/test_%.o $(filter-out $(OBJ_DIR)/src_main.o, $(SRC_OBJ_FILES)) | $(BIN_DIR)
+# Compilar executável de todos os testes
+$(TEST_EXEC): $(TEST_OBJ_FILES) $(filter-out $(OBJ_DIR)/src_main.o, $(SRC_OBJ_FILES)) | $(BIN_DIR)
 	$(CXX) $(CXXFLAGS) -o $@ $^
 
 # Regras para compilar objetos
