@@ -135,8 +135,11 @@ int main(int argc, char const* argv[]) {
 
 
 
-
-    // TODO - Deletar voos com delete
+    // Liberação de memória
+    for (int i = 0; i < numLinhas; i++) {
+        delete voos[i];
+    }
+    delete[] voos;
 
     return 0;
 }
