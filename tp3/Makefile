@@ -44,7 +44,7 @@ timetest: $(TEST_EXEC)
 	time $(TEST_EXEC) --source-file=*testeProcessamento.cpp*
 
 run: $(EXEC)
-	./$(EXEC) $(ARGS) ./test/load/entrada.csv
+	./$(EXEC) $(ARGS) ./test/inputs/input_1.txt
 
 debug: $(EXEC)
 	gdb --args $(EXEC) $(ARGS)

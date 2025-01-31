@@ -1,12 +1,15 @@
+#include <cstdlib>
+#include <cstring>
+#include <ctime>
+#include <fstream>
+#include <iomanip>
 #include <iostream>
 #include <sstream>
-#include <iomanip>
-#include <ctime>
 #include <string>
-#include <fstream>
 
 class Voo {
-public:
+   public:
+    std::string inputStr;
     std::string origem;
     std::string destino;
     float preco;
@@ -17,12 +20,17 @@ public:
     std::time_t duracao;
 
     Voo(const std::string& linha) {
+        inputStr = linha;
+
         std::istringstream ss(linha);
         std::string partidaStr, chegadaStr;
 
-        ss >> origem >> destino >> preco >> assentos >> partidaStr >> chegadaStr >> numParadas;
+        ss >> origem >> destino >> preco >> assentos >> partidaStr >>
+            chegadaStr >> numParadas;
 
         if (ss.fail()) {
+            std::cerr << "Erro ao processar a linha de entrada: " << linha
+                      << std::endl;
             throw std::runtime_error("Erro ao processar a linha de entrada.");
         }
 
@@ -31,62 +39,142 @@ public:
         duracao = chegada - partida;
     }
 
-private:
+   private:
     std::time_t parseTempo(const std::string& datetime) {
         std::tm tm = {};
-        char tzSign;
-        int tzHour, tzMinute;
 
         std::istringstream ss(datetime);
         ss >> std::get_time(&tm, "%Y-%m-%dT%H:%M:%S");
-        ss >> tzSign >> std::setw(2) >> tzHour;
-        ss.ignore(1);
-        ss >> std::setw(2) >> tzMinute;
 
         if (ss.fail()) {
+            std::cerr << "Erro ao interpretar data/hora: " << datetime
+                      << std::endl;
             throw std::runtime_error("Erro ao interpretar data/hora.");
         }
 
+        std::cout << "Data/hora: " << std::put_time(&tm, "%c") << std::endl;
+
         std::time_t tt = std::mktime(&tm);
-
-        int tzOffset = (tzHour * 3600) + (tzMinute * 60);
-        if (tzSign == '-') {
-            tt += tzOffset;
-        } else {
-            tt -= tzOffset;
-        }
-
         return tt;
     }
 };
 
+// Lista encadeada para armazenar voos filtrados
+struct ListaVoos {
+    Voo* voo;
+    ListaVoos* prox;
+};
 
-void leVoosdeArquivo(const std::string& filePath, Voo** voos, int numLinhas) {
-    std::ifstream inputFile(filePath);
+// Nó da árvore sintática
+struct No {
+    char tipo;  // 'O' = operador, 'P' = predicado
+    char operador[3], atributo[10], valor[10];
+    No* esq;
+    No* dir;
 
+    No(const char* op, No* e, No* d) {
+        tipo = 'O';
+        strcpy(operador, op);
+        esq = e;
+        dir = d;
+    }
+
+    No(const char* atr, const char* op, const char* val) {
+        tipo = 'P';
+        strcpy(atributo, atr);
+        strcpy(operador, op);
+        strcpy(valor, val);
+        esq = dir = nullptr;
+    }
+};
+
+// Adiciona um voo filtrado à lista encadeada
+ListaVoos* adicionarVoo(ListaVoos* lista, Voo* voo) {
+    ListaVoos* novo = new ListaVoos{voo, lista};
+    return novo;
+}
+
+// Avalia um nó de predicado para um voo
+bool avaliarPredicado(No* no, Voo* voo) {
+    if (strcmp(no->atributo, "org") == 0) {
+        return strcmp(no->operador, "==") == 0 && voo->origem == no->valor;
+    }
+    if (strcmp(no->atributo, "dst") == 0) {
+        return strcmp(no->operador, "==") == 0 && voo->destino == no->valor;
+    }
+    if (strcmp(no->atributo, "prc") == 0) {
+        return strcmp(no->operador, "<=") == 0 &&
+               voo->preco <= std::stof(no->valor);
+    }
+    if (strcmp(no->atributo, "dur") == 0) {
+        return strcmp(no->operador, "<=") == 0 &&
+               voo->duracao <= std::stoi(no->valor);
+    }
+    return false;
+}
+
+// Avalia a árvore para um voo
+bool avaliarArvore(No* no, Voo* voo) {
+    if (!no) return false;
+    if (no->tipo == 'P') return avaliarPredicado(no, voo);
+    if (strcmp(no->operador, "&&") == 0)
+        return avaliarArvore(no->esq, voo) && avaliarArvore(no->dir, voo);
+    if (strcmp(no->operador, "||") == 0)
+        return avaliarArvore(no->esq, voo) || avaliarArvore(no->dir, voo);
+    return false;
+}
+
+// Filtra os voos usando a árvore sintática
+ListaVoos* filtrarVoos(No* raiz, Voo** voos, int numLinhas) {
+    ListaVoos* lista = nullptr;
+    for (int i = 0; i < numLinhas; i++) {
+        if (avaliarArvore(raiz, voos[i])) {
+            lista = adicionarVoo(lista, voos[i]);
+        }
+    }
+    return lista;
+}
+
+// Imprime a lista de voos filtrados
+void imprimirVoos(ListaVoos* lista) {
+    while (lista) {
+        std::cout << "Voo: " << lista->voo->origem << " -> "
+                  << lista->voo->destino << ", Preço: " << lista->voo->preco
+                  << std::endl;
+        lista = lista->prox;
+    }
+}
+
+// Libera memória da lista encadeada
+void liberarLista(ListaVoos* lista) {
+    while (lista) {
+        ListaVoos* temp = lista;
+        lista = lista->prox;
+        delete temp;
+    }
+}
+
+// Lê voos de um arquivo
+void leVoosdeArquivo(std::ifstream& inputFile, Voo** voos, int numLinhas) {
     std::string line;
-    std::istringstream iss;
 
-    for(int i = 0; i < numLinhas; i++){
+    for (int i = 0; i < numLinhas; i++) {
         std::getline(inputFile, line);
         voos[i] = new Voo(line);
     }
-
-    inputFile.close();
 }
 
+// Lê voos da entrada padrão
 void leVoosdeEntrada(Voo** voos, int numLinhas) {
     std::string line;
-    std::istringstream iss;
-
-    for(int i = 0; i < numLinhas; i++){
+    for (int i = 0; i < numLinhas; i++) {
         std::getline(std::cin, line);
         voos[i] = new Voo(line);
     }
 }
 
+/**/
 int main(int argc, char const* argv[]) {
-    
     // Leitura de dados
     // ---------------------------------------------------
 
@@ -102,7 +190,8 @@ int main(int argc, char const* argv[]) {
             filePath = argv[1];
             break;
         default:
-            std::cerr << "Uso: " << argv[0] << " <caminho_para_arquivo> [-f]" << std::endl;
+            std::cerr << "Uso: " << argv[0] << " <caminho_para_arquivo> [-f]"
+                      << std::endl;
             return 1;
     }
 
@@ -110,35 +199,39 @@ int main(int argc, char const* argv[]) {
     std::istringstream iss;
     int numLinhas;
 
-    if(fileEnabled){
-        std::ifstream inputFile(filePath);
+    Voo** voos;
 
-        // Conseguir numero de linhas
+    if (fileEnabled) {
+        std::ifstream inputFile(filePath);
         std::getline(inputFile, line);
         numLinhas = std::stoi(line);
+
+        voos = new Voo*[numLinhas];
+        leVoosdeArquivo(inputFile, voos, numLinhas);
+
         inputFile.close();
     } else {
         std::getline(std::cin, line);
         numLinhas = std::stoi(line);
-    }
 
-    Voo* voos[numLinhas];
-
-    if(fileEnabled){
-        leVoosdeArquivo(filePath, voos, numLinhas);
-    } else {
+        voos = new Voo*[numLinhas];
         leVoosdeEntrada(voos, numLinhas);
     }
 
-    // 
-    // ---------------------------------------------------
+    // Criando árvore ((org==DEN)&&(dst==ORD))&&((prc<=500)&&(dur<=8400))
+    No* raiz = new No(
+        "&&",
+        new No("&&", new No("org", "==", "DEN"), new No("dst", "==", "ORD")),
+        new No("&&", new No("prc", "<=", "500"), new No("dur", "<=", "8400"))
+    );
 
+    std::cout << "Filtrando voos..." << std::endl;
+    ListaVoos* resultado = filtrarVoos(raiz, voos, numLinhas);
+    imprimirVoos(resultado);
 
+    liberarLista(resultado);
 
-    // Liberação de memória
-    for (int i = 0; i < numLinhas; i++) {
-        delete voos[i];
-    }
+    for (int i = 0; i < numLinhas; i++) delete voos[i];
     delete[] voos;
 
     return 0;
