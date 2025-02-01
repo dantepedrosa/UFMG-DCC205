@@ -1,27 +1,20 @@
 #include <iostream>
 #include <stdexcept>
 
-typedef int TipoItem;
-
+template <typename TipoItem>
 class TipoCelula {
 public:
-    TipoCelula() {
-        item = -1;
-        prox = nullptr;
-    }
-
-private:
+    TipoCelula() : prox(nullptr) {}
     TipoItem item;
     TipoCelula* prox;
-
-    friend class PilhaEncadeada;
 };
 
+template <typename TipoItem>
 class Pilha {
 public:
-    Pilha() { tamanho = 0; }
-    int GetTamanho() { return tamanho; }
-    bool Vazia() { return tamanho == 0; }
+    Pilha() : tamanho(0) {}
+    int GetTamanho() const { return tamanho; }
+    bool Vazia() const { return tamanho == 0; }
     virtual void Empilha(TipoItem item) = 0;
     virtual TipoItem Desempilha() = 0;
     virtual void Limpa() = 0;
@@ -30,44 +23,47 @@ protected:
     int tamanho;
 };
 
-class PilhaEncadeada : public Pilha {
+template <typename TipoItem>
+class PilhaEncadeada : public Pilha<TipoItem> {
 public:
-    PilhaEncadeada() {
-        topo = nullptr;
-    }
-
-    virtual ~PilhaEncadeada() {
-        Limpa();
-    }
+    PilhaEncadeada() : topo(nullptr) {}
+    virtual ~PilhaEncadeada() { this->Limpa(); }
 
     void Empilha(TipoItem item) override {
-        TipoCelula* novaCelula = new TipoCelula();
+        TipoCelula<TipoItem>* novaCelula = new TipoCelula<TipoItem>();
         novaCelula->item = item;
         novaCelula->prox = topo;
         topo = novaCelula;
-        tamanho++;
+        this->tamanho++;
     }
 
     TipoItem Desempilha() override {
-        if (Vazia()) {
+        if (this->Vazia()) {
             throw std::underflow_error("Erro: Pilha vazia.");
         }
-        TipoCelula* celulaRemover = topo;
+        TipoCelula<TipoItem>* celulaRemover = topo;
         TipoItem item = celulaRemover->item;
         topo = topo->prox;
         delete celulaRemover;
-        tamanho--;
+        this->tamanho--;
         return item;
     }
 
+    TipoItem Topo() const {
+        if (this->Vazia()) {
+            throw std::underflow_error("Erro: Pilha vazia.");
+        }
+        return topo->item;
+    }
+
     void Limpa() override {
-        while (!Vazia()) {
+        while (!this->Vazia()) {
             Desempilha();
         }
     }
 
-    void Mostrar() {
-        TipoCelula* atual = topo;
+    void Mostrar() const {
+        TipoCelula<TipoItem>* atual = topo;
         std::cout << "Pilha: ";
         while (atual != nullptr) {
             std::cout << atual->item << " ";
@@ -77,5 +73,5 @@ public:
     }
 
 private:
-    TipoCelula* topo;
+    TipoCelula<TipoItem>* topo;
 };

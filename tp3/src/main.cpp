@@ -6,19 +6,11 @@
 #include <iostream>
 #include <sstream>
 #include <string>
-
 #include <vector>
-#include <stack>
-#include <iostream>
-#include <string>
-#include <vector>
-#include <stack>
-#include <ctime>
-#include <cstdlib>
-#include <cctype>
 #include <functional>
 
 #include "../include/Voo.hpp"
+#include "../include/Pilha.hpp"  // Inclui a implementação da Pilha
 
 // Lista encadeada para armazenar voos filtrados
 struct ListaVoos {
@@ -76,45 +68,48 @@ std::vector<std::string> tokenize(const std::string& expr) {
 
 // Função que monta a árvore de expressão a partir dos tokens
 Node* parseExpression(const std::vector<std::string>& tokens) {
-    std::stack<Node*> nodes;
-    std::stack<std::string> ops;
+    PilhaEncadeada<Node*> nodes;
+    PilhaEncadeada<std::string> ops;
     for (const std::string& token : tokens) {
         if (token == "(") {
-            ops.push(token);
+            ops.Empilha(token);
         } else if (token == ")") {
-            while (!ops.empty() && ops.top() != "(") {
-                Node* right = nodes.top();
-                nodes.pop();
-                Node* left = nodes.top();
-                nodes.pop();
-                Node* opNode = new Node(ops.top());
-                ops.pop();
+            while (!ops.Vazia() && ops.Topo() != "(") {
+                Node* right = nodes.Desempilha();
+                Node* left = nodes.Desempilha();
+                Node* opNode = new Node(ops.Desempilha());
                 opNode->left = left;
                 opNode->right = right;
-                nodes.push(opNode);
+                nodes.Empilha(opNode);
             }
-            if (!ops.empty())
-                ops.pop(); // remove o "("
+            if (!ops.Vazia()) {
+                ops.Desempilha(); // remove o "("
+            }
         } else if (token == "&&") {
-            while (!ops.empty() && ops.top() != "(") {
-                Node* right = nodes.top();
-                nodes.pop();
-                Node* left = nodes.top();
-                nodes.pop();
-                Node* opNode = new Node(ops.top());
-                ops.pop();
+            while (!ops.Vazia() && ops.Topo() != "(") {
+                Node* right = nodes.Desempilha();
+                Node* left = nodes.Desempilha();
+                Node* opNode = new Node(ops.Desempilha());
                 opNode->left = left;
                 opNode->right = right;
-                nodes.push(opNode);
+                nodes.Empilha(opNode);
             }
-            ops.push(token);
+            ops.Empilha(token);
         } else if (token == "==" || token == "<=") {
-            ops.push(token);
+            ops.Empilha(token);
         } else {
-            nodes.push(new Node(token));
+            nodes.Empilha(new Node(token));
         }
     }
-    return nodes.top();
+    while (!ops.Vazia()) {
+        Node* right = nodes.Desempilha();
+        Node* left = nodes.Desempilha();
+        Node* opNode = new Node(ops.Desempilha());
+        opNode->left = left;
+        opNode->right = right;
+        nodes.Empilha(opNode);
+    }
+    return nodes.Desempilha();
 }
 
 // Função para imprimir a árvore (para debug)
