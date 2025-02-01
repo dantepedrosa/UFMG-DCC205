@@ -17,7 +17,7 @@ SRC_OBJ_FILES = $(SRC_FILES:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/src_%.o)
 TEST_OBJ_FILES = $(TEST_FILES:$(TEST_DIR)/%.cpp=$(OBJ_DIR)/test_%.o)
 
 # Executáveis
-EXEC = $(BIN_DIR)/main.out
+EXEC = $(BIN_DIR)/tp3.out
 TEST_EXEC = $(BIN_DIR)/tests.out
 
 # Regras principais
@@ -25,26 +25,26 @@ all: $(EXEC)
 
 unittest: $(TEST_EXEC)
 	@echo "Running all unit tests:"
-	@$(TEST_EXEC) --source-file-exclude=*testeSistema.cpp*
+	@$(TEST_EXEC) 
 
 systest: $(TEST_EXEC)
 	@echo "Running system tests:"
-	@$(TEST_EXEC) --source-file=*testeSistema.cpp*
+	@$(TEST_EXEC) 
 
 unitmemtest: $(TEST_EXEC)@
 	@echo "Running all tests with Valgrind:"
-	valgrind --leak-check=full $(TEST_EXEC) --source-file-exclude=*testeSistema.cpp*
+	valgrind --leak-check=full $(TEST_EXEC)
 
 sysmemtest: $(TEST_EXEC)
 	@echo "Running all tests with Valgrind:"
-	valgrind --leak-check=full $(TEST_EXEC) --source-file=*testeSistema.cpp*
+	valgrind --leak-check=full $(TEST_EXEC)
 
 timetest: $(TEST_EXEC)
 	@echo "Running time test:"
-	time $(TEST_EXEC) --source-file=*testeProcessamento.cpp*
+	time $(TEST_EXEC)
 
 run: $(EXEC)
-	./$(EXEC) $(ARGS) ./test/inputs/input_1.txt
+	./$(EXEC) ./test/inputs/input_1.txt
 
 debug: $(EXEC)
 	gdb --args $(EXEC) $(ARGS)
