@@ -1,6 +1,9 @@
 #include <iostream>
 #include <stdexcept>
 
+#ifndef TIPO_CELULA_HPP
+#define TIPO_CELULA_HPP
+
 template <typename TipoItem>
 class TipoCelula {
 public:
@@ -8,6 +11,8 @@ public:
     TipoItem item;
     TipoCelula* prox;
 };
+
+#endif
 
 template <typename TipoItem>
 class Pilha {

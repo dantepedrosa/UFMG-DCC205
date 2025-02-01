@@ -6,11 +6,11 @@
 #include <iostream>
 #include <sstream>
 #include <string>
-#include <vector>
 #include <functional>
 
 #include "../include/Voo.hpp"
 #include "../include/Pilha.hpp"  // Inclui a implementação da Pilha
+#include "../include/ListaEncadeada.hpp"  // Inclui a implementação da Lista
 
 // Lista encadeada para armazenar voos filtrados
 struct ListaVoos {
@@ -34,8 +34,8 @@ struct Node {
 };
 
 // Função que converte a expressão em tokens
-std::vector<std::string> tokenize(const std::string& expr) {
-    std::vector<std::string> tokens;
+ListaEncadeada<std::string> tokenize(const std::string& expr) {
+    ListaEncadeada<std::string> tokens;
     std::string temp;
     for (std::size_t i = 0; i < expr.size(); i++) {
         char c = expr[i];
@@ -44,21 +44,21 @@ std::vector<std::string> tokenize(const std::string& expr) {
             continue;
 
         if (c == '(' || c == ')') {
-            tokens.push_back(std::string(1, c));
+            tokens.InsereFinal(std::string(1, c));
         } else if (c == '&' && i + 1 < expr.size() && expr[i + 1] == '&') {
-            tokens.push_back("&&");
+            tokens.InsereFinal("&&");
             i++;
         } else if (c == '=' && i + 1 < expr.size() && expr[i + 1] == '=') {
-            tokens.push_back("==");
+            tokens.InsereFinal("==");
             i++;
         } else if (c == '<' && i + 1 < expr.size() && expr[i + 1] == '=') {
-            tokens.push_back("<=");
+            tokens.InsereFinal("<=");
             i++;
         } else {
             temp += c;
             // Se o próximo caractere não for alfanumérico ou for final da string, empurra o token
             if (i + 1 == expr.size() || !std::isalnum(expr[i + 1])) {
-                tokens.push_back(temp);
+                tokens.InsereFinal(temp);
                 temp = "";
             }
         }
@@ -67,10 +67,11 @@ std::vector<std::string> tokenize(const std::string& expr) {
 }
 
 // Função que monta a árvore de expressão a partir dos tokens
-Node* parseExpression(const std::vector<std::string>& tokens) {
+Node* parseExpression(const ListaEncadeada<std::string>& tokens) {
     PilhaEncadeada<Node*> nodes;
     PilhaEncadeada<std::string> ops;
-    for (const std::string& token : tokens) {
+    for (int i = 0; i < tokens.GetTamanho(); i++) {
+        std::string token = tokens.GetItem(i);
         if (token == "(") {
             ops.Empilha(token);
         } else if (token == ")") {
@@ -153,11 +154,11 @@ bool evaluate(Node* root, Voo* voo) {
 }
 
 // Função que filtra os voos aplicando a árvore de expressão
-std::vector<Voo*> filtrarVoos(Node* root, Voo** voos, int numVoos) {
-    std::vector<Voo*> voosFiltrados;
+ListaEncadeada<Voo*> filtrarVoos(Node* root, Voo** voos, int numVoos) {
+    ListaEncadeada<Voo*> voosFiltrados;
     for (int i = 0; i < numVoos; i++) {
         if (evaluate(root, voos[i])) {
-            voosFiltrados.push_back(voos[i]);
+            voosFiltrados.InsereFinal(voos[i]);
         }
     }
     return voosFiltrados;
@@ -248,7 +249,7 @@ int main(int argc, char const* argv[]) {
 
     // Expressão de filtro
     std::string expression = "((org==ATL)&&(dst==LAX))";
-    std::vector<std::string> tokens = tokenize(expression);
+    ListaEncadeada<std::string> tokens = tokenize(expression);
     Node* root = parseExpression(tokens);
 
     // Exibe a árvore de expressão
@@ -256,12 +257,12 @@ int main(int argc, char const* argv[]) {
     printTree(root);
 
     // Filtra os voos usando a árvore de expressão
-    std::vector<Voo*> voosFiltrados = filtrarVoos(root, voos, numLinhas);
+    ListaEncadeada<Voo*> voosFiltrados = filtrarVoos(root, voos, numLinhas);
 
     // Imprime os voos filtrados
     ListaVoos* listaFiltrada = nullptr;
-    for (Voo* voo : voosFiltrados) {
-        listaFiltrada = adicionarVoo(listaFiltrada, voo);
+    for (int i = 0; i < voosFiltrados.GetTamanho(); i++) {
+        listaFiltrada = adicionarVoo(listaFiltrada, voosFiltrados.GetItem(i));
     }
 
     imprimirVoos(listaFiltrada);
