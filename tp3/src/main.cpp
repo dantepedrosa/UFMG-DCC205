@@ -12,18 +12,6 @@
 #include "../include/Pilha.hpp"  // Inclui a implementação da Pilha
 #include "../include/ListaEncadeada.hpp"  // Inclui a implementação da Lista
 
-// Lista encadeada para armazenar voos filtrados
-struct ListaVoos {
-    Voo* voo;
-    ListaVoos* prox;
-};
-
-// Adiciona um voo filtrado à lista encadeada
-ListaVoos* adicionarVoo(ListaVoos* lista, Voo* voo) {
-    ListaVoos* novo = new ListaVoos{voo, lista};
-    return novo;
-}
-
 // Nó da árvore de expressão (parse tree)
 struct Node {
     std::string value;
@@ -165,21 +153,11 @@ ListaEncadeada<Voo*> filtrarVoos(Node* root, Voo** voos, int numVoos) {
 }
 
 // Imprime a lista de voos filtrados
-void imprimirVoos(ListaVoos* lista) {
-    while (lista) {
-        std::cout << "Voo: " << lista->voo->origem << " -> "
-                  << lista->voo->destino << ", Preço: " << lista->voo->preco
-                  << std::endl;
-        lista = lista->prox;
-    }
-}
-
-// Libera memória da lista encadeada
-void liberarLista(ListaVoos* lista) {
-    while (lista) {
-        ListaVoos* temp = lista;
-        lista = lista->prox;
-        delete temp;
+void imprimirVoos(const ListaEncadeada<Voo*>& voosFiltrados) {
+    for (int i = 0; i < voosFiltrados.GetTamanho(); i++) {
+        Voo* voo = voosFiltrados.GetItem(i);
+        std::cout << "Voo: " << voo->origem << " -> " << voo->destino
+                  << ", Preço: " << voo->preco << std::endl;
     }
 }
 
@@ -260,13 +238,7 @@ int main(int argc, char const* argv[]) {
     ListaEncadeada<Voo*> voosFiltrados = filtrarVoos(root, voos, numLinhas);
 
     // Imprime os voos filtrados
-    ListaVoos* listaFiltrada = nullptr;
-    for (int i = 0; i < voosFiltrados.GetTamanho(); i++) {
-        listaFiltrada = adicionarVoo(listaFiltrada, voosFiltrados.GetItem(i));
-    }
-
-    imprimirVoos(listaFiltrada);
-    liberarLista(listaFiltrada);
+    imprimirVoos(voosFiltrados);
 
     for (int i = 0; i < numLinhas; i++) delete voos[i];
     delete[] voos;
