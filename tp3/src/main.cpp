@@ -252,7 +252,7 @@ int main(int argc, char const* argv[]) {
     }
 
     // Expressão de filtro
-    std::string expression = "(((org==ATL)&&(dst==BOS)))";
+    std::string expression = "((org==ATL)&&(dst==LAX))";
     std::vector<std::string> tokens = tokenize(expression);
     Node* root = parseExpression(tokens);
 
