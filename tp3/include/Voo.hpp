@@ -1,3 +1,5 @@
+#pragma once
+
 #include <sstream>
 #include <iomanip>
 #include <ctime>
@@ -32,28 +34,15 @@ public:
 private:
     std::time_t parseTempo(const std::string& datetime) {
         std::tm tm = {};
-        char tzSign;
-        int tzHour, tzMinute;
-
         std::istringstream ss(datetime);
         ss >> std::get_time(&tm, "%Y-%m-%dT%H:%M:%S");
-        ss >> tzSign >> std::setw(2) >> tzHour;
-        ss.ignore(1);
-        ss >> std::setw(2) >> tzMinute;
 
         if (ss.fail()) {
+            std::cerr << "Failed to parse datetime: " << datetime << std::endl;
             throw std::runtime_error("Erro ao interpretar data/hora.");
         }
 
         std::time_t tt = std::mktime(&tm);
-
-        int tzOffset = (tzHour * 3600) + (tzMinute * 60);
-        if (tzSign == '-') {
-            tt += tzOffset;
-        } else {
-            tt -= tzOffset;
-        }
-
         return tt;
     }
 };

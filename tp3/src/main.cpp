@@ -252,7 +252,7 @@ int main(int argc, char const* argv[]) {
     }
 
     // Expressão de filtro
-    std::string expression = "(((org==DEN)&&(dst==ORD))&&((prc<=500)&&(dur<=8400)))";
+    std::string expression = "(((org==ATL)&&(dst==BOS)))";
     std::vector<std::string> tokens = tokenize(expression);
     Node* root = parseExpression(tokens);
 
@@ -262,6 +262,15 @@ int main(int argc, char const* argv[]) {
 
     // Filtra os voos usando a árvore de expressão
     std::vector<Voo*> voosFiltrados = filtrarVoos(root, voos, numLinhas);
+
+    // Imprime os voos filtrados
+    ListaVoos* listaFiltrada = nullptr;
+    for (Voo* voo : voosFiltrados) {
+        listaFiltrada = adicionarVoo(listaFiltrada, voo);
+    }
+
+    imprimirVoos(listaFiltrada);
+    liberarLista(listaFiltrada);
 
     for (int i = 0; i < numLinhas; i++) delete voos[i];
     delete[] voos;

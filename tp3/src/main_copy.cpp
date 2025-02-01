@@ -8,7 +8,7 @@
 #include <string>
 
 #include "Voo.hpp"
-
+/*
 // Lista encadeada para armazenar voos filtrados
 struct ListaVoos {
     Voo* voo;
@@ -180,7 +180,7 @@ void leVoosdeEntrada(Voo** voos, int numLinhas) {
     }
 }
 
-/*
+
 int main(int argc, char const* argv[]) {
     // Leitura de dados
     // ---------------------------------------------------
