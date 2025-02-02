@@ -23,25 +23,19 @@ TEST_EXEC = $(BIN_DIR)/tests.out
 # Regras principais
 all: $(EXEC)
 
-unittest: $(TEST_EXEC)
-	@echo "Running all unit tests:"
-	@$(TEST_EXEC) 
-
-systest: $(TEST_EXEC)
-	@echo "Running system tests:"
-	@$(TEST_EXEC) 
-
-unitmemtest: $(TEST_EXEC)@
-	@echo "Running all tests with Valgrind:"
-	valgrind --leak-check=full $(TEST_EXEC)
-
-sysmemtest: $(TEST_EXEC)
+memtest: $(TEST_EXEC)
 	@echo "Running all tests with Valgrind:"
 	valgrind --leak-check=full $(TEST_EXEC)
 
 timetest: $(TEST_EXEC)
 	@echo "Running time test:"
 	time $(TEST_EXEC)
+
+testall: $(TEST_EXEC)
+	@for input in $(wildcard ./test/inputs/*); do \
+		echo "Running test with input $$input:"; \
+		./$(TEST_EXEC) $$input; \
+	done
 
 run: $(EXEC)
 	./$(EXEC) ./test/inputs/input_1.txt
