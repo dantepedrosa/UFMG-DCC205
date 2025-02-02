@@ -28,12 +28,24 @@ ListaEncadeada<std::string> tokenize(const std::string& expr) {
         } else if (c == '&' && i + 1 < expr.size() && expr[i + 1] == '&') {
             tokens.InsereFinal("&&");
             i++;
+        } else if (c == '|' && i + 1 < expr.size() && expr[i + 1] == '|') {
+            tokens.InsereFinal("||");
+            i++;
         } else if (c == '=' && i + 1 < expr.size() && expr[i + 1] == '=') {
             tokens.InsereFinal("==");
             i++;
         } else if (c == '<' && i + 1 < expr.size() && expr[i + 1] == '=') {
             tokens.InsereFinal("<=");
             i++;
+        } else if (c == '>' && i + 1 < expr.size() && expr[i + 1] == '=') {
+            tokens.InsereFinal(">=");
+            i++;
+        } else if (c == '<') {
+            tokens.InsereFinal("<");
+        } else if (c == '>') {
+            tokens.InsereFinal(">");
+        } else if (c == '!') {
+            tokens.InsereFinal("!");
         } else {
             temp += c;
             // Se o próximo caractere não for alfanumérico ou for final da string, empurra o token
