@@ -14,13 +14,14 @@
 void separarMenoresVoos(ListaEncadeada<Voo*>& lista, Voo** arrayDestino, int n, const std::string& trigrama) {
     std::cout << "Separando os " << n << " menores voos..." << std::endl;
 
-    Voo* temp[n];
+    Voo* temp[lista.GetTamanho()];
 
     // Ordena a lista usando Selection Sort
     for(int i = 0; i < lista.GetTamanho(); i++) {
         temp[i] = lista.GetItem(i);
     }
 
+    insertionsort(temp, lista.GetTamanho(), trigrama);
     quicksort(temp, 0, lista.GetTamanho() - 1, trigrama);
 
     // Copia os n primeiros voos da lista ordenada para o array de destino
