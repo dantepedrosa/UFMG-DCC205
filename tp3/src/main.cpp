@@ -139,19 +139,18 @@ int main(int argc, char const* argv[]) {
     for (int i = 0; i < numConsultas; i++) {
         std::cout << consultas[i]->str << std::endl;
 
-        ListaEncadeada<std::string> tokens = tokenizar(consultas[i]->expression);
-        No* root = montaArvoreExpressao(tokens);
-        ListaEncadeada<Voo*> voosFiltrados = filtrarVoos(root, voos, numLinhas);
+        // Cria árvore já com a expressão
+        ArvoreDeExpressao arvore(consultas[i]->expression);
+        
+        // Filtra os voos com um único método
+        ListaEncadeada<Voo*> voosFiltrados = arvore.filtrarVoos(voos, numLinhas);
 
-        // Separa os primeiros n voos na ordenação especificada
+        // Processa resultados e separa em array
         int numResultados = std::min(consultas[i]->numResultados, voosFiltrados.GetTamanho());
         Voo* menoresVoos[numResultados];
-
         separarMenoresVoos(voosFiltrados, menoresVoos, numResultados, consultas[i]->trigrama);
-        imprimirVoos(menoresVoos, numResultados);
-        //confereOutput(menoresVoos, numResultados, consultas[i]->str, filePath);
         
-        deleteTree(root);   // Apaga a árvore de expressão
+        imprimirVoos(menoresVoos, numResultados);
     }
 
     // Liberação de memória

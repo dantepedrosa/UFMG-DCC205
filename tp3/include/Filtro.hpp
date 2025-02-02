@@ -1,8 +1,11 @@
 /**
  * @file Filtro.hpp
- * @brief Arquivo contendo as definições para filtragem e processamento de consultas de voos
+ * @brief Sistema de filtragem de voos usando árvore de expressão
  * @author Dante Junqueira Pedrosa
  * @date 2025
+ * 
+ * Este arquivo contém a implementação de uma árvore de expressão para
+ * filtrar voos com base em expressões booleanas complexas.
  */
 
 #include <string>
@@ -10,27 +13,131 @@
 #include "../include/Pilha.hpp"
 #include "../include/ListaEncadeada.hpp"
 
+// Define as precedências dos operadores
+#define PREC_NOT 4    // Precedência do operador NOT (!)
+#define PREC_COMP 3   // Precedência dos operadores de comparação (==, !=, <=, >=, <, >)
+#define PREC_AND 2    // Precedência do operador AND (&&)
+#define PREC_OR  1    // Precedência do operador OR (||)
+#define PREC_NONE 0   // Precedência para tokens não-operadores
+
 /**
- * @brief Estrutura que representa um nó na árvore de expressão
+ * @brief Classe que implementa uma árvore de expressão para filtragem de voos
+ * 
+ * Esta classe permite construir e avaliar expressões booleanas complexas
+ * para filtrar voos com base em múltiplos critérios como:
+ * - Origem (org)
+ * - Destino (dst)
+ * - Preço (prc)
+ * - Assentos disponíveis (sea)
+ * - Número de paradas (sto)
+ * - Duração do voo (dur)
  */
-struct No {
-    std::string value;   // Valor armazenado no nó
-    No* left;          // Ponteiro para o filho esquerdo
-    No* right;         // Ponteiro para o filho direito
+class ArvoreDeExpressao {
+private:
+    /**
+     * @brief Estrutura de nó da árvore de expressão
+     */
+    struct No {
+        std::string value;  // Valor armazenado no nó (operador ou operando)
+        No* left;          // Ponteiro para o filho esquerdo
+        No* right;         // Ponteiro para o filho direito
+
+        /**
+         * @brief Construtor do nó
+         * @param val Valor a ser armazenado no nó
+         */
+        No(std::string val) : value(val), left(nullptr), right(nullptr) {}
+    };
+
+    No* root;  // Raiz da árvore de expressão
 
     /**
-     * @brief Construtor do nó
-     * @param val Valor a ser armazenado no nó
+     * @brief Converte uma string em uma lista de tokens
+     * @param expr String contendo a expressão
+     * @return Lista de tokens
      */
-    No(std::string val) : value(val), left(nullptr), right(nullptr) {}
+    ListaEncadeada<std::string> tokenizar(const std::string& expr);
+
+    /**
+     * @brief Constrói a árvore de expressão a partir dos tokens
+     * @param tokens Lista de tokens da expressão
+     * @return Ponteiro para a raiz da árvore construída
+     */
+    No* montaArvoreExpressao(const ListaEncadeada<std::string>& tokens);
+
+    /**
+     * @brief Retorna a precedência do operador
+     * @param op String contendo o operador
+     * @return Valor numérico da precedência
+     */
+    int getOperatorPrecedence(const std::string& op);
+
+    /**
+     * @brief Avalia a expressão para um voo específico
+     * @param node Nó atual da árvore
+     * @param voo Voo a ser avaliado
+     * @return true se o voo satisfaz a expressão, false caso contrário
+     */
+    bool evaluate(No* node, Voo* voo);
+
+    /**
+     * @brief Libera a memória da árvore recursivamente
+     * @param node Nó atual a ser liberado
+     */
+    void deleteTree(No* node);
+
+public:
+    /**
+     * @brief Construtor que inicializa a árvore com uma expressão
+     * @param expr String contendo a expressão booleana
+     */
+    ArvoreDeExpressao(const std::string& expr) : root(nullptr) {
+        ListaEncadeada<std::string> tokens = tokenizar(expr);
+        root = montaArvoreExpressao(tokens);
+    }
+
+    /**
+     * @brief Destrutor que libera a memória da árvore
+     */
+    ~ArvoreDeExpressao() {
+        deleteTree(root);
+    }
+
+    /**
+     * @brief Filtra um array de voos de acordo com a expressão
+     * @param voos Array de ponteiros para voos
+     * @param numVoos Número de voos no array
+     * @return Lista encadeada contendo os voos que satisfazem a expressão
+     */
+    ListaEncadeada<Voo*> filtrarVoos(Voo** voos, int numVoos) {
+        ListaEncadeada<Voo*> voosFiltrados;
+        for (int i = 0; i < numVoos; i++) {
+            if (evaluate(root, voos[i])) {
+                voosFiltrados.InsereFinal(voos[i]);
+            }
+        }
+        return voosFiltrados;
+    }
+
+    #ifdef DEBUG
+    /**
+     * @brief Imprime a árvore para debugging
+     */
+    void printTree() {
+        printTreeRecursive(root, 0);
+    }
+    
+private:
+    /**
+     * @brief Função auxiliar recursiva para impressão da árvore
+     * @param node Nó atual
+     * @param level Nível de indentação
+     */
+    void printTreeRecursive(No* node, int level);
+    #endif
 };
 
-/**
- * @brief Converte uma expressão em uma lista de tokens
- * @param expr Expressão a ser tokenizada
- * @return Lista encadeada contendo os tokens
- */
-ListaEncadeada<std::string> tokenizar(const std::string& expr) {
+ListaEncadeada<std::string> ArvoreDeExpressao::tokenizar(const std::string& expr) {
     ListaEncadeada<std::string> tokens;
     std::string temp;
     for (std::size_t i = 0; i < expr.size(); i++) {
@@ -105,33 +212,7 @@ ListaEncadeada<std::string> tokenizar(const std::string& expr) {
     return tokens;
 }
 
-// Define as precedências dos operadores
-#define PREC_NOT 4    // !
-#define PREC_COMP 3   // ==, !=, <=, >=, <, >
-#define PREC_AND 2    // &&
-#define PREC_OR  1    // ||
-#define PREC_NONE 0   // outros
-
-/**
- * @brief Retorna a precedência do operador
- * @param op Operador a ser avaliado
- * @return Valor numérico representando a precedência (maior valor = maior precedência)
- */
-int getOperatorPrecedence(const std::string& op) {
-    if (op == "!") return PREC_NOT;
-    if (op == "==" || op == "!=" || op == "<=" || op == ">=" || op == "<" || op == ">") 
-        return PREC_COMP;
-    if (op == "&&") return PREC_AND;
-    if (op == "||") return PREC_OR;
-    return PREC_NONE;
-}
-
-/**
- * @brief Monta uma árvore de expressão a partir de uma lista de tokens
- * @param tokens Lista de tokens a ser processada
- * @return Ponteiro para a raiz da árvore de expressão
- */
-No* montaArvoreExpressao(const ListaEncadeada<std::string>& tokens) {
+ArvoreDeExpressao::No* ArvoreDeExpressao::montaArvoreExpressao(const ListaEncadeada<std::string>& tokens) {
     PilhaEncadeada<No*> nodes;
     PilhaEncadeada<std::string> ops;
 
@@ -215,26 +296,16 @@ No* montaArvoreExpressao(const ListaEncadeada<std::string>& tokens) {
     return nodes.Vazia() ? nullptr : nodes.Desempilha();
 }
 
-/**
- * @brief Imprime a árvore de expressão (função auxiliar para debug)
- * @param root Ponteiro para a raiz da árvore
- * @param level Nível atual na árvore (usado para indentação)
- */
-void printTree(No* root, int level = 0) {
-    if (!root)
-        return;
-    printTree(root->right, level + 1);
-    std::cout << std::string(level * 4, ' ') << root->value << std::endl;
-    printTree(root->left, level + 1);
+int ArvoreDeExpressao::getOperatorPrecedence(const std::string& op) {
+    if (op == "!") return PREC_NOT;
+    if (op == "==" || op == "!=" || op == "<=" || op == ">=" || op == "<" || op == ">") 
+        return PREC_COMP;
+    if (op == "&&") return PREC_AND;
+    if (op == "||") return PREC_OR;
+    return PREC_NONE;
 }
 
-/**
- * @brief Avalia uma expressão para um determinado voo
- * @param root Ponteiro para a raiz da árvore de expressão
- * @param voo Ponteiro para o voo a ser avaliado
- * @return true se o voo satisfaz a expressão, false caso contrário
- */
-bool evaluate(No* root, Voo* voo) {
+bool ArvoreDeExpressao::evaluate(No* root, Voo* voo) {
     if (!root) return false;
     
     // Trata operador unário
@@ -314,30 +385,18 @@ bool evaluate(No* root, Voo* voo) {
     return false;
 }
 
-/**
- * @brief Libera recursivamente os nós da árvore de expressão
- * @param root Ponteiro para a raiz da árvore a ser liberada
- */
-void deleteTree(No* root) {
-    if (!root) return;
-    deleteTree(root->left);
-    deleteTree(root->right);
-    delete root;
+void ArvoreDeExpressao::deleteTree(No* node) {
+    if (!node) return;
+    deleteTree(node->left);
+    deleteTree(node->right);
+    delete node;
 }
 
-/**
- * @brief Filtra uma lista de voos de acordo com uma expressão
- * @param root Ponteiro para a raiz da árvore de expressão
- * @param voos Array de ponteiros para voos
- * @param numVoos Número de voos no array
- * @return Lista encadeada contendo os voos que satisfazem a expressão
- */
-ListaEncadeada<Voo*> filtrarVoos(No* root, Voo** voos, int numVoos) {
-    ListaEncadeada<Voo*> voosFiltrados;
-    for (int i = 0; i < numVoos; i++) {
-        if (evaluate(root, voos[i])) {
-            voosFiltrados.InsereFinal(voos[i]);
-        }
-    }
-    return voosFiltrados;
+#ifdef DEBUG
+void ArvoreDeExpressao::printTreeRecursive(No* node, int level) {
+    if (!node) return;
+    printTreeRecursive(node->right, level + 1);
+    std::cout << std::string(level * 4, ' ') << node->value << std::endl;
+    printTreeRecursive(node->left, level + 1);
 }
+#endif
