@@ -68,7 +68,7 @@ $(OBJ_DIR)/testeMain.o: $(SRC_DIR)/testeMain.cpp $(HEADERS)
 
 # Compilar e executar testes de stress
 stress: $(TEST_MAIN_EXEC)
-	for i in $$(seq 15 15 350); do \
+	for i in $$(seq 15 15 360); do \
 		./$(TEST_MAIN_EXEC) $$i; \
 		valgrind --leak-check=full --log-fd=1 ./$(TEST_MAIN_EXEC) $$i 2>&1 | \
 		awk '/allocs/ || /LEAK SUMMARY/' | tr -s ' '; \
