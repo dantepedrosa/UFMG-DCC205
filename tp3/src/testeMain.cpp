@@ -1,11 +1,9 @@
-﻿/**
- * @file main.cpp
- * @brief Sistema de processamento e filtragem de voos
+/**
+ * @file testMain.cpp
+ * @brief Arquivo de teste de processamento para o sistema de processamento e filtragem de voos
  * @author Dante Junqueira Pedrosa
  * @date 2025
  */
-
-
 
 #include <fstream>
 #include <functional>
@@ -13,6 +11,7 @@
 #include <sstream>
 #include <string>
 #include <stdexcept>
+#include <chrono>
 
 #include "../include/ArvoreDeExpressao.hpp"
 #include "../include/ListaEncadeada.hpp"
@@ -42,11 +41,11 @@ void leConsultasdeEntrada(Consulta** consultas, int numConsultas);
 
 /**
  * @brief Lê as consultas de um arquivo
- * @param inputFile Arquivo de entrada
+ * @param arquivoQueries Arquivo de entrada
  * @param consultas Array de ponteiros para consultas a ser preenchido
  * @param numConsultas Número de consultas a serem lidas
  */
-void leConsultasdeArquivo(std::ifstream& inputFile, Consulta** consultas, int numConsultas);
+void leConsultasdeArquivo(std::ifstream& arquivoQueries, Consulta** consultas, int numConsultas);
 
 /**
  * @brief Separa os n menores voos de uma lista
@@ -66,11 +65,11 @@ void imprimirVoos(Voo** voos, int numVoos);
 
 /**
  * @brief Lê voos de um arquivo
- * @param inputFile Arquivo de entrada
+ * @param arquivoDados Arquivo de entrada
  * @param voos Array de ponteiros para voos a ser preenchido
  * @param numLinhas Número de linhas (voos) a serem lidas
  */
-void leVoosdeArquivo(std::ifstream& inputFile, Voo** voos, int numLinhas);
+void leVoosdeArquivo(std::ifstream& arquivoDados, Voo** voos, int numLinhas);
 
 /**
  * @brief Lê voos da entrada padrão
@@ -90,99 +89,136 @@ int main(int argc, char const* argv[]) {
         // Inicialização
         // ---------------------------------------------------
 
-        bool fileEnabled = false;
-        std::string filePath;
+        if (argc < 2) {
+            std::cerr << "Erro: número insuficiente de argumentos" << std::endl;
+            return 1;
+        }
+
+        int numDados = std::stoi(argv[1]);
+
+        // Define variaveis para captura de tempo 
+        std::chrono::time_point<std::chrono::high_resolution_clock> start, end;
+        std::chrono::duration<double> tInit, tLeituraDados, tFinal;
+        
+        // Capture o tempo de início
+        start = std::chrono::high_resolution_clock::now();
+
+        std::string dadosPath = "./test/inputs/input_flights.txt";
+        std::string queriesPath = "./test/inputs/input_queries.txt";
         std::string line;
         std::istringstream iss;
-        int numLinhas;
-        int numConsultas;
+        int numConsultasTotal;
         
         Voo** voos;
-        Consulta** consultas;
+        
         GerenciadorIndices indices;  // Moved declaration here
 
         // Leitura de dados
         // Trata diferente para caso seja entrada padrão ou arquivo
         // ---------------------------------------------------
-        switch (argc) {
-            case 1:
-                fileEnabled = false;
-                return 1;
-            case 2:
-                fileEnabled = true;
-                filePath = argv[1];
-                break;
-            default:
-                std::cerr << "Uso: " << argv[0] << " <caminho_para_arquivo> [-f]"
-                        << std::endl;
-                return 1;
+
+        std::ifstream arquivoDados(dadosPath);
+        if (!arquivoDados.is_open()) {
+            std::cerr << "Erro: não foi possível abrir o arquivo " << dadosPath << std::endl;
+            return 1;
         }
 
-        if (fileEnabled) {
-            std::ifstream inputFile(filePath);
-            if (!inputFile.is_open()) {
-                std::cerr << "Erro: não foi possível abrir o arquivo " << filePath << std::endl;
-                return 1;
-            }
-            std::getline(inputFile, line);
-            numLinhas = std::stoi(line);
+        // Captura tempo de inicialização
+        end = std::chrono::high_resolution_clock::now();
+        tInit = end - start;
+        // Capture o tempo
+        start = std::chrono::high_resolution_clock::now();
 
-            voos = new Voo*[numLinhas];
-            leVoosdeArquivo(inputFile, voos, numLinhas);
+        voos = new Voo*[numDados];
+        leVoosdeArquivo(arquivoDados, voos, numDados);
 
-            // Criar e preencher os índices após carregar os voos
-            for (int i = 0; i < numLinhas; i++) {
-                indices.inserirVoo(voos[i], i);
-            }
-
-            std::getline(inputFile, line);
-            numConsultas = std::stoi(line);
-            consultas = new Consulta*[numConsultas];
-            leConsultasdeArquivo(inputFile, consultas, numConsultas);
-
-            inputFile.close();
-        } else {
-            std::getline(std::cin, line);
-            numLinhas = std::stoi(line);
-
-            voos = new Voo*[numLinhas];
-            leVoosdeEntrada(voos, numLinhas);
-
-            // Criar e preencher os índices após carregar os voos
-            for (int i = 0; i < numLinhas; i++) {
-                indices.inserirVoo(voos[i], i);
-            }
-
-            std::getline(std::cin, line);
-            numConsultas = std::stoi(line);
-            consultas = new Consulta*[numConsultas];
-            leConsultasdeEntrada(consultas, numConsultas);
+        // Criar e preencher os índices após carregar os voos
+        for (int i = 0; i < numDados; i++) {
+            indices.inserirVoo(voos[i], i);
         }
+
+        // Lê expressões de consulta
+        std::ifstream arquivoQueries(queriesPath);
+        std::getline(arquivoQueries, line);
+        numConsultasTotal = std::stoi(line);
+        Consulta*** consultas = new Consulta**[numConsultasTotal];
+        int numConsultas;
+        for (int i = 0; i < numConsultasTotal; i++) {
+            std::getline(arquivoQueries, line);
+            numConsultas = std::stoi(line);
+            consultas[i] = new Consulta*[numConsultas];
+            leConsultasdeArquivo(arquivoQueries, consultas[i], numConsultas);
+        }
+
+        arquivoQueries.close();
+        arquivoDados.close();
+
+        // Captura tempo de leitura de dados
+        end = std::chrono::high_resolution_clock::now();
+        tLeituraDados = end - start;
+        std::chrono::duration<double> tConsultaMedio[numConsultasTotal];
 
         // Processamento de consultas
         // ---------------------------------------------------
-        for (int i = 0; i < numConsultas; i++) {
-            std::cout << consultas[i]->str << std::endl;
+        for (int i = 0; i < numConsultasTotal; i++) {
 
-            // Cria a árvore de expressão e filtra os voos
-            ArvoreDeExpressao arvore(consultas[i]->expression);
-            ListaEncadeada<Voo*> voosFiltrados = arvore.filtrarVoos(voos, numLinhas);
+            //std::cout << "Testando " << i+2 << " consultas em " << numDados << " voos." << std::endl;
 
-            // Processar resultados
-            int numResultados = std::min(consultas[i]->numResultados, voosFiltrados.GetTamanho());
-            Voo* menoresVoos[numResultados];
-            separarMenoresVoos(voosFiltrados, menoresVoos, numResultados, consultas[i]->trigrama);
-            
-            imprimirVoos(menoresVoos, numResultados);
+            // Capture o tempo de início
+            start = std::chrono::high_resolution_clock::now();
+
+            for (int j = 0; j < numConsultas; j++) {
+                
+                
+
+                // Cria a árvore de expressão e filtra os voos
+                ArvoreDeExpressao arvore(consultas[i][j]->expression);
+                ListaEncadeada<Voo*> voosFiltrados = arvore.filtrarVoos(voos, numDados);
+
+                // Processar resultados
+                int numResultados = std::min(consultas[i][j]->numResultados, voosFiltrados.GetTamanho());
+                Voo* menoresVoos[numResultados];
+                separarMenoresVoos(voosFiltrados, menoresVoos, numResultados, consultas[i][j]->trigrama);
+                
+                //imprimirVoos(menoresVoos, numResultados);
+            }
+
+            // Captura tempo de consulta com n consultas
+            end = std::chrono::high_resolution_clock::now();
+            tConsultaMedio[i] = (end - start)/numConsultas;
+
         }
+
+        // Capture o tempo de início
+        start = std::chrono::high_resolution_clock::now();
 
         // Liberação de memória
         // ---------------------------------------------------
-        for (int i = 0; i < numLinhas; i++) delete voos[i];
+        for (int i = 0; i < numDados; i++) delete voos[i];
         delete[] voos;
 
-        for (int i = 0; i < numConsultas; i++) delete consultas[i];
+        for (int i = 0; i < numConsultasTotal; i++) {
+            for (int j = 0; j < numConsultas; j++) {
+                delete consultas[i][j];
+            }
+            delete[] consultas[i];
+        }
         delete[] consultas;
+
+        // Captura tempo final
+        end = std::chrono::high_resolution_clock::now();
+        tFinal = end - start;
+
+        std::cout 
+            << numDados << " " 
+            << tInit.count() << " " 
+            << tLeituraDados.count() << " " 
+            << tConsultaMedio[0].count() << " "
+            << tConsultaMedio[1].count() << " "
+            << tConsultaMedio[2].count() << " "
+            << tConsultaMedio[3].count() << " "
+            << tFinal.count() << " "
+            << std::endl;
 
     } catch (const std::exception& e) {
         std::cerr << "Erro fatal: " << e.what() << std::endl;
@@ -207,15 +243,15 @@ void leConsultasdeEntrada(Consulta** consultas, int numConsultas) {
 }
 
 
-void leConsultasdeArquivo(std::ifstream& inputFile, Consulta** consultas,
+void leConsultasdeArquivo(std::ifstream& arquivoDados, Consulta** consultas,
                           int numConsultas) {
-    if (!inputFile.is_open()) {
+    if (!arquivoDados.is_open()) {
         throw std::runtime_error("Erro: arquivo não está aberto para leitura");
     }
     
     std::string line;
     for (int i = 0; i < numConsultas; i++) {
-        if (!std::getline(inputFile, line)) {
+        if (!std::getline(arquivoDados, line)) {
             std::cerr << "Erro: fim inesperado do arquivo na consulta " << i + 1 << std::endl;
             throw std::runtime_error("Número insuficiente de consultas no arquivo");
         }
@@ -226,6 +262,7 @@ void leConsultasdeArquivo(std::ifstream& inputFile, Consulta** consultas,
         
         if (!(iss >> consultas[i]->numResultados >> consultas[i]->trigrama >> consultas[i]->expression)) {
             std::cerr << "Erro: formato inválido na consulta " << i + 1 << std::endl;
+            std::cerr << "Consulta " << consultas[i]->str << std::endl;
             throw std::invalid_argument("Formato de consulta inválido");
         }
         
@@ -273,14 +310,14 @@ void imprimirVoos(Voo** voos, int numVoos) {
 }
 
 
-void leVoosdeArquivo(std::ifstream& inputFile, Voo** voos, int numLinhas) {
-    if (!inputFile.is_open()) {
+void leVoosdeArquivo(std::ifstream& arquivoDados, Voo** voos, int numLinhas) {
+    if (!arquivoDados.is_open()) {
         throw std::runtime_error("Erro: arquivo não está aberto para leitura");
     }
     
     std::string line;
     for (int i = 0; i < numLinhas; i++) {
-        if (!std::getline(inputFile, line)) {
+        if (!std::getline(arquivoDados, line)) {
             std::cerr << "Erro: fim inesperado do arquivo na linha " << i + 1 << std::endl;
             throw std::runtime_error("Número insuficiente de linhas no arquivo");
         }

@@ -36,12 +36,20 @@ private:
     No* rotacaoEsquerda(No* x);
     int fatorBalanceamento(No* n) const;
     No* inserir(No* node, const std::string& chave, int indiceVoo);
+    void liberar(No* node);
 
 public:
     /**
      * @brief Construtor da classe IndiceVoos
      */
     IndiceVoos() : raiz(nullptr) {}
+
+    /**
+     * @brief Destrutor da classe IndiceVoos
+     */
+    ~IndiceVoos() {
+        liberar(raiz);
+    }
 
     /**
      * @brief Insere um voo no índice
@@ -144,4 +152,12 @@ IndiceVoos::No* IndiceVoos::inserir(No* node, const std::string& chave, int indi
     }
 
     return node;
+}
+
+void IndiceVoos::liberar(No* node) {
+    if (node) {
+        liberar(node->esq);   // Libera subárvore esquerda
+        liberar(node->dir);   // Libera subárvore direita
+        delete node;          // Libera o nó atual
+    }
 }
