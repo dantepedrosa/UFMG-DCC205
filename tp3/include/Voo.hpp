@@ -14,7 +14,7 @@ public:
     int assentos;
     std::time_t partida;
     std::time_t chegada;
-    int numParadas;
+    int paradas;
     std::time_t duracao;
 
     Voo(const std::string& linha) {
@@ -23,7 +23,7 @@ public:
 
         str = linha;
 
-        ss >> origem >> destino >> preco >> assentos >> partidaStr >> chegadaStr >> numParadas;
+        ss >> origem >> destino >> preco >> assentos >> partidaStr >> chegadaStr >> paradas;
 
         if (ss.fail()) {
             throw std::runtime_error("Erro ao processar a linha de entrada.");

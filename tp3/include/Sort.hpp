@@ -12,7 +12,7 @@ bool compare(const Voo* x, const Voo* y, const std::string& trigrama) {
         switch (var) {
             case 'p': if (x->preco != y->preco) return x->preco < y->preco; break;
             case 'd': if (x->duracao != y->duracao) return x->duracao < y->duracao; break;
-            case 's': if (x->numParadas != y->numParadas) return x->numParadas < y->numParadas; break;
+            case 's': if (x->paradas != y->paradas) return x->paradas < y->paradas; break;
         }
     }
     return false;

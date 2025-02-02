@@ -156,7 +156,7 @@ bool evaluate(Node* root, Voo* voo) {
         return !evaluate(root->left, voo);
     }
     
-    // Handle leaf nodes (should not occur in valid expressions)
+    // Handle leaf nodes
     if (!root->left && !root->right) {
         return false;
     }
@@ -170,25 +170,54 @@ bool evaluate(Node* root, Voo* voo) {
     
     // Handle comparison operators
     std::string atributo = root->left->value;
+    std::string operador = root->value;
     
-    if (root->value == "==") {
+    // String comparisons (org, dst)
+    if (atributo == "org" || atributo == "dst") {
         std::string valor = root->right->value;
-        if (atributo == "org") return voo->origem == valor;
-        if (atributo == "dst") return voo->destino == valor;
-    } else {
-        float valor = std::stof(root->right->value);
-        if (atributo == "prc") {
-            if (root->value == "<=") return voo->preco <= valor;
-            if (root->value == ">=") return voo->preco >= valor;
-            if (root->value == "<")  return voo->preco < valor;
-            if (root->value == ">")  return voo->preco > valor;
-        } else if (atributo == "dur") {
-            std::time_t duracao = static_cast<std::time_t>(valor);
-            if (root->value == "<=") return voo->duracao <= duracao;
-            if (root->value == ">=") return voo->duracao >= duracao;
-            if (root->value == "<")  return voo->duracao < duracao;
-            if (root->value == ">")  return voo->duracao > duracao;
+        if (operador == "==") {
+            return (atributo == "org") ? voo->origem == valor : voo->destino == valor;
+        } else if (operador == "!=") {
+            return (atributo == "org") ? voo->origem != valor : voo->destino != valor;
         }
+        return false;
+    }
+    
+    // Numeric comparisons (prc, sea, sto, dur)
+    float valor = std::stof(root->right->value);
+    
+    if (atributo == "prc") {
+        if (operador == "<=") return voo->preco <= valor;
+        if (operador == ">=") return voo->preco >= valor;
+        if (operador == "<")  return voo->preco < valor;
+        if (operador == ">")  return voo->preco > valor;
+        if (operador == "==") return voo->preco == valor;
+        if (operador == "!=") return voo->preco != valor;
+    } 
+    else if (atributo == "sea") {
+        if (operador == "<=") return voo->assentos <= valor;
+        if (operador == ">=") return voo->assentos >= valor;
+        if (operador == "<")  return voo->assentos < valor;
+        if (operador == ">")  return voo->assentos > valor;
+        if (operador == "==") return voo->assentos == valor;
+        if (operador == "!=") return voo->assentos != valor;
+    }
+    else if (atributo == "sto") {
+        if (operador == "<=") return voo->paradas <= valor;
+        if (operador == ">=") return voo->paradas >= valor;
+        if (operador == "<")  return voo->paradas < valor;
+        if (operador == ">")  return voo->paradas > valor;
+        if (operador == "==") return voo->paradas == valor;
+        if (operador == "!=") return voo->paradas != valor;
+    }
+    else if (atributo == "dur") {
+        std::time_t duracao = static_cast<std::time_t>(valor);
+        if (operador == "<=") return voo->duracao <= duracao;
+        if (operador == ">=") return voo->duracao >= duracao;
+        if (operador == "<")  return voo->duracao < duracao;
+        if (operador == ">")  return voo->duracao > duracao;
+        if (operador == "==") return voo->duracao == duracao;
+        if (operador == "!=") return voo->duracao != duracao;
     }
     
     return false;
