@@ -10,7 +10,24 @@
 #include "../include/Filtro.hpp"
 #include "../include/Sort.hpp"
 
+// Função para separar os n menores voos da lista encadeada e armazená-los em arrayDestino
+void separarMenoresVoos(ListaEncadeada<Voo*>& lista, Voo** arrayDestino, int n, const std::string& trigrama) {
+    std::cout << "Separando os " << n << " menores voos..." << std::endl;
 
+    Voo* temp[n];
+
+    // Ordena a lista usando Selection Sort
+    for(int i = 0; i < lista.GetTamanho(); i++) {
+        temp[i] = lista.GetItem(i);
+    }
+
+    quicksort(temp, 0, lista.GetTamanho() - 1, trigrama);
+
+    // Copia os n primeiros voos da lista ordenada para o array de destino
+    for (int i = 0; i < n && i < lista.GetTamanho(); i++) {
+        arrayDestino[i] = temp[i];
+    }
+}
 
 // Imprime a lista de voos filtrados
 void imprimirVoos(Voo** voos, int numVoos) {
