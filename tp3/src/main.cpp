@@ -1,4 +1,11 @@
-﻿#include <fstream>
+﻿/**
+ * @file main.cpp
+ * @brief Programa principal para processamento de consultas de voos
+ * @author Meirielen Andrade
+ * @date 2023
+ */
+
+#include <fstream>
 #include <functional>
 #include <iostream>
 #include <sstream>
@@ -10,8 +17,13 @@
 #include "../include/Sort.hpp"
 #include "../include/Voo.hpp"
 
-// Função para separar os n menores voos da lista encadeada e armazená-los em
-// arrayDestino
+/**
+ * @brief Separa os n menores voos de uma lista
+ * @param lista Lista de voos
+ * @param arrayDestino Array para armazenar os voos selecionados
+ * @param n Número de voos a serem selecionados
+ * @param trigrama Critério de ordenação
+ */
 void separarMenoresVoos(ListaEncadeada<Voo*>& lista, Voo** arrayDestino, int n,
                         const std::string& trigrama) {
     std::cout << "Separando os " << n << " menores voos..." << std::endl;
@@ -59,11 +71,14 @@ void leVoosdeEntrada(Voo** voos, int numLinhas) {
     }
 }
 
+/**
+ * @brief Estrutura para armazenar dados de uma consulta
+ */
 struct Consulta {
-    std::string str;
-    int numResultados;
-    std::string trigrama;
-    std::string expression;
+    std::string str;          // String original da consulta
+    int numResultados;        // Número de resultados desejados
+    std::string trigrama;     // Critério de ordenação
+    std::string expression;   // Expressão de filtragem
 };
 
 void leConsultasdeArquivo(std::ifstream& inputFile, Consulta** consultas,
@@ -156,7 +171,7 @@ int main(int argc, char const* argv[]) {
         std::cout << "Consulta: " << consultas[i]->str << std::endl;
 
         ListaEncadeada<std::string> tokens = tokenizar(consultas[i]->expression);
-        Node* root = montaArvoreExpressao(tokens);
+        No* root = montaArvoreExpressao(tokens);
 
         ListaEncadeada<Voo*> voosFiltrados = filtrarVoos(root, voos, numLinhas);
 
@@ -176,7 +191,7 @@ int main(int argc, char const* argv[]) {
 
         // Função lambda para liberar recursivamente os nós da árvore de
         // expressão
-        std::function<void(Node*)> deleteTree = [&](Node* node) {
+        std::function<void(No*)> deleteTree = [&](No* node) {
             if (!node) return;
             deleteTree(node->left);
             deleteTree(node->right);

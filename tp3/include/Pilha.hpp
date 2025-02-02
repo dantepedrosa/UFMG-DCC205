@@ -1,3 +1,10 @@
+/**
+ * @file Pilha.hpp
+ * @brief Implementação de pilha genérica
+ * @author Dante Junqueira Pedrosa
+ * @date 2025
+ */
+
 #pragma once
 
 #include <iostream>
@@ -16,6 +23,10 @@ public:
 
 #endif
 
+/**
+ * @brief Classe base abstrata para implementação de pilha
+ * @tparam TipoItem Tipo de dado armazenado na pilha
+ */
 template <typename TipoItem>
 class Pilha {
 public:
@@ -30,6 +41,10 @@ protected:
     int tamanho;
 };
 
+/**
+ * @brief Implementação de pilha encadeada
+ * @tparam TipoItem Tipo de dado armazenado na pilha
+ */
 template <typename TipoItem>
 class PilhaEncadeada : public Pilha<TipoItem> {
 public:

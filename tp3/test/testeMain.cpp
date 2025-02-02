@@ -156,7 +156,7 @@ int main(int argc, char const* argv[]) {
         std::cout << "Consulta: " << consultas[i]->str << std::endl;
 
         ListaEncadeada<std::string> tokens = tokenizar(consultas[i]->expression);
-        Node* root = montaArvoreExpressao(tokens);
+        No* root = montaArvoreExpressao(tokens);
 
         ListaEncadeada<Voo*> voosFiltrados = filtrarVoos(root, voos, numLinhas);
 
@@ -176,7 +176,7 @@ int main(int argc, char const* argv[]) {
 
         // Função lambda para liberar recursivamente os nós da árvore de
         // expressão
-        std::function<void(Node*)> deleteTree = [&](Node* node) {
+        std::function<void(No*)> deleteTree = [&](No* node) {
             if (!node) return;
             deleteTree(node->left);
             deleteTree(node->right);

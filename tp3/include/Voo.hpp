@@ -1,3 +1,10 @@
+/**
+ * @file Voo.hpp
+ * @brief Definição da classe Voo e suas propriedades
+ * @author Dante Junqueira Pedrosa
+ * @date 2025
+ */
+
 #pragma once
 
 #include <sstream>
@@ -5,18 +12,25 @@
 #include <ctime>
 #include <string>
 
+/**
+ * @brief Classe que representa um voo
+ */
 class Voo {
 public:
-    std::string str;
-    std::string origem;
-    std::string destino;
-    float preco;
-    int assentos;
-    std::time_t partida;
-    std::time_t chegada;
-    int paradas;
-    std::time_t duracao;
+    std::string str;      // String original do voo
+    std::string origem;   // Aeroporto de origem
+    std::string destino;  // Aeroporto de destino
+    float preco;         // Preço do voo
+    int assentos;        // Número de assentos disponíveis
+    std::time_t partida; // Horário de partida
+    std::time_t chegada; // Horário de chegada
+    int paradas;         // Número de paradas
+    std::time_t duracao; // Duração total do voo
 
+    /**
+     * @brief Construtor que inicializa um voo a partir de uma string
+     * @param linha String contendo os dados do voo
+     */
     Voo(const std::string& linha) {
         std::istringstream ss(linha);
         std::string partidaStr, chegadaStr;
@@ -35,6 +49,11 @@ public:
     }
 
 private:
+    /**
+     * @brief Converte uma string de data/hora para time_t
+     * @param datetime String no formato "YYYY-MM-DDThh:mm:ss"
+     * @return Valor em time_t correspondente
+     */
     std::time_t parseTempo(const std::string& datetime) {
         std::tm tm = {};
         std::istringstream ss(datetime);

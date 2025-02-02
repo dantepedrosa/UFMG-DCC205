@@ -1,3 +1,10 @@
+/**
+ * @file ListaEncadeada.hpp
+ * @brief Implementação de lista encadeada genérica
+ * @author Dante Junqueira Pedrosa
+ * @date 2025
+ */
+
 #pragma once
 
 #include <iostream>
@@ -6,6 +13,10 @@
 #ifndef TIPO_CELULA_HPP
 #define TIPO_CELULA_HPP
 
+/**
+ * @brief Célula base para estruturas encadeadas
+ * @tparam TipoItem Tipo de dado armazenado na célula
+ */
 template <typename TipoItem>
 class TipoCelula {
 public:
@@ -16,6 +27,10 @@ public:
 
 #endif
 
+/**
+ * @brief Classe base abstrata para implementação de lista
+ * @tparam TipoItem Tipo de dado armazenado na lista
+ */
 template <typename TipoItem>
 class Lista {
 public:
@@ -32,6 +47,10 @@ protected:
     int tamanho;
 };
 
+/**
+ * @brief Implementação de lista encadeada
+ * @tparam TipoItem Tipo de dado armazenado na lista
+ */
 template <typename TipoItem>
 class ListaEncadeada : public Lista<TipoItem> {
 public:

@@ -1,3 +1,10 @@
+/**
+ * @file Sort.hpp
+ * @brief Implementação dos algoritmos de ordenação
+ * @author Dante Junqueira Pedrosa
+ * @date 2025
+ */
+
 #pragma once
 
 #include <iostream>
@@ -6,7 +13,13 @@
 
 #include "Voo.hpp"
 
-// Função de comparação com base no trigrama
+/**
+ * @brief Compara dois voos com base no trigrama fornecido
+ * @param x Primeiro voo
+ * @param y Segundo voo
+ * @param trigrama String contendo a ordem de comparação (p=preço, d=duração, s=paradas)
+ * @return true se x deve vir antes de y na ordenação
+ */
 bool compare(const Voo* x, const Voo* y, const std::string& trigrama) {
     for (char var : trigrama) {
         switch (var) {
@@ -18,7 +31,12 @@ bool compare(const Voo* x, const Voo* y, const std::string& trigrama) {
     return false;
 }
 
-// Implementação do InsertionSort
+/**
+ * @brief Implementa o algoritmo Insertion Sort para ordenação de voos
+ * @param voos Array de ponteiros para voos
+ * @param n Tamanho do array
+ * @param trigrama Critério de ordenação
+ */
 void insertionsort(Voo* voos[], int n, const std::string& trigrama) {
     for (int i = 1; i < n; ++i) {
         Voo* key = voos[i];
@@ -32,7 +50,13 @@ void insertionsort(Voo* voos[], int n, const std::string& trigrama) {
     }
 }
 
-// Implementação do QuickSort
+/**
+ * @brief Implementa o algoritmo Quick Sort para ordenação de voos
+ * @param voos Array de ponteiros para voos
+ * @param low Índice inicial do subarray
+ * @param high Índice final do subarray
+ * @param trigrama Critério de ordenação
+ */
 void quicksort(Voo* voos[], int low, int high, const std::string& trigrama) {
     if (low < high) {
         int pivot = low;
