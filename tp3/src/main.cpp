@@ -1,23 +1,25 @@
 ﻿#include <fstream>
+#include <functional>
 #include <iostream>
 #include <sstream>
 #include <string>
-#include <functional>
 
-#include "../include/Voo.hpp"
-#include "../include/Pilha.hpp"
-#include "../include/ListaEncadeada.hpp"
 #include "../include/Filtro.hpp"
+#include "../include/ListaEncadeada.hpp"
+#include "../include/Pilha.hpp"
 #include "../include/Sort.hpp"
+#include "../include/Voo.hpp"
 
-// Função para separar os n menores voos da lista encadeada e armazená-los em arrayDestino
-void separarMenoresVoos(ListaEncadeada<Voo*>& lista, Voo** arrayDestino, int n, const std::string& trigrama) {
+// Função para separar os n menores voos da lista encadeada e armazená-los em
+// arrayDestino
+void separarMenoresVoos(ListaEncadeada<Voo*>& lista, Voo** arrayDestino, int n,
+                        const std::string& trigrama) {
     std::cout << "Separando os " << n << " menores voos..." << std::endl;
 
     Voo* temp[lista.GetTamanho()];
 
     // Ordena a lista usando Selection Sort
-    for(int i = 0; i < lista.GetTamanho(); i++) {
+    for (int i = 0; i < lista.GetTamanho(); i++) {
         temp[i] = lista.GetItem(i);
     }
 
@@ -34,7 +36,7 @@ void separarMenoresVoos(ListaEncadeada<Voo*>& lista, Voo** arrayDestino, int n, 
 void imprimirVoos(Voo** voos, int numVoos) {
     for (int i = 0; i < numVoos; i++) {
         Voo* voo = voos[i];
-        std::cout << voo->preco << std::endl;
+        std::cout << voo->str << std::endl;
     }
 }
 
@@ -57,6 +59,41 @@ void leVoosdeEntrada(Voo** voos, int numLinhas) {
     }
 }
 
+struct Consulta {
+    std::string str;
+    int numResultados;
+    std::string trigrama;
+    std::string expression;
+};
+
+void leConsultasdeArquivo(std::ifstream& inputFile, Consulta** consultas,
+                          int numConsultas) {
+    std::string line;
+
+    for (int i = 0; i < numConsultas; i++) {
+        std::getline(inputFile, line);
+        consultas[i] = new Consulta(); // Initialize the Consulta object
+        consultas[i]->str = line;
+        std::istringstream iss(line);
+        iss >> consultas[i]->numResultados;
+        iss >> consultas[i]->trigrama;
+        iss >> consultas[i]->expression;
+    }
+}
+
+void leConsultasdeEntrada(Consulta** consultas, int numConsultas) {
+    std::string line;
+
+    for (int i = 0; i < numConsultas; i++) {
+        std::getline(std::cin, line);   
+        consultas[i] = new Consulta(); // Initialize the Consulta object
+        consultas[i]->str = line;
+        std::istringstream iss(line);
+        iss >> consultas[i]->numResultados;
+        iss >> consultas[i]->trigrama;
+        iss >> consultas[i]->expression;
+    }
+}
 
 int main(int argc, char const* argv[]) {
     // Leitura de dados
@@ -82,8 +119,10 @@ int main(int argc, char const* argv[]) {
     std::string line;
     std::istringstream iss;
     int numLinhas;
-
+    int numConsultas;
+    
     Voo** voos;
+    Consulta** consultas;
 
     if (fileEnabled) {
         std::ifstream inputFile(filePath);
@@ -93,6 +132,11 @@ int main(int argc, char const* argv[]) {
         voos = new Voo*[numLinhas];
         leVoosdeArquivo(inputFile, voos, numLinhas);
 
+        std::getline(inputFile, line);
+        numConsultas = std::stoi(line);
+        consultas = new Consulta*[numConsultas];
+        leConsultasdeArquivo(inputFile, consultas, numConsultas);
+
         inputFile.close();
     } else {
         std::getline(std::cin, line);
@@ -100,40 +144,54 @@ int main(int argc, char const* argv[]) {
 
         voos = new Voo*[numLinhas];
         leVoosdeEntrada(voos, numLinhas);
+
+        std::getline(std::cin, line);
+        numConsultas = std::stoi(line);
+        consultas = new Consulta*[numConsultas];
+        leConsultasdeEntrada(consultas, numConsultas);
     }
 
-    // Expressão de filtro
-    std::string expression = "((org==ATL))";
-    ListaEncadeada<std::string> tokens = tokenize(expression);
-    Node* root = parseExpression(tokens);
+    // Processamento de consultas
+    for (int i = 0; i < numConsultas; i++) {
+        std::cout << "Consulta: " << consultas[i]->str << std::endl;
 
-    // Exibe a árvore de expressão
-    //std::cout << "Árvore de Expressão:" << std::endl;
-    //printTree(root);
+        ListaEncadeada<std::string> tokens = tokenize(consultas[i]->expression);
+        Node* root = parseExpression(tokens);
 
-    // Filtra os voos usando a árvore de expressão
-    ListaEncadeada<Voo*> voosFiltrados = filtrarVoos(root, voos, numLinhas);
+        ListaEncadeada<Voo*> voosFiltrados = filtrarVoos(root, voos, numLinhas);
 
-    // Separa os 3 menores voos
-    Voo* menoresVoos[3];
+        // Separa os 3 menores voos
+        int numResultados;
+        if(consultas[i]->numResultados > voosFiltrados.GetTamanho()) {
+            numResultados = voosFiltrados.GetTamanho();
+        } else {
+            numResultados = consultas[i]->numResultados;
+        }
+        Voo* menoresVoos[numResultados];
 
-    separarMenoresVoos(voosFiltrados, menoresVoos, 3, "pds");
+        separarMenoresVoos(voosFiltrados, menoresVoos, numResultados, consultas[i]->trigrama);
 
-    // Imprime os voos filtrados
-    imprimirVoos(menoresVoos, 3);
+        // Imprime os voos filtrados
+        imprimirVoos(menoresVoos, numResultados);
 
+        // Função lambda para liberar recursivamente os nós da árvore de
+        // expressão
+        std::function<void(Node*)> deleteTree = [&](Node* node) {
+            if (!node) return;
+            deleteTree(node->left);
+            deleteTree(node->right);
+            delete node;
+        };
+        deleteTree(root);
+    }
+
+    // Liberação de memória
+    // ---------------------------------------------------
     for (int i = 0; i < numLinhas; i++) delete voos[i];
     delete[] voos;
 
-    // Função lambda para liberar recursivamente os nós da árvore de expressão
-    std::function<void(Node*)> deleteTree = [&](Node* node) {
-        if (!node)
-            return;
-        deleteTree(node->left);
-        deleteTree(node->right);
-        delete node;
-    };
-    deleteTree(root);
+    for (int i = 0; i < numConsultas; i++) delete consultas[i];
+    delete[] consultas;
 
     return 0;
 }
