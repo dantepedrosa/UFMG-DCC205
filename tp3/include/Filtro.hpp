@@ -257,6 +257,17 @@ bool evaluate(No* root, Voo* voo) {
 }
 
 /**
+ * @brief Libera recursivamente os nós da árvore de expressão
+ * @param root Ponteiro para a raiz da árvore a ser liberada
+ */
+void deleteTree(No* root) {
+    if (!root) return;
+    deleteTree(root->left);
+    deleteTree(root->right);
+    delete root;
+}
+
+/**
  * @brief Filtra uma lista de voos de acordo com uma expressão
  * @param root Ponteiro para a raiz da árvore de expressão
  * @param voos Array de ponteiros para voos
