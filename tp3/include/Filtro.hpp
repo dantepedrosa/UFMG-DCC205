@@ -74,16 +74,25 @@ ListaEncadeada<std::string> tokenizar(const std::string& expr) {
     return tokens;
 }
 
+// Define as precedências dos operadores
+#define PREC_NOT 4    // !
+#define PREC_COMP 3   // ==, !=, <=, >=, <, >
+#define PREC_AND 2    // &&
+#define PREC_OR  1    // ||
+#define PREC_NONE 0   // outros
+
 /**
  * @brief Retorna a precedência do operador
  * @param op Operador a ser avaliado
  * @return Valor numérico representando a precedência (maior valor = maior precedência)
  */
 int getOperatorPrecedence(const std::string& op) {
-    if (op == "!") return 3;
-    if (op == "<" || op == "<=" || op == ">" || op == ">=" || op == "==") return 2;
-    if (op == "&&" || op == "||") return 1;
-    return 0;
+    if (op == "!") return PREC_NOT;
+    if (op == "==" || op == "!=" || op == "<=" || op == ">=" || op == "<" || op == ">") 
+        return PREC_COMP;
+    if (op == "&&") return PREC_AND;
+    if (op == "||") return PREC_OR;
+    return PREC_NONE;
 }
 
 /**
@@ -100,15 +109,18 @@ No* montaArvoreExpressao(const ListaEncadeada<std::string>& tokens) {
         
         if (token == "(") {
             ops.Empilha(token);
-        } else if (token == ")") {
+        } 
+        else if (token == ")") {
             while (!ops.Vazia() && ops.Topo() != "(") {
                 std::string op = ops.Desempilha();
                 if (op == "!") {
-                    No* operand = nodes.Desempilha();
-                    No* opNode = new No(op);
-                    opNode->left = operand;
-                    nodes.Empilha(opNode);
-                } else {
+                    if (!nodes.Vazia()) {
+                        No* operand = nodes.Desempilha();
+                        No* opNode = new No(op);
+                        opNode->left = operand;
+                        nodes.Empilha(opNode);
+                    }
+                } else if (nodes.GetTamanho() >= 2) {
                     No* right = nodes.Desempilha();
                     No* left = nodes.Desempilha();
                     No* opNode = new No(op);
@@ -117,17 +129,22 @@ No* montaArvoreExpressao(const ListaEncadeada<std::string>& tokens) {
                     nodes.Empilha(opNode);
                 }
             }
-            if (!ops.Vazia()) ops.Desempilha(); // Remove "("
-        } else if (getOperatorPrecedence(token) > 0) {
+            if (!ops.Vazia()) {
+                ops.Desempilha(); // Remove "("
+            }
+        } 
+        else if (getOperatorPrecedence(token) > PREC_NONE) {
             while (!ops.Vazia() && ops.Topo() != "(" && 
                    getOperatorPrecedence(ops.Topo()) >= getOperatorPrecedence(token)) {
                 std::string op = ops.Desempilha();
                 if (op == "!") {
-                    No* operand = nodes.Desempilha();
-                    No* opNode = new No(op);
-                    opNode->left = operand;
-                    nodes.Empilha(opNode);
-                } else {
+                    if (!nodes.Vazia()) {
+                        No* operand = nodes.Desempilha();
+                        No* opNode = new No(op);
+                        opNode->left = operand;
+                        nodes.Empilha(opNode);
+                    }
+                } else if (nodes.GetTamanho() >= 2) {
                     No* right = nodes.Desempilha();
                     No* left = nodes.Desempilha();
                     No* opNode = new No(op);
@@ -137,19 +154,24 @@ No* montaArvoreExpressao(const ListaEncadeada<std::string>& tokens) {
                 }
             }
             ops.Empilha(token);
-        } else {
+        } 
+        else {
             nodes.Empilha(new No(token));
         }
     }
 
     while (!ops.Vazia()) {
         std::string op = ops.Desempilha();
+        if (op == "(") continue;
+        
         if (op == "!") {
-            No* operand = nodes.Desempilha();
-            No* opNode = new No(op);
-            opNode->left = operand;
-            nodes.Empilha(opNode);
-        } else {
+            if (!nodes.Vazia()) {
+                No* operand = nodes.Desempilha();
+                No* opNode = new No(op);
+                opNode->left = operand;
+                nodes.Empilha(opNode);
+            }
+        } else if (nodes.GetTamanho() >= 2) {
             No* right = nodes.Desempilha();
             No* left = nodes.Desempilha();
             No* opNode = new No(op);
@@ -159,7 +181,7 @@ No* montaArvoreExpressao(const ListaEncadeada<std::string>& tokens) {
         }
     }
 
-    return nodes.Desempilha();
+    return nodes.Vazia() ? nullptr : nodes.Desempilha();
 }
 
 /**

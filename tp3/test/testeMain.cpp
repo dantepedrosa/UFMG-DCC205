@@ -1,3 +1,10 @@
+/**
+ * @file main.cpp
+ * @brief Programa principal para processamento de consultas de voos
+ * @author Dante Junqueira Pedrosa
+ * @date 2025
+ */
+
 #include <fstream>
 #include <functional>
 #include <iostream>
@@ -10,93 +17,33 @@
 #include "../include/Sort.hpp"
 #include "../include/Voo.hpp"
 
-// Função para separar os n menores voos da lista encadeada e armazená-los em
-// arrayDestino
-void separarMenoresVoos(ListaEncadeada<Voo*>& lista, Voo** arrayDestino, int n,
-                        const std::string& trigrama) {
-    std::cout << "Separando os " << n << " menores voos..." << std::endl;
+/* EXCLUSIVAMENTE PARA TESTES
+#include "doctest.hpp"
+#define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
+bool confereOutput(Voo** voos, int numVoos, std::string consulta, std::string filePath);
+*/
 
-    Voo* temp[lista.GetTamanho()];
-
-    // Ordena a lista usando Selection Sort
-    for (int i = 0; i < lista.GetTamanho(); i++) {
-        temp[i] = lista.GetItem(i);
-    }
-
-    insertionsort(temp, lista.GetTamanho(), trigrama);
-    quicksort(temp, 0, lista.GetTamanho() - 1, trigrama);
-
-    // Copia os n primeiros voos da lista ordenada para o array de destino
-    for (int i = 0; i < n && i < lista.GetTamanho(); i++) {
-        arrayDestino[i] = temp[i];
-    }
-}
-
-// Imprime a lista de voos filtrados
-void imprimirVoos(Voo** voos, int numVoos) {
-    for (int i = 0; i < numVoos; i++) {
-        Voo* voo = voos[i];
-        std::cout << voo->str << std::endl;
-    }
-}
-
-// Lê voos de um arquivo
-void leVoosdeArquivo(std::ifstream& inputFile, Voo** voos, int numLinhas) {
-    std::string line;
-
-    for (int i = 0; i < numLinhas; i++) {
-        std::getline(inputFile, line);
-        voos[i] = new Voo(line);
-    }
-}
-
-// Lê voos da entrada padrão
-void leVoosdeEntrada(Voo** voos, int numLinhas) {
-    std::string line;
-    for (int i = 0; i < numLinhas; i++) {
-        std::getline(std::cin, line);
-        voos[i] = new Voo(line);
-    }
-}
-
+/**
+ * @brief Estrutura para armazenar dados de uma consulta
+ */
 struct Consulta {
-    std::string str;
-    int numResultados;
-    std::string trigrama;
-    std::string expression;
+    std::string str;          // String original da consulta
+    int numResultados;        // Número de resultados desejados
+    std::string trigrama;     // Critério de ordenação
+    std::string expression;   // Expressão de filtragem
 };
 
-void leConsultasdeArquivo(std::ifstream& inputFile, Consulta** consultas,
-                          int numConsultas) {
-    std::string line;
+void leConsultasdeEntrada(Consulta** consultas, int numConsultas);
+void leConsultasdeArquivo(std::ifstream& inputFile, Consulta** consultas, int numConsultas);
+void separarMenoresVoos(ListaEncadeada<Voo*>& lista, Voo** arrayDestino, int n, const std::string& trigrama);
+void imprimirVoos(Voo** voos, int numVoos);
+void leVoosdeArquivo(std::ifstream& inputFile, Voo** voos, int numLinhas);
+void leVoosdeEntrada(Voo** voos, int numLinhas);
 
-    for (int i = 0; i < numConsultas; i++) {
-        std::getline(inputFile, line);
-        consultas[i] = new Consulta(); // Initialize the Consulta object
-        consultas[i]->str = line;
-        std::istringstream iss(line);
-        iss >> consultas[i]->numResultados;
-        iss >> consultas[i]->trigrama;
-        iss >> consultas[i]->expression;
-    }
-}
-
-void leConsultasdeEntrada(Consulta** consultas, int numConsultas) {
-    std::string line;
-
-    for (int i = 0; i < numConsultas; i++) {
-        std::getline(std::cin, line);   
-        consultas[i] = new Consulta(); // Initialize the Consulta object
-        consultas[i]->str = line;
-        std::istringstream iss(line);
-        iss >> consultas[i]->numResultados;
-        iss >> consultas[i]->trigrama;
-        iss >> consultas[i]->expression;
-    }
-}
 
 int main(int argc, char const* argv[]) {
-    // Leitura de dados
+
+    // Inicialização
     // ---------------------------------------------------
 
     bool fileEnabled = false;
@@ -124,6 +71,8 @@ int main(int argc, char const* argv[]) {
     Voo** voos;
     Consulta** consultas;
 
+    // Leitura de dados
+    // ---------------------------------------------------
     if (fileEnabled) {
         std::ifstream inputFile(filePath);
         std::getline(inputFile, line);
@@ -152,37 +101,23 @@ int main(int argc, char const* argv[]) {
     }
 
     // Processamento de consultas
+    // ---------------------------------------------------
     for (int i = 0; i < numConsultas; i++) {
-        std::cout << "Consulta: " << consultas[i]->str << std::endl;
+        std::cout << consultas[i]->str << std::endl;
 
         ListaEncadeada<std::string> tokens = tokenizar(consultas[i]->expression);
         No* root = montaArvoreExpressao(tokens);
-
         ListaEncadeada<Voo*> voosFiltrados = filtrarVoos(root, voos, numLinhas);
 
-        // Separa os 3 menores voos
-        int numResultados;
-        if(consultas[i]->numResultados > voosFiltrados.GetTamanho()) {
-            numResultados = voosFiltrados.GetTamanho();
-        } else {
-            numResultados = consultas[i]->numResultados;
-        }
+        // Separa os primeiros n voos na ordenação especificada
+        int numResultados = std::min(consultas[i]->numResultados, voosFiltrados.GetTamanho());
         Voo* menoresVoos[numResultados];
 
         separarMenoresVoos(voosFiltrados, menoresVoos, numResultados, consultas[i]->trigrama);
-
-        // Imprime os voos filtrados
         imprimirVoos(menoresVoos, numResultados);
-
-        // Função lambda para liberar recursivamente os nós da árvore de
-        // expressão
-        std::function<void(No*)> deleteTree = [&](No* node) {
-            if (!node) return;
-            deleteTree(node->left);
-            deleteTree(node->right);
-            delete node;
-        };
-        deleteTree(root);
+        //confereOutput(menoresVoos, numResultados, consultas[i]->str, filePath);
+        
+        deleteTree(root);   // Apaga a árvore de expressão
     }
 
     // Liberação de memória
@@ -195,3 +130,136 @@ int main(int argc, char const* argv[]) {
 
     return 0;
 }
+
+/* EXCLUSIVAMENTE PARA TESTES 
+bool confereOutput(Voo** voos, int numVoos, std::string consulta, std::string filePath) {
+    size_t pos = filePath.find("inputs/input_");
+    if (pos != std::string::npos) {
+        filePath.replace(pos, 12, "outputs/output_");
+    }
+
+    std::ifstream inputFile(filePath);
+    std::string line;
+
+    std::getline(inputFile, line);
+    CHECK(line == consulta);
+    for (int i = 0; i < numVoos; i++) {
+        std::getline(inputFile, line);
+        if (line != voos[i]->str) {
+            return false;
+        }
+    }
+
+    inputFile.close();
+
+    return true;
+}
+*/
+
+/**
+ * @brief Lê as consultas da entrada padrão
+ * @param consultas Array de ponteiros para consultas a ser preenchido
+ * @param numConsultas Número de consultas a serem lidas
+ */
+void leConsultasdeEntrada(Consulta** consultas, int numConsultas) {
+    std::string line;
+
+    for (int i = 0; i < numConsultas; i++) {
+        std::getline(std::cin, line);   
+        consultas[i] = new Consulta(); // Initialize the Consulta object
+        consultas[i]->str = line;
+        std::istringstream iss(line);
+        iss >> consultas[i]->numResultados;
+        iss >> consultas[i]->trigrama;
+        iss >> consultas[i]->expression;
+    }
+}
+
+/**
+ * @brief Lê as consultas de um arquivo
+ * @param inputFile Arquivo de entrada
+ * @param consultas Array de ponteiros para consultas a ser preenchido
+ * @param numConsultas Número de consultas a serem lidas
+ */
+void leConsultasdeArquivo(std::ifstream& inputFile, Consulta** consultas,
+                          int numConsultas) {
+    std::string line;
+
+    for (int i = 0; i < numConsultas; i++) {
+        std::getline(inputFile, line);
+        consultas[i] = new Consulta(); // Initialize the Consulta object
+        consultas[i]->str = line;
+        std::istringstream iss(line);
+        iss >> consultas[i]->numResultados;
+        iss >> consultas[i]->trigrama;
+        iss >> consultas[i]->expression;
+    }
+}
+
+/**
+ * @brief Separa os n menores voos de uma lista
+ * @param lista Lista de voos
+ * @param arrayDestino Array para armazenar os voos selecionados
+ * @param n Número de voos a serem selecionados
+ * @param trigrama Critério de ordenação
+ */
+void separarMenoresVoos(ListaEncadeada<Voo*>& lista, Voo** arrayDestino, int n,
+                        const std::string& trigrama) {
+
+    Voo* temp[lista.GetTamanho()];
+
+    // Ordena a lista usando Selection Sort
+    for (int i = 0; i < lista.GetTamanho(); i++) {
+        temp[i] = lista.GetItem(i);
+    }
+
+    insertionsort(temp, lista.GetTamanho(), trigrama);
+    quicksort(temp, 0, lista.GetTamanho() - 1, trigrama);
+
+    // Copia os n primeiros voos da lista ordenada para o array de destino
+    for (int i = 0; i < n && i < lista.GetTamanho(); i++) {
+        arrayDestino[i] = temp[i];
+    }
+}
+
+/**
+ * @brief Imprime a lista de voos filtrados
+ * @param voos Array de ponteiros para voos
+ * @param numVoos Número de voos a serem impressos
+ */
+void imprimirVoos(Voo** voos, int numVoos) {
+    for (int i = 0; i < numVoos; i++) {
+        Voo* voo = voos[i];
+        std::cout << voo->str << std::endl;
+    }
+}
+
+/**
+ * @brief Lê voos de um arquivo
+ * @param inputFile Arquivo de entrada
+ * @param voos Array de ponteiros para voos a ser preenchido
+ * @param numLinhas Número de linhas (voos) a serem lidas
+ */
+void leVoosdeArquivo(std::ifstream& inputFile, Voo** voos, int numLinhas) {
+    std::string line;
+
+    for (int i = 0; i < numLinhas; i++) {
+        std::getline(inputFile, line);
+        voos[i] = new Voo(line);
+    }
+}
+
+/**
+ * @brief Lê voos da entrada padrão
+ * @param voos Array de ponteiros para voos a ser preenchido
+ * @param numLinhas Número de linhas (voos) a serem lidas
+ */
+void leVoosdeEntrada(Voo** voos, int numLinhas) {
+    std::string line;
+    for (int i = 0; i < numLinhas; i++) {
+        std::getline(std::cin, line);
+        voos[i] = new Voo(line);
+    }
+}
+
+
