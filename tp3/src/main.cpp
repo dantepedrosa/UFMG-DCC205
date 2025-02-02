@@ -1,8 +1,4 @@
-﻿#include <cstdlib>
-#include <cstring>
-#include <ctime>
-#include <fstream>
-#include <iomanip>
+﻿#include <fstream>
 #include <iostream>
 #include <sstream>
 #include <string>
@@ -12,14 +8,15 @@
 #include "../include/Pilha.hpp"
 #include "../include/ListaEncadeada.hpp"
 #include "../include/Filtro.hpp"
+#include "../include/Sort.hpp"
+
 
 
 // Imprime a lista de voos filtrados
-void imprimirVoos(const ListaEncadeada<Voo*>& voosFiltrados) {
-    for (int i = 0; i < voosFiltrados.GetTamanho(); i++) {
-        Voo* voo = voosFiltrados.GetItem(i);
-        std::cout << "Voo: " << voo->origem << " -> " << voo->destino
-                  << ", Preço: " << voo->preco << std::endl;
+void imprimirVoos(Voo** voos, int numVoos) {
+    for (int i = 0; i < numVoos; i++) {
+        Voo* voo = voos[i];
+        std::cout << voo->preco << std::endl;
     }
 }
 
@@ -42,7 +39,7 @@ void leVoosdeEntrada(Voo** voos, int numLinhas) {
     }
 }
 
-/**/
+
 int main(int argc, char const* argv[]) {
     // Leitura de dados
     // ---------------------------------------------------
@@ -88,19 +85,24 @@ int main(int argc, char const* argv[]) {
     }
 
     // Expressão de filtro
-    std::string expression = "((org==ATL)&&(dst==LAX))";
+    std::string expression = "((org==ATL))";
     ListaEncadeada<std::string> tokens = tokenize(expression);
     Node* root = parseExpression(tokens);
 
     // Exibe a árvore de expressão
-    std::cout << "Árvore de Expressão:" << std::endl;
-    printTree(root);
+    //std::cout << "Árvore de Expressão:" << std::endl;
+    //printTree(root);
 
     // Filtra os voos usando a árvore de expressão
     ListaEncadeada<Voo*> voosFiltrados = filtrarVoos(root, voos, numLinhas);
 
+    // Separa os 3 menores voos
+    Voo* menoresVoos[3];
+
+    separarMenoresVoos(voosFiltrados, menoresVoos, 3, "pds");
+
     // Imprime os voos filtrados
-    imprimirVoos(voosFiltrados);
+    imprimirVoos(menoresVoos, 3);
 
     for (int i = 0; i < numLinhas; i++) delete voos[i];
     delete[] voos;

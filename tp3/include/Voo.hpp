@@ -7,6 +7,7 @@
 
 class Voo {
 public:
+    std::string str;
     std::string origem;
     std::string destino;
     float preco;
@@ -19,6 +20,8 @@ public:
     Voo(const std::string& linha) {
         std::istringstream ss(linha);
         std::string partidaStr, chegadaStr;
+
+        str = linha;
 
         ss >> origem >> destino >> preco >> assentos >> partidaStr >> chegadaStr >> numParadas;
 
