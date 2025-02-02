@@ -1,5 +1,4 @@
 #include <string>
-
 #include "../include/Voo.hpp"
 #include "../include/Pilha.hpp"
 #include "../include/ListaEncadeada.hpp"
@@ -14,7 +13,7 @@ struct Node {
 };
 
 // Função que converte a expressão em tokens
-ListaEncadeada<std::string> tokenize(const std::string& expr) {
+ListaEncadeada<std::string> tokenizar(const std::string& expr) {
     ListaEncadeada<std::string> tokens;
     std::string temp;
     for (std::size_t i = 0; i < expr.size(); i++) {
@@ -58,50 +57,84 @@ ListaEncadeada<std::string> tokenize(const std::string& expr) {
     return tokens;
 }
 
+
+// Função que retorna a precedência do operador
+int getOperatorPrecedence(const std::string& op) {
+    if (op == "!") return 3;
+    if (op == "<" || op == "<=" || op == ">" || op == ">=" || op == "==") return 2;
+    if (op == "&&" || op == "||") return 1;
+    return 0;
+}
+
 // Função que monta a árvore de expressão a partir dos tokens
-Node* parseExpression(const ListaEncadeada<std::string>& tokens) {
+Node* montaArvoreExpressao(const ListaEncadeada<std::string>& tokens) {
     PilhaEncadeada<Node*> nodes;
     PilhaEncadeada<std::string> ops;
+
     for (int i = 0; i < tokens.GetTamanho(); i++) {
         std::string token = tokens.GetItem(i);
+        
         if (token == "(") {
             ops.Empilha(token);
         } else if (token == ")") {
             while (!ops.Vazia() && ops.Topo() != "(") {
-                Node* right = nodes.Desempilha();
-                Node* left = nodes.Desempilha();
-                Node* opNode = new Node(ops.Desempilha());
-                opNode->left = left;
-                opNode->right = right;
-                nodes.Empilha(opNode);
+                std::string op = ops.Desempilha();
+                if (op == "!") {
+                    Node* operand = nodes.Desempilha();
+                    Node* opNode = new Node(op);
+                    opNode->left = operand;
+                    nodes.Empilha(opNode);
+                } else {
+                    Node* right = nodes.Desempilha();
+                    Node* left = nodes.Desempilha();
+                    Node* opNode = new Node(op);
+                    opNode->left = left;
+                    opNode->right = right;
+                    nodes.Empilha(opNode);
+                }
             }
-            if (!ops.Vazia()) {
-                ops.Desempilha(); // remove o "("
+            if (!ops.Vazia()) ops.Desempilha(); // Remove "("
+        } else if (getOperatorPrecedence(token) > 0) {
+            while (!ops.Vazia() && ops.Topo() != "(" && 
+                   getOperatorPrecedence(ops.Topo()) >= getOperatorPrecedence(token)) {
+                std::string op = ops.Desempilha();
+                if (op == "!") {
+                    Node* operand = nodes.Desempilha();
+                    Node* opNode = new Node(op);
+                    opNode->left = operand;
+                    nodes.Empilha(opNode);
+                } else {
+                    Node* right = nodes.Desempilha();
+                    Node* left = nodes.Desempilha();
+                    Node* opNode = new Node(op);
+                    opNode->left = left;
+                    opNode->right = right;
+                    nodes.Empilha(opNode);
+                }
             }
-        } else if (token == "&&") {
-            while (!ops.Vazia() && ops.Topo() != "(") {
-                Node* right = nodes.Desempilha();
-                Node* left = nodes.Desempilha();
-                Node* opNode = new Node(ops.Desempilha());
-                opNode->left = left;
-                opNode->right = right;
-                nodes.Empilha(opNode);
-            }
-            ops.Empilha(token);
-        } else if (token == "==" || token == "<=") {
             ops.Empilha(token);
         } else {
             nodes.Empilha(new Node(token));
         }
     }
+
     while (!ops.Vazia()) {
-        Node* right = nodes.Desempilha();
-        Node* left = nodes.Desempilha();
-        Node* opNode = new Node(ops.Desempilha());
-        opNode->left = left;
-        opNode->right = right;
-        nodes.Empilha(opNode);
+        std::string op = ops.Desempilha();
+        if (op == "!") {
+            Node* operand = nodes.Desempilha();
+            Node* opNode = new Node(op);
+            opNode->left = operand;
+            nodes.Empilha(opNode);
+        } else {
+            Node* right = nodes.Desempilha();
+            Node* left = nodes.Desempilha();
+            Node* opNode = new Node(op);
+            opNode->left = left;
+            opNode->right = right;
+            nodes.Empilha(opNode);
+        }
     }
+
     return nodes.Desempilha();
 }
 
@@ -116,32 +149,48 @@ void printTree(Node* root, int level = 0) {
 
 // Função que avalia a árvore de expressão para um determinado Voo
 bool evaluate(Node* root, Voo* voo) {
-    // Se for nó folha, geralmente não deve ocorrer em expressões válidas
+    if (!root) return false;
+    
+    // Handle unary operator
+    if (root->value == "!") {
+        return !evaluate(root->left, voo);
+    }
+    
+    // Handle leaf nodes (should not occur in valid expressions)
     if (!root->left && !root->right) {
         return false;
     }
     
-    // Processa operadores lógicos e de comparação
+    // Handle logical operators
     if (root->value == "&&") {
         return evaluate(root->left, voo) && evaluate(root->right, voo);
-    } else if (root->value == "==") {
-        // No nó de comparação, o lado esquerdo é o atributo e o direito é o valor esperado
-        std::string atributo = root->left->value;
+    } else if (root->value == "||") {
+        return evaluate(root->left, voo) || evaluate(root->right, voo);
+    }
+    
+    // Handle comparison operators
+    std::string atributo = root->left->value;
+    
+    if (root->value == "==") {
         std::string valor = root->right->value;
-        if (atributo == "org") {
-            return voo->origem == valor;
-        } else if (atributo == "dst") {
-            return voo->destino == valor;
-        }
-    } else if (root->value == "<=") {
-        std::string atributo = root->left->value;
+        if (atributo == "org") return voo->origem == valor;
+        if (atributo == "dst") return voo->destino == valor;
+    } else {
         float valor = std::stof(root->right->value);
         if (atributo == "prc") {
-            return voo->preco <= valor;
+            if (root->value == "<=") return voo->preco <= valor;
+            if (root->value == ">=") return voo->preco >= valor;
+            if (root->value == "<")  return voo->preco < valor;
+            if (root->value == ">")  return voo->preco > valor;
         } else if (atributo == "dur") {
-            return voo->duracao <= static_cast<std::time_t>(valor);
+            std::time_t duracao = static_cast<std::time_t>(valor);
+            if (root->value == "<=") return voo->duracao <= duracao;
+            if (root->value == ">=") return voo->duracao >= duracao;
+            if (root->value == "<")  return voo->duracao < duracao;
+            if (root->value == ">")  return voo->duracao > duracao;
         }
     }
+    
     return false;
 }
 

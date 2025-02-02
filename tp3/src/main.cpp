@@ -155,8 +155,8 @@ int main(int argc, char const* argv[]) {
     for (int i = 0; i < numConsultas; i++) {
         std::cout << "Consulta: " << consultas[i]->str << std::endl;
 
-        ListaEncadeada<std::string> tokens = tokenize(consultas[i]->expression);
-        Node* root = parseExpression(tokens);
+        ListaEncadeada<std::string> tokens = tokenizar(consultas[i]->expression);
+        Node* root = montaArvoreExpressao(tokens);
 
         ListaEncadeada<Voo*> voosFiltrados = filtrarVoos(root, voos, numLinhas);
 
