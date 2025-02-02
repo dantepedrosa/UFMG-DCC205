@@ -40,34 +40,65 @@ ListaEncadeada<std::string> tokenizar(const std::string& expr) {
             continue;
 
         if (c == '(' || c == ')') {
+            if (!temp.empty()) {
+                tokens.InsereFinal(temp);
+                temp = "";
+            }
             tokens.InsereFinal(std::string(1, c));
         } else if (c == '&' && i + 1 < expr.size() && expr[i + 1] == '&') {
+            if (!temp.empty()) {
+                tokens.InsereFinal(temp);
+                temp = "";
+            }
             tokens.InsereFinal("&&");
             i++;
         } else if (c == '|' && i + 1 < expr.size() && expr[i + 1] == '|') {
+            if (!temp.empty()) {
+                tokens.InsereFinal(temp);
+                temp = "";
+            }
             tokens.InsereFinal("||");
             i++;
         } else if (c == '=' && i + 1 < expr.size() && expr[i + 1] == '=') {
+            if (!temp.empty()) {
+                tokens.InsereFinal(temp);
+                temp = "";
+            }
             tokens.InsereFinal("==");
             i++;
         } else if (c == '<' && i + 1 < expr.size() && expr[i + 1] == '=') {
+            if (!temp.empty()) {
+                tokens.InsereFinal(temp);
+                temp = "";
+            }
             tokens.InsereFinal("<=");
             i++;
         } else if (c == '>' && i + 1 < expr.size() && expr[i + 1] == '=') {
-            tokens.InsereFinal(">=");
-            i++;
-        } else if (c == '<') {
-            tokens.InsereFinal("<");
-        } else if (c == '>') {
-            tokens.InsereFinal(">");
-        } else if (c == '!') {
-            tokens.InsereFinal("!");
-        } else {
-            temp += c;
-            // Se o próximo caractere não for alfanumérico ou for final da string, empurra o token
-            if (i + 1 == expr.size() || !std::isalnum(expr[i + 1])) {
+            if (!temp.empty()) {
                 tokens.InsereFinal(temp);
                 temp = "";
+            }
+            tokens.InsereFinal(">=");
+            i++;
+        } else if (c == '<' || c == '>' || c == '!') {
+            if (!temp.empty()) {
+                tokens.InsereFinal(temp);
+                temp = "";
+            }
+            tokens.InsereFinal(std::string(1, c));
+        } else {
+            // Incluir dígitos, letras e ponto decimal no token
+            if (std::isalnum(c) || c == '.') {
+                temp += c;
+            }
+            
+            // Se o próximo caractere não for alfanumérico ou ponto decimal, ou for final da string
+            if (i + 1 == expr.size() || 
+                (!std::isalnum(expr[i + 1]) && expr[i + 1] != '.')) {
+                if (!temp.empty()) {
+                    tokens.InsereFinal(temp);
+                    temp = "";
+                }
             }
         }
     }
@@ -239,40 +270,45 @@ bool evaluate(No* root, Voo* voo) {
     }
     
     // Comparações numéricas (prc, sea, sto, dur)
-    float valor = std::stof(root->right->value);
-    
-    if (atributo == "prc") {
-        if (operador == "<=") return voo->preco <= valor;
-        if (operador == ">=") return voo->preco >= valor;
-        if (operador == "<")  return voo->preco < valor;
-        if (operador == ">")  return voo->preco > valor;
-        if (operador == "==") return voo->preco == valor;
-        if (operador == "!=") return voo->preco != valor;
-    } 
-    else if (atributo == "sea") {
-        if (operador == "<=") return voo->assentos <= valor;
-        if (operador == ">=") return voo->assentos >= valor;
-        if (operador == "<")  return voo->assentos < valor;
-        if (operador == ">")  return voo->assentos > valor;
-        if (operador == "==") return voo->assentos == valor;
-        if (operador == "!=") return voo->assentos != valor;
-    }
-    else if (atributo == "sto") {
-        if (operador == "<=") return voo->paradas <= valor;
-        if (operador == ">=") return voo->paradas >= valor;
-        if (operador == "<")  return voo->paradas < valor;
-        if (operador == ">")  return voo->paradas > valor;
-        if (operador == "==") return voo->paradas == valor;
-        if (operador == "!=") return voo->paradas != valor;
-    }
-    else if (atributo == "dur") {
-        std::time_t duracao = static_cast<std::time_t>(valor);
-        if (operador == "<=") return voo->duracao <= duracao;
-        if (operador == ">=") return voo->duracao >= duracao;
-        if (operador == "<")  return voo->duracao < duracao;
-        if (operador == ">")  return voo->duracao > duracao;
-        if (operador == "==") return voo->duracao == duracao;
-        if (operador == "!=") return voo->duracao != duracao;
+    try {
+        float valor = std::stof(root->right->value);
+        
+        if (atributo == "prc") {
+            if (operador == "<=") return voo->preco <= valor;
+            if (operador == ">=") return voo->preco >= valor;
+            if (operador == "<") return voo->preco < valor;
+            if (operador == ">") return voo->preco > valor;
+            if (operador == "==") return std::abs(voo->preco - valor) < 0.01;   // Para evitar problema com tolerancia
+            if (operador == "!=") return std::abs(voo->preco - valor) >= 0.01;  // Para evitar problema com tolerancia
+        }
+        if (atributo == "sea") {
+            if (operador == "<=") return voo->assentos <= valor;
+            if (operador == ">=") return voo->assentos >= valor;
+            if (operador == "<")  return voo->assentos < valor;
+            if (operador == ">")  return voo->assentos > valor;
+            if (operador == "==") return voo->assentos == valor;
+            if (operador == "!=") return voo->assentos != valor;
+        }
+        else if (atributo == "sto") {
+            if (operador == "<=") return voo->paradas <= valor;
+            if (operador == ">=") return voo->paradas >= valor;
+            if (operador == "<")  return voo->paradas < valor;
+            if (operador == ">")  return voo->paradas > valor;
+            if (operador == "==") return voo->paradas == valor;
+            if (operador == "!=") return voo->paradas != valor;
+        }
+        else if (atributo == "dur") {
+            std::time_t duracao = static_cast<std::time_t>(valor);
+            if (operador == "<=") return voo->duracao <= duracao;
+            if (operador == ">=") return voo->duracao >= duracao;
+            if (operador == "<")  return voo->duracao < duracao;
+            if (operador == ">")  return voo->duracao > duracao;
+            if (operador == "==") return voo->duracao == duracao;
+            if (operador == "!=") return voo->duracao != duracao;
+        }
+    } catch (const std::exception& e) {
+        std::cerr << "Erro na conversão do valor: " << root->right->value << std::endl;
+        return false;
     }
     
     return false;
