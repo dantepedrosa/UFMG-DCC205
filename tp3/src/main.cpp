@@ -16,6 +16,8 @@
 #include "../include/Pilha.hpp"
 #include "../include/Sort.hpp"
 #include "../include/Voo.hpp"
+#include "../include/IndiceVoos.hpp"
+#include "../include/GerenciadorIndices.hpp"
 
 
 /**
@@ -82,7 +84,18 @@ int main(int argc, char const* argv[]) {
 
     bool fileEnabled = false;
     std::string filePath;
+    std::string line;
+    std::istringstream iss;
+    int numLinhas;
+    int numConsultas;
+    
+    Voo** voos;
+    Consulta** consultas;
+    GerenciadorIndices indices;  // Moved declaration here
 
+    // Leitura de dados
+    // Trata diferente para caso seja entrada padrão ou arquivo
+    // ---------------------------------------------------
     switch (argc) {
         case 1:
             fileEnabled = false;
@@ -97,16 +110,6 @@ int main(int argc, char const* argv[]) {
             return 1;
     }
 
-    std::string line;
-    std::istringstream iss;
-    int numLinhas;
-    int numConsultas;
-    
-    Voo** voos;
-    Consulta** consultas;
-
-    // Leitura de dados
-    // ---------------------------------------------------
     if (fileEnabled) {
         std::ifstream inputFile(filePath);
         std::getline(inputFile, line);
@@ -114,6 +117,11 @@ int main(int argc, char const* argv[]) {
 
         voos = new Voo*[numLinhas];
         leVoosdeArquivo(inputFile, voos, numLinhas);
+
+        // Criar e preencher os índices após carregar os voos
+        for (int i = 0; i < numLinhas; i++) {
+            indices.inserirVoo(voos[i], i);
+        }
 
         std::getline(inputFile, line);
         numConsultas = std::stoi(line);
@@ -128,6 +136,11 @@ int main(int argc, char const* argv[]) {
         voos = new Voo*[numLinhas];
         leVoosdeEntrada(voos, numLinhas);
 
+        // Criar e preencher os índices após carregar os voos
+        for (int i = 0; i < numLinhas; i++) {
+            indices.inserirVoo(voos[i], i);
+        }
+
         std::getline(std::cin, line);
         numConsultas = std::stoi(line);
         consultas = new Consulta*[numConsultas];
@@ -139,13 +152,11 @@ int main(int argc, char const* argv[]) {
     for (int i = 0; i < numConsultas; i++) {
         std::cout << consultas[i]->str << std::endl;
 
-        // Cria árvore já com a expressão
+        // Cria a árvore de expressão e filtra os voos
         ArvoreDeExpressao arvore(consultas[i]->expression);
-        
-        // Filtra os voos com um único método
         ListaEncadeada<Voo*> voosFiltrados = arvore.filtrarVoos(voos, numLinhas);
 
-        // Processa resultados e separa em array
+        // Processar resultados
         int numResultados = std::min(consultas[i]->numResultados, voosFiltrados.GetTamanho());
         Voo* menoresVoos[numResultados];
         separarMenoresVoos(voosFiltrados, menoresVoos, numResultados, consultas[i]->trigrama);
