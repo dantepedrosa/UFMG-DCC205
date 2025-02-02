@@ -1,6 +1,6 @@
 /**
  * @file Voo.hpp
- * @brief Definição da classe Voo e suas propriedades
+ * @brief Definição e implementação da classe Voo
  * @author Dante Junqueira Pedrosa
  * @date 2025
  */
@@ -13,19 +13,19 @@
 #include <string>
 
 /**
- * @brief Classe que representa um voo
+ * @brief Classe que representa um voo e seus atributos
  */
 class Voo {
 public:
-    std::string str;      // String original do voo
-    std::string origem;   // Aeroporto de origem
-    std::string destino;  // Aeroporto de destino
-    float preco;         // Preço do voo
-    int assentos;        // Número de assentos disponíveis
-    std::time_t partida; // Horário de partida
-    std::time_t chegada; // Horário de chegada
-    int paradas;         // Número de paradas
-    std::time_t duracao; // Duração total do voo
+    std::string str;        // String original do voo
+    std::string origem;     // Aeroporto de origem
+    std::string destino;    // Aeroporto de destino
+    float preco;            // Preço do voo
+    int assentos;           // Número de assentos disponíveis
+    std::time_t partida;    // Horário de partida
+    std::time_t chegada;    // Horário de chegada
+    int paradas;            // Número de paradas
+    std::time_t duracao;    // Duração total do voo
 
     /**
      * @brief Construtor que inicializa um voo a partir de uma string
@@ -37,15 +37,37 @@ public:
 
         str = linha;
 
-        ss >> origem >> destino >> preco >> assentos >> partidaStr >> chegadaStr >> paradas;
-
-        if (ss.fail()) {
-            throw std::runtime_error("Erro ao processar a linha de entrada.");
+        if (!(ss >> origem >> destino >> preco >> assentos >> partidaStr >> chegadaStr >> paradas)) {
+            throw std::invalid_argument("Formato inválido de entrada para voo");
         }
 
-        partida = parseTempo(partidaStr);
-        chegada = parseTempo(chegadaStr);
+        if (origem.empty() || destino.empty()) {
+            throw std::invalid_argument("Origem ou destino não podem estar vazios");
+        }
+
+        if (preco < 0) {
+            throw std::invalid_argument("Preço não pode ser negativo");
+        }
+
+        if (assentos < 0) {
+            throw std::invalid_argument("Número de assentos não pode ser negativo");
+        }
+
+        if (paradas < 0) {
+            throw std::invalid_argument("Número de paradas não pode ser negativo");
+        }
+
+        try {
+            partida = parseTempo(partidaStr);
+            chegada = parseTempo(chegadaStr);
+        } catch (const std::exception& e) {
+            throw std::invalid_argument(std::string("Erro no formato de data/hora: ") + e.what());
+        }
+
         duracao = chegada - partida;
+        if (duracao < 0) {
+            throw std::invalid_argument("Data de chegada deve ser posterior à data de partida");
+        }
     }
 
 private:
@@ -55,16 +77,23 @@ private:
      * @return Valor em time_t correspondente
      */
     std::time_t parseTempo(const std::string& datetime) {
+        if (datetime.length() != 19) { // YYYY-MM-DDThh:mm:ss
+            throw std::invalid_argument("Formato de data/hora inválido");
+        }
+
         std::tm tm = {};
         std::istringstream ss(datetime);
         ss >> std::get_time(&tm, "%Y-%m-%dT%H:%M:%S");
 
         if (ss.fail()) {
-            std::cerr << "Failed to parse datetime: " << datetime << std::endl;
-            throw std::runtime_error("Erro ao interpretar data/hora.");
+            throw std::runtime_error("Erro ao interpretar data/hora: " + datetime);
         }
 
         std::time_t tt = std::mktime(&tm);
+        if (tt == -1) {
+            throw std::runtime_error("Data/hora inválida");
+        }
+
         return tt;
     }
 };

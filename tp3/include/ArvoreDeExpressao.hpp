@@ -1,11 +1,8 @@
 /**
- * @file Filtro.hpp
- * @brief Sistema de filtragem de voos usando árvore de expressão
+ * @file ArvoreDeExpressao.hpp
+ * @brief Implementação da árvore de expressão para filtragem de voos
  * @author Dante Junqueira Pedrosa
  * @date 2025
- * 
- * Este arquivo contém a implementação de uma árvore de expressão para
- * filtrar voos com base em expressões booleanas complexas.
  */
 
 #include <string>
@@ -31,6 +28,23 @@
  * - Assentos disponíveis (sea)
  * - Número de paradas (sto)
  * - Duração do voo (dur)
+ * 
+ * @par Exemplos de Expressões:
+ * 
+ * Exemplo 1: Voos com preço menor que 200 E destino GRU OU destino CGH
+ * @code
+ * (prc < 200.0) && (dst == "GRU" || dst == "CGH")
+ * @endcode
+ * 
+ * Exemplo 2: Voos sem escala E com duração menor que 3 horas (10800 segundos)
+ * @code
+ * ((sto == 0)&&(dur < 10800))
+ * @endcode
+ * 
+ * As expressões podem combinar múltiplos operadores:
+ * - Comparação: ==, !=, <, >, <=, >=
+ * - Lógicos: && (AND), || (OR), ! (NOT)
+ * - Parênteses: ( ) para controlar precedência
  */
 class ArvoreDeExpressao {
 private:
@@ -92,8 +106,22 @@ public:
      * @param expr String contendo a expressão booleana
      */
     ArvoreDeExpressao(const std::string& expr) : root(nullptr) {
-        ListaEncadeada<std::string> tokens = tokenizar(expr);
-        root = montaArvoreExpressao(tokens);
+        if (expr.empty()) {
+            throw std::invalid_argument("Expressão vazia não é permitida");
+        }
+        try {
+            ListaEncadeada<std::string> tokens = tokenizar(expr);
+            if (tokens.Vazia()) {
+                throw std::invalid_argument("Nenhum token válido encontrado na expressão");
+            }
+            root = montaArvoreExpressao(tokens);
+            if (!root) {
+                throw std::runtime_error("Falha ao construir árvore de expressão");
+            }
+        } catch (const std::exception& e) {
+            std::cerr << "Erro ao processar expressão: " << e.what() << std::endl;
+            throw;
+        }
     }
 
     /**
@@ -306,8 +334,13 @@ int ArvoreDeExpressao::getOperatorPrecedence(const std::string& op) {
 }
 
 bool ArvoreDeExpressao::evaluate(No* root, Voo* voo) {
-    if (!root) return false;
-    
+    if (!voo) {
+        throw std::invalid_argument("Ponteiro de voo inválido");
+    }
+    if (!root) {
+        throw std::invalid_argument("Nó inválido na árvore de expressão");
+    }
+
     // Trata operador unário
     if (root->value == "!") {
         return !evaluate(root->left, voo);
@@ -378,8 +411,8 @@ bool ArvoreDeExpressao::evaluate(No* root, Voo* voo) {
             if (operador == "!=") return voo->duracao != duracao;
         }
     } catch (const std::exception& e) {
-        std::cerr << "Erro na conversão do valor: " << root->right->value << std::endl;
-        return false;
+        std::cerr << "Erro na conversão do valor numérico: " << root->right->value << std::endl;
+        throw std::invalid_argument("Valor numérico inválido na expressão");
     }
     
     return false;

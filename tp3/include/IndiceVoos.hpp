@@ -1,3 +1,9 @@
+/**
+ * @file IndiceVoos.hpp
+ * @brief Implementação da árvore AVL para indexação de voos
+ * @author Dante Junqueira Pedrosa
+ * @date 2025
+ */
 #pragma once
 
 #include <string>
