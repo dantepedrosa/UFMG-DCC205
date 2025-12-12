@@ -12,6 +12,10 @@ Este repositório contém o material das aulas práticas da disciplina de Estrut
 - [Aula Prática 4](./Aula4)
 - [Aula Prática 5](./Aula5)
 
+### 🤖 Assistente de Programação
+
+Este repositório possui um assistente de programação que pode ajudar com várias tarefas! Veja o arquivo [CAPABILITIES.md](./CAPABILITIES.md) para saber o que ele pode fazer.
+
 ### Como Usar
 
 1. Clone o repositório:
