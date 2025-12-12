@@ -8,33 +8,33 @@ Sou um assistente de programação avançado com habilidades em várias linguage
 
 ## Capacidades Técnicas
 
-### 1. **Análise e Compreensão de Código**
+### Análise e Compreensão de Código
 - Analisar código C/C++ existente
 - Explicar algoritmos e estruturas de dados
 - Identificar padrões de design e boas práticas
 - Revisar código e sugerir melhorias
 
-### 2. **Desenvolvimento e Modificação de Código**
+### Desenvolvimento e Modificação de Código
 - Implementar novas estruturas de dados
 - Corrigir bugs e erros de compilação
 - Refatorar código para melhor legibilidade
 - Otimizar algoritmos existentes
 - Adicionar novos recursos e funcionalidades
 
-### 3. **Depuração e Testes**
+### Depuração e Testes
 - Identificar e corrigir erros de lógica
 - Analisar problemas de memória (memory leaks, buffer overflows)
 - Criar casos de teste
 - Executar e analisar resultados de testes
 - Depurar código usando ferramentas como GDB
 
-### 4. **Documentação**
+### Documentação
 - Criar e atualizar documentação
 - Escrever comentários claros no código
 - Gerar READMEs informativos
 - Documentar APIs e interfaces
 
-### 5. **Build e Compilação**
+### Build e Compilação
 - Trabalhar com Makefiles
 - Resolver problemas de compilação
 - Gerenciar dependências
