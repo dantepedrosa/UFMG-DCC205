@@ -2,11 +2,11 @@
 
 Este documento descreve as capacidades e funcionalidades que posso oferecer ao trabalhar com este repositório de Estruturas de Dados (DCC205) da UFMG.
 
-## 🎯 Visão Geral
+## Visão Geral
 
 Sou um assistente de programação avançado com habilidades em várias linguagens de programação, especialmente C e C++. Posso ajudá-lo com diversos aspectos do desenvolvimento e manutenção deste repositório educacional.
 
-## 💻 Capacidades Técnicas
+## Capacidades Técnicas
 
 ### 1. **Análise e Compreensão de Código**
 - Analisar código C/C++ existente
@@ -40,32 +40,33 @@ Sou um assistente de programação avançado com habilidades em várias linguage
 - Gerenciar dependências
 - Configurar ambientes de build
 
-## 📚 Estruturas de Dados que Posso Ajudar
+## Estruturas de Dados que Posso Ajudar
 
 Com base no conteúdo deste repositório, posso auxiliar com:
 
 ### Estruturas Lineares
-- **Listas** (Lista.cpp, ListaEncadeada.cpp)
-- **Pilhas** (Pilha.cpp, PilhaEncadeada.cpp)
-- **Filas** (Fila.cpp, FilaEncadeada.cpp)
+- **Listas** (xbib/linear/Lista.cpp, xbib/linear/ListaEncadeada.cpp)
+- **Pilhas** (xbib/linear/Pilha.cpp, xbib/linear/PilhaEncadeada.cpp)
+- **Filas** (xbib/linear/Fila.cpp, xbib/linear/FilaEncadeada.cpp)
 
 ### Estruturas de Árvores
-- **Árvores Binárias** (ArvoreBinaria.cpp)
-- **Heaps Binários** (HeapBinario.cpp)
+- **Árvores Binárias** (xbib/grafos/ArvoreBinaria.cpp)
+- **Heaps Binários** (xbib/grafos/HeapBinario.cpp)
+- **Árvores de Expressão** (tp3/include/ArvoreDeExpressao.hpp)
 
 ### Grafos
-- **Grafos com Matriz de Adjacência** (GrafoMatriz.cpp)
-- **Grafos com Malha** (GrafoMalha.cpp)
+- **Grafos com Matriz de Adjacência** (xbib/grafos/GrafoMatriz.cpp)
+- **Grafos com Malha** (xbib/grafos/GrafoMalha.cpp)
 
 ### Matrizes
-- **Matrizes Densas** (Matriz.cpp)
-- **Matrizes Esparsas COO** (MatrizEsparsaCOO.cpp)
-- **Matrizes Esparsas CSR** (MatrizEsparsaCSR.cpp)
+- **Matrizes Densas** (xbib/matrizes/Matriz.cpp)
+- **Matrizes Esparsas COO** (xbib/matrizes/MatrizEsparsaCOO.cpp)
+- **Matrizes Esparsas CSR** (xbib/matrizes/MatrizEsparsaCSR.cpp)
 
 ### Estruturas Complexas
-- **Disjoint Set Union (DSU)** (DSU.cpp)
+- **Disjoint Set Union (DSU)** (xbib/complex/DSU.cpp)
 
-## 🛠️ Exemplos de Tarefas que Posso Realizar
+## Exemplos de Tarefas que Posso Realizar
 
 ### Para Estudantes
 1. Explicar como funciona uma estrutura de dados específica
@@ -89,7 +90,7 @@ Com base no conteúdo deste repositório, posso auxiliar com:
 5. **Otimização**: "Otimize o algoritmo de busca no grafo"
 6. **Refatoração**: "Refatore o código de matriz para usar templates C++"
 
-## 🔍 Como Trabalho
+## Como Trabalho
 
 1. **Análise**: Primeiro, analiso o código e estrutura existente
 2. **Planejamento**: Crio um plano com mudanças mínimas necessárias
@@ -97,14 +98,14 @@ Com base no conteúdo deste repositório, posso auxiliar com:
 4. **Verificação**: Testo e valido as mudanças
 5. **Documentação**: Atualizo documentação relevante
 
-## ⚠️ Limitações
+## Limitações
 
 - Não posso executar programas que requerem interface gráfica
 - Não posso acessar recursos externos se não estiverem disponíveis
 - Foco em mudanças mínimas e precisas para manter a integridade do código
 - Respeito a estrutura e estilo existentes do projeto
 
-## 📝 Como Me Usar
+## Como Me Usar
 
 Para obter ajuda, seja específico sobre o que você precisa:
 
@@ -118,7 +119,7 @@ Para obter ajuda, seja específico sobre o que você precisa:
 - Perguntas muito vagas: "Faça tudo"
 - Solicitações sem contexto: "Corrija isso" (sem especificar o quê)
 
-## 🚀 Começando
+## Começando
 
 1. Me informe sobre o que você precisa
 2. Fornecerei um plano de ação
@@ -130,6 +131,6 @@ Para obter ajuda, seja específico sobre o que você precisa:
 
 **Dica**: Quanto mais específico você for sobre suas necessidades, melhor eu posso ajudar!
 
-## 📧 Contato do Repositório
+## Contato do Repositório
 
 Para dúvidas sobre o curso: [dantepedrosa@ufmg.br](mailto:dantepedrosa@ufmg.br)
